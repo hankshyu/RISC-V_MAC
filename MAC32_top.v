@@ -103,7 +103,7 @@ module MAC32_top #(
     wire A_Zero, B_Zero, C_Zero;
     wire A_NaN, B_NaN, C_NaN;
     wire A_DeN, B_DeN, C_DeN;
-    
+
     
     SpecialCaseDetector specialCaseDetector(
         .A_i(A_i),
@@ -141,7 +141,4 @@ module MAC32_top #(
     wire [PARM_MANT : 0] C_Mant = {C_Leadingbit, C_i[PARM_MANT - 1 : 0]};
 
 
-
-
-    
 endmodule
