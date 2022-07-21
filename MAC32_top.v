@@ -105,7 +105,6 @@ module MAC32_top #(
     wire A_DeN, B_DeN, C_DeN;
 
     
-    
     SpecialCaseDetector specialCaseDetector(
         .A_i(A_i),
         .B_i(B_i),
