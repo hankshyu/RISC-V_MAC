@@ -143,9 +143,11 @@ module MAC32_top #(
     //Generate 13 Partial Product by Radix-4 Booth's Algorithm
 
     wire [2*PARM_MANT + 2 : 0] booth_PP [13 - 1: 0];
+    
     R4Booth R4Booth (
         .MantA_i(B_Mant),
         .MantB_i(C_Mant),
+        
         .pp_00_o(booth_PP[ 0]),
         .pp_01_o(booth_PP[ 1]),
         .pp_02_o(booth_PP[ 2]),
@@ -162,6 +164,27 @@ module MAC32_top #(
     );
 
     // Sum 13 partial Product by Wallace Tree
-
+    wire [2*PARM_MANT + 2 : 0] Wallace_sum;
+    wire [2*PARM_MANT + 2 : 0] Wallace_carry;
+    wire Wallace_msb_cor;
+    WallaceTree WallaceTree (
+        .pp_00_i(booth_PP[ 0]),
+        .pp_01_i(booth_PP[ 1]),
+        .pp_02_i(booth_PP[ 2]),
+        .pp_03_i(booth_PP[ 3]),
+        .pp_04_i(booth_PP[ 4]),
+        .pp_05_i(booth_PP[ 5]),
+        .pp_06_i(booth_PP[ 6]),
+        .pp_07_i(booth_PP[ 7]),
+        .pp_08_i(booth_PP[ 8]),
+        .pp_09_i(booth_PP[ 9]),
+        .pp_10_i(booth_PP[10]),
+        .pp_11_i(booth_PP[11]),
+        .pp_12_i(booth_PP[12]),
+        
+        .pp_sum_o(Wallace_sum),
+        .pp_carry_o(Wallace_carry),
+        .msb_cor_o(Wallace_msb_cor)
+    );
 
 endmodule
