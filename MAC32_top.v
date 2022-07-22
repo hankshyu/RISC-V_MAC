@@ -64,7 +64,7 @@ module MAC32_top #(
     input [PARM_XLEN - 1 : 0] B_i,
     input [PARM_XLEN - 1 : 0] C_i,
 
-    // T (result_o) = B + (A * C)
+    // T (result_o) = A + (B * C)
     output reg [32 - 1 : 0] result_o,
     output ready_o,
     
@@ -139,6 +139,27 @@ module MAC32_top #(
     wire [PARM_MANT : 0] A_Mant = {A_Leadingbit, A_i[PARM_MANT - 1 : 0]};
     wire [PARM_MANT : 0] B_Mant = {B_Leadingbit, B_i[PARM_MANT - 1 : 0]};
     wire [PARM_MANT : 0] C_Mant = {C_Leadingbit, C_i[PARM_MANT - 1 : 0]};
+
+    // Generate 13 Partial Product by Radix-4 Booth's Algorithm
+
+    wire [2*PARM_MANT + 2 : 0] booth_PP [13 - 1: 0];
+    R4Booth R4Booth (
+        .MantA_i(B_Mant),
+        .MantB_i(C_Mant),
+        .pp_00_o(booth_PP[ 0]),
+        .pp_01_o(booth_PP[ 1]),
+        .pp_02_o(booth_PP[ 2]),
+        .pp_03_o(booth_PP[ 3]),
+        .pp_04_o(booth_PP[ 4]),
+        .pp_05_o(booth_PP[ 5]),
+        .pp_06_o(booth_PP[ 6]),
+        .pp_07_o(booth_PP[ 7]),
+        .pp_08_o(booth_PP[ 8]),
+        .pp_09_o(booth_PP[ 9]),
+        .pp_10_o(booth_PP[10]),
+        .pp_11_o(booth_PP[11]),
+        .pp_12_o(booth_PP[12])
+    );
 
 
 endmodule
