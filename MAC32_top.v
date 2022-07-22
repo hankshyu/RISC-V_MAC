@@ -140,7 +140,7 @@ module MAC32_top #(
     wire [PARM_MANT : 0] B_Mant = {B_Leadingbit, B_i[PARM_MANT - 1 : 0]};
     wire [PARM_MANT : 0] C_Mant = {C_Leadingbit, C_i[PARM_MANT - 1 : 0]};
 
-    // Generate 13 Partial Product by Radix-4 Booth's Algorithm
+    //Generate 13 Partial Product by Radix-4 Booth's Algorithm
 
     wire [2*PARM_MANT + 2 : 0] booth_PP [13 - 1: 0];
     R4Booth R4Booth (
@@ -160,6 +160,8 @@ module MAC32_top #(
         .pp_11_o(booth_PP[11]),
         .pp_12_o(booth_PP[12])
     );
+
+    // Sum 13 partial Product by Wallace Tree
 
 
 endmodule
