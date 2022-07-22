@@ -42,7 +42,7 @@ module R4Booth #(
     parameter PARM_PP = 13;
 
     //left shift b by 2 bits(radix-4 booth algorithm)
-    wire [PARM_MANT + 4 : 0] mant_BExt = {2'd0, MantB_i, 2'd0};
+    wire [PARM_MANT + 5 : 0] mant_BExt = {3'd0, MantB_i, 2'd0};
 
     wire [PARM_PP - 1 : 0] mul1x;
     wire [PARM_PP - 1 : 0] mul2x;
@@ -63,31 +63,19 @@ module R4Booth #(
     wire [PARM_MANT + 2 : 0] mant_AExt = {1'b0,MantA_i,1'b0};
     wire [PARM_MANT + 1 : 0] booth_PP [PARM_PP - 1: 0];
 
-    function R4Booth_PatternSelector;
-        input [1:0] ba_i;
-        input sel_1x_i;
-        input sel_2x_i;
-        input sel_sign_i;
 
-        reg zerosit;
-        begin        
-            zerosit = ~((sel_1x_i&&ba_i[1]) | (sel_2x_i&&ba_i[0]));
-            R4Booth_PatternSelector = ~((zerosit)^(sel_sign_i));
-        end
-        
-    endfunction
 
     generate
         genvar n,p;
         for(n = 0; n < 13 ; n = n+1)begin
             for(p = 0; p < PARM_MANT + 2 ; p = p+1)begin
-                    assign booth_PP[n][p] = R4Booth_PatternSelector(
-                                                    .ba_i(mant_AExt[p+1 : p]),
-                                                    .sel_1x_i(mul1x[n]),
-                                                    .sel_2x_i(mul2x[n]),
-                                                    .sel_sign_i(mulsign[n])
-
-                                                );
+                R4Booth_PatternSelector R4Booth_PatternSelector(
+                    .ba_i(mant_AExt[p+1 : p]),
+                    .sel_1x_i(mul1x[n]),
+                    .sel_2x_i(mul2x[n]),
+                    .sel_sign_i(mulsign[n]),
+                    .boothbit_o(booth_PP[n][p])
+                );
             end
         end
     endgenerate

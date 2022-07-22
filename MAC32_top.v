@@ -52,12 +52,12 @@ module MAC32_top #(
    parameter PARM_RM            = 3,
    parameter PARM_XLEN          = 32
 ) (
-    input clk_i,
-    input rst_i,
+    //input clk_i,
+    //input rst_i,
     //input stall_i,
-    input req_i,
+    //input req_i,
 
-    input [PARM_RM - 1 : 0] rounding_mode_i,
+    //input [PARM_RM - 1 : 0] rounding_mode_i,
 
 
     input [PARM_XLEN - 1 : 0] A_i,
@@ -65,8 +65,8 @@ module MAC32_top #(
     input [PARM_XLEN - 1 : 0] C_i,
 
     // T (result_o) = A + (B * C)
-    output reg [32 - 1 : 0] result_o,
-    output ready_o,
+    output reg [PARM_XLEN - 1 : 0] result_o,
+    //output ready_o,
     
     //Accrued exceptions (fflags)
     output reg NV_o,
@@ -141,7 +141,6 @@ module MAC32_top #(
     wire [PARM_MANT : 0] C_Mant = {C_Leadingbit, C_i[PARM_MANT - 1 : 0]};
 
     //Generate 13 Partial Product by Radix-4 Booth's Algorithm
-
     wire [2*PARM_MANT + 2 : 0] booth_PP [13 - 1: 0];
     
     R4Booth R4Booth (
@@ -167,6 +166,7 @@ module MAC32_top #(
     wire [2*PARM_MANT + 2 : 0] Wallace_sum;
     wire [2*PARM_MANT + 2 : 0] Wallace_carry;
     wire Wallace_msb_cor;
+
     WallaceTree WallaceTree (
         .pp_00_i(booth_PP[ 0]),
         .pp_01_i(booth_PP[ 1]),
