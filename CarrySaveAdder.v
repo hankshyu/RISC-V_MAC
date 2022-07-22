@@ -27,7 +27,7 @@ module CarrySaveAdder #(
     input [XLEN - 1 : 0] B_i,
     input [XLEN - 1 : 0] C_i,
     output [XLEN - 1 : 0] Sum_o,
-    output [XLEN - 1 : 0] Cy_o
+    output [XLEN - 1 : 0] Carry_o
 );
     generate
         genvar j;
@@ -37,7 +37,7 @@ module CarrySaveAdder #(
                 .addend_i(B_i[j]),
                 .carry_i(C_i[j]),
                 .sum_o(Sum_o[j]),
-                .carry_o(Cy_o[j])
+                .carry_o(Carry_o[j])
             );
             
         end
