@@ -61,7 +61,9 @@ module R4Booth #(
     endgenerate
 
     wire [PARM_MANT + 2 : 0] mant_AExt = {1'b0,MantA_i,1'b0};
-    wire [PARM_MANT + 1 : 0] booth_PP [PARM_PP - 1: 0];
+    wire [PARM_MANT + 1 : 0] booth_PP [PARM_PP - 1: 0]; //Each partial product, except the bottom one, is 1 bits larget(for 2x)
+    
+    wire [PARM_MANT + 1 : 0] booth_PP_new [PARM_PP - 1: 0];
 
 
 
@@ -79,6 +81,31 @@ module R4Booth #(
             end
         end
     endgenerate
+
+
+
+
+
+    // assign mul1x_o = (pattern_i[1] ^ pattern_i[0]);
+    // assign mul2x_o = (pattern_i == 3'b011 || pattern_i == 3'b100);
+    // assign mulsign_o = pattern_i[2];
+    
+    wire [PARM_MANT + 3 : 0] mant_BExt_n = {2'd0, MantB_i, 1'd0};
+    wire [PARM_PP - 1 : 0] mul1x_n;
+    wire [PARM_PP - 1 : 0] mul2x_n;
+    wire [PARM_PP - 1 : 0] mulsign_n;
+
+    genvar tmp;
+    generate
+    for (tmp = 0; tmp < 13; tmp = tmp+1) begin
+        assign mul1x_n[tmp] =  mant_BExt_n[tmp*2] ^ mant_BExt_n[tmp*2 + 1];
+        assign mul2x_n[tmp] = ((~mant_BExt_n[tmp*2])&(~mant_BExt_n[tmp*2+1])&(mant_BExt_n[tmp*2+2])) ||
+             ((mant_BExt_n[tmp*2])&(mant_BExt_n[tmp*2+1])&(~mant_BExt_n[tmp*2+2]));
+        assign mulsign_n[tmp] = mant_BExt_n[tmp*2 + 2];
+    end
+    endgenerate
+    
+    
 
 
     assign pp_00_o = {21'd0, ~mulsign[ 0],{2{mulsign[0]}},booth_PP[0]}; 
