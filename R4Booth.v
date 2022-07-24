@@ -39,8 +39,7 @@ module R4Booth #(
     output [2*PARM_MANT + 2 : 0] pp_11_o,
     output [2*PARM_MANT + 2 : 0] pp_12_o
 );
-    parameter PARM_PP = 13;
-
+    parameter PARM_PP = 13; 
 
     //Modified Booth's Recording Table
     // Multiplier   
@@ -95,8 +94,8 @@ module R4Booth #(
         end
     endgenerate 
 
-    //by adding the "1 triagle" in the left up
 
+    //by adding the "1 triagle" in the left up. It's under the assumption that it's an unsigned Multiplication.
     assign pp_00_o = {21'd0, ~mulsign[ 0],{2{mulsign[0]}},booth_PP[0]}; 
     assign pp_01_o = {21'd1, ~mulsign[ 1], booth_PP[ 1], 1'b0, mulsign[ 0]};
     assign pp_02_o = {19'd1, ~mulsign[ 2], booth_PP[ 2], 1'b0, mulsign[ 1],  2'd0};
