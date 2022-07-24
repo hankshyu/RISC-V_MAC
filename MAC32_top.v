@@ -182,7 +182,6 @@ module MAC32_top #(
         .pp_11_i(booth_PP[11]),
         .pp_12_i(booth_PP[12]),
         
-        
         .pp_sum_o(Wallace_sum),
         .pp_carry_o(Wallace_carry),
         .msb_cor_o(Wallace_msb_cor)
