@@ -100,8 +100,8 @@ module R4Booth #(
     integer idx;
     always @(*) begin
         for (idx = 0; idx < 13; idx = idx + 1) begin
-            if(mul1x) booth_PP_new[idx] = MantA_i;
-            else if(mul2x) booth_PP_new[idx] = MantA_i << 1;
+            if(mul1x[idx]) booth_PP_new[idx] = MantA_i;
+            else if(mul2x[idx]) booth_PP_new[idx] = MantA_i << 1;
             else booth_PP_new[idx] = 0;
             
         end
