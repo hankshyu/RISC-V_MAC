@@ -62,23 +62,23 @@ module R4Booth #(
     wire [PARM_PP - 1 : 0] mulsign; // mulsign_o = bit (i + 1)
     
     
-    genvar tmp;
+    genvar j;
     generate
-    for (tmp = 0; tmp < 13; tmp = tmp+1) begin
-        assign mul1x[tmp] =  mant_B_Padding[tmp*2] ^ mant_B_Padding[tmp*2 + 1];
-        assign mul2x[tmp] = ((~mant_B_Padding[tmp*2])&(~mant_B_Padding[tmp*2+1])&(mant_B_Padding[tmp*2+2])) ||
-             ((mant_B_Padding[tmp*2])&(mant_B_Padding[tmp*2+1])&(~mant_B_Padding[tmp*2+2]));
-        assign mulsign[tmp] = mant_B_Padding[tmp*2 + 2];
+    for (j = 0; j < 13; j = j+1) begin
+        assign mul1x[j] =  mant_B_Padding[j*2] ^ mant_B_Padding[j*2 + 1];
+        assign mul2x[j] =   ((~mant_B_Padding[j*2]) & (~mant_B_Padding[j*2 + 1]) & (mant_B_Padding[j*2 + 2])) ||
+                            ((mant_B_Padding[j*2]) & (mant_B_Padding[j*2+1]) & (~mant_B_Padding[j*2+2]));
+        assign mulsign[j] = mant_B_Padding[j*2 + 2];
     end
     endgenerate
-
 
 
 
     wire [PARM_MANT + 2 : 0] mant_AExt = {1'b0,MantA_i,1'b0};
     wire [PARM_MANT + 1 : 0] booth_PP [PARM_PP - 1: 0]; //Each partial product, except the bottom one, is 1 bits larget(for 2x)
     
-    wire [PARM_MANT + 1 : 0] booth_PP_new [PARM_PP - 1: 0];
+    reg [PARM_MANT + 1 : 0] booth_PP_new [PARM_PP - 1: 0];
+    wire [PARM_MANT + 1 : 0] booth_PP_new_ans [PARM_PP - 1: 0];
 
 
 
@@ -97,12 +97,22 @@ module R4Booth #(
         end
     endgenerate
 
+    integer idx;
+    always @(*) begin
+        for (idx = 0; idx < 13; idx = idx + 1) begin
+            if(mul1x) booth_PP_new[idx] = MantA_i;
+            else if(mul2x) booth_PP_new[idx] = MantA_i << 1;
+            else booth_PP_new[idx] = 0;
+            
+        end
+    end
 
-
-
-
-
-    
+    genvar k;
+    generate
+        for(k = 0; k < 13; k = k + 1)begin
+            assign booth_PP_new_ans[k] = (mulsign[k])? ~booth_PP_new[k] : booth_PP_new[k];
+        end
+    endgenerate 
 
 
 
