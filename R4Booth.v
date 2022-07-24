@@ -39,7 +39,7 @@ module R4Booth #(
     output [2*PARM_MANT + 2 : 0] pp_11_o,
     output [2*PARM_MANT + 2 : 0] pp_12_o
 );
-    parameter PARM_PP = 13; 
+    parameter PARM_PP = (PARM_MANT/2) + 1; //booth's algorithm produces at most CEILING( (n+1))/2 )  partial products
 
     //Modified Booth's Recording Table
     // Multiplier   
