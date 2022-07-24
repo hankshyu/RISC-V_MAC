@@ -73,25 +73,29 @@ module R4Booth #(
     endgenerate
 
     
+    // Partial product is differentiate by 0x 1x 2x here
     reg [PARM_MANT + 1 : 0] booth_PP_tmp [PARM_PP - 1: 0];
     wire [PARM_MANT + 1 : 0] booth_PP [PARM_PP - 1: 0];
     
     integer idx;
     always @(*) begin
-        for (idx = 0; idx < 13; idx = idx + 1) begin
+        for (idx = 0; idx < PARM_PP; idx = idx + 1) begin
             if(mul1x[idx]) booth_PP_tmp[idx] = MantA_i;
             else if(mul2x[idx]) booth_PP_tmp[idx] = MantA_i << 1;
             else booth_PP_tmp[idx] = 0;
             
         end
     end
-
+    
+    //bit flip if it's negative due to booth's algorithm, we calculate 2's complement by bitwise invert and add 1 to the next row.
     generate
         genvar k;
-        for(k = 0; k < 13; k = k + 1)begin
+        for(k = 0; k < PARM_PP; k = k + 1)begin
             assign booth_PP[k] = (mulsign[k])? ~booth_PP_tmp[k] : booth_PP_tmp[k];
         end
     endgenerate 
+
+    //by adding the "1 triagle" in the left up
 
     assign pp_00_o = {21'd0, ~mulsign[ 0],{2{mulsign[0]}},booth_PP[0]}; 
     assign pp_01_o = {21'd1, ~mulsign[ 1], booth_PP[ 1], 1'b0, mulsign[ 0]};
