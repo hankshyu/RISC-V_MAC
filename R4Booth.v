@@ -41,24 +41,39 @@ module R4Booth #(
 );
     parameter PARM_PP = 13;
 
-    //left shift b by 2 bits(radix-4 booth algorithm)
-    wire [PARM_MANT + 5 : 0] mant_BExt = {3'd0, MantB_i, 2'd0};
 
-    wire [PARM_PP - 1 : 0] mul1x;
-    wire [PARM_PP - 1 : 0] mul2x;
-    wire [PARM_PP - 1 : 0] mulsign;
+    //Modified Booth's Recording Table
+    // Multiplier   
+    //| Bit i + 1   |   Bit i   |   Bit i - 1   |   Multiplicand selected   |
+    //|     0       |    0      |       0       |   0 x Multiplicand        |
+    //|     0       |    0      |       1       |  +1 x Multiplicand        |
+    //|     0       |    1      |       0       |  +1 x Multiplicand        |
+    //|     0       |    1      |       1       |  +2 x Multiplicand        |
+    //|     1       |    0      |       0       |  -2 x Multiplicand        |
+    //|     1       |    0      |       1       |  -1 x Multiplicand        |
+    //|     1       |    1      |       0       |  -1 x Multiplicand        |
+    //|     1       |    1      |       1       |   0 x Multiplicand        |
     
+
+    wire [PARM_MANT + 3 : 0] mant_B_Padding = {2'd0, MantB_i, 1'd0};
+
+    wire [PARM_PP - 1 : 0] mul1x; // mul1x_o = bit (i) ^ bit(i - 1)
+    wire [PARM_PP - 1 : 0] mul2x; // mul2x_o = (pattern == 3'b011 || pattern_i == 3'b100);
+    wire [PARM_PP - 1 : 0] mulsign; // mulsign_o = bit (i + 1)
+    
+    
+    genvar tmp;
     generate
-        genvar m;
-        for(m = 0; m < PARM_PP; m = m+1)begin
-            R4Booth_BitPairRecorder R4Booth_BPR(
-                .pattern_i(mant_BExt[(2*m+1) +: 3]),
-                .mul1x_o(mul1x[m]),
-                .mul2x_o(mul2x[m]),
-                .mulsign_o(mulsign[m])
-            );
-        end
+    for (tmp = 0; tmp < 13; tmp = tmp+1) begin
+        assign mul1x[tmp] =  mant_B_Padding[tmp*2] ^ mant_B_Padding[tmp*2 + 1];
+        assign mul2x[tmp] = ((~mant_B_Padding[tmp*2])&(~mant_B_Padding[tmp*2+1])&(mant_B_Padding[tmp*2+2])) ||
+             ((mant_B_Padding[tmp*2])&(mant_B_Padding[tmp*2+1])&(~mant_B_Padding[tmp*2+2]));
+        assign mulsign[tmp] = mant_B_Padding[tmp*2 + 2];
+    end
     endgenerate
+
+
+
 
     wire [PARM_MANT + 2 : 0] mant_AExt = {1'b0,MantA_i,1'b0};
     wire [PARM_MANT + 1 : 0] booth_PP [PARM_PP - 1: 0]; //Each partial product, except the bottom one, is 1 bits larget(for 2x)
@@ -86,26 +101,9 @@ module R4Booth #(
 
 
 
-    // assign mul1x_o = (pattern_i[1] ^ pattern_i[0]);
-    // assign mul2x_o = (pattern_i == 3'b011 || pattern_i == 3'b100);
-    // assign mulsign_o = pattern_i[2];
-    
-    wire [PARM_MANT + 3 : 0] mant_BExt_n = {2'd0, MantB_i, 1'd0};
-    wire [PARM_PP - 1 : 0] mul1x_n;
-    wire [PARM_PP - 1 : 0] mul2x_n;
-    wire [PARM_PP - 1 : 0] mulsign_n;
 
-    genvar tmp;
-    generate
-    for (tmp = 0; tmp < 13; tmp = tmp+1) begin
-        assign mul1x_n[tmp] =  mant_BExt_n[tmp*2] ^ mant_BExt_n[tmp*2 + 1];
-        assign mul2x_n[tmp] = ((~mant_BExt_n[tmp*2])&(~mant_BExt_n[tmp*2+1])&(mant_BExt_n[tmp*2+2])) ||
-             ((mant_BExt_n[tmp*2])&(mant_BExt_n[tmp*2+1])&(~mant_BExt_n[tmp*2+2]));
-        assign mulsign_n[tmp] = mant_BExt_n[tmp*2 + 2];
-    end
-    endgenerate
     
-    
+
 
 
     assign pp_00_o = {21'd0, ~mulsign[ 0],{2{mulsign[0]}},booth_PP[0]}; 
