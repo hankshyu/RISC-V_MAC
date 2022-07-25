@@ -40,8 +40,8 @@ module Aligner #(
     output [PARM_EXP + 1: 0] Exp_aligned_o,
     output Sign_aligned_o,
 
-    output Sign_Exp_mv_o, //done, Sign_amt_DO
-    output Mv_halt_o, //done, Sft_stop_SO
+    output Exp_mv_sign_o, //done, Sign_amt_DO
+    output Mv_halt_o, //, Sft_stop_SO
 
     output [2*PARM_MANT + 2 : 0] PP_sum_postcal_o,
     output [2*PARM_MANT + 2 : 0] PP_carry_postcal_o,
@@ -58,8 +58,8 @@ module Aligner #(
     assign Exp_mv_neg = -27 + A_Exp_i - B_Exp_i - C_Exp_i + PARM_BIAS;
     assign Exp_mv_sign_o = Exp_mv[PARM_EXP + 1]; // the sign bit of the mv parameter
 
-    wire shift_stop; //if right shift > 74, shall halt
-
+    assign Mv_halt_o = (~Exp_mv_sign_o) && (Exp_mv[PARM_EXP : 0] > 73) //right shift is out of range, which is 74 or more
+    
 
 
 
