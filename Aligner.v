@@ -58,9 +58,11 @@ module Aligner #(
     assign Exp_mv_neg = -27 + A_Exp_i - B_Exp_i - C_Exp_i + PARM_BIAS;
     assign Exp_mv_sign_o = Exp_mv[PARM_EXP + 1]; // the sign bit of the mv parameter
 
-    assign Mv_halt_o = (~Exp_mv_sign_o) && (Exp_mv[PARM_EXP : 0] > 73); //right shift(+) is out of range, which is 74 or more
-    
+    assign Mv_halt_o = (~Exp_mv_sign_o) & (Exp_mv[PARM_EXP : 0] > 73); //right shift(+) is out of range, which is 74 or more
+    assign Exp_aligned_o = (Exp_mv_sign_o)? A_Exp_i : (B_Exp_i + C_Exp_i - PARM_BIAS + 27); // exponent = (expB + expC -127) + point distance(= 27)
 
-
+    wire [73 : 0] A_Mant_aligned;
+    wire [PARM_MANT : 0] Drop_bits;
+    assign {A_Mant_aligned, Drop_bits} = {A_Mant_i, 74'd0} >> (Mv_halt_o ? 0 : Exp_mv);
 
 endmodule
