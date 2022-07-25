@@ -42,8 +42,8 @@ module WallaceTree#(
     output suppression_sign_extension_o);
 
 
-    wire  [2*PARM_MANT + 3 : 0] csa_sum [9 - 1: 0];
-    wire  [2*PARM_MANT + 3 : 0] csa_carry [9 - 1: 0];
+    wire  [2*PARM_MANT + 2 : 0] csa_sum [9 - 1: 0];
+    wire  [2*PARM_MANT + 2 : 0] csa_carry [9 - 1: 0];
     
     wire  [2*PARM_MANT + 3 : 0] csa_shcy [9 - 1: 0];
     wire  [9 : 3] sign_extension;
@@ -56,7 +56,7 @@ module WallaceTree#(
 
     generate
         genvar j;
-        for(j = 0; j < 8; j = j+1)begin
+        for(j = 0; j < 9; j = j+1)begin
             assign csa_shcy[j] = csa_carry[j] << 1;
         end
     endgenerate
