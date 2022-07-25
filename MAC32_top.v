@@ -130,7 +130,8 @@ module MAC32_top #(
     wire A_Sign = A_i[PARM_XLEN - 1];
     wire B_Sign = B_i[PARM_XLEN - 1];
     wire C_Sign = C_i[PARM_XLEN - 1];
-    
+    wire Sub_Sign = A_Sign ^ B_Sign ^ C_Sign; // indicator of effective subtraction
+
     //denormalized number has exponent 1 
     wire [PARM_EXP - 1: 0] A_Exp = A_DeN? PARM_EXP_ONE : A_i[PARM_XLEN - 2 : PARM_MANT];
     wire [PARM_EXP - 1: 0] B_Exp = B_DeN? PARM_EXP_ONE : B_i[PARM_XLEN - 2 : PARM_MANT];
