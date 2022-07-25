@@ -9,7 +9,7 @@
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
-// Description: 
+// Description: This 4:2 compressor is made up of 2 3:2 compressor, could be map to more advanced compressor design
 // 
 // Dependencies: 
 // 

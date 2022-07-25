@@ -9,7 +9,7 @@
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
-// Description: 
+// Description: This is a 3:2 compressor, a.k.a carry save adder.
 // 
 // Dependencies: 
 // 
