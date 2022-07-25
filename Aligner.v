@@ -58,7 +58,7 @@ module Aligner #(
     assign Exp_mv_neg = -27 + A_Exp_i - B_Exp_i - C_Exp_i + PARM_BIAS;
     assign Exp_mv_sign_o = Exp_mv[PARM_EXP + 1]; // the sign bit of the mv parameter
 
-    assign Mv_halt_o = (~Exp_mv_sign_o) && (Exp_mv[PARM_EXP : 0] > 73) //right shift is out of range, which is 74 or more
+    assign Mv_halt_o = (~Exp_mv_sign_o) && (Exp_mv[PARM_EXP : 0] > 73); //right shift(+) is out of range, which is 74 or more
     
 
 
