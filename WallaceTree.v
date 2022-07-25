@@ -47,6 +47,12 @@ module WallaceTree#(
     
     wire  [2*PARM_MANT + 3 : 0] csa_shcy [9 - 1: 0];
     wire  [9 : 3] sign_extension;
+    generate
+        genvar i;
+        for(i = 3; i < 9; i = i+1)begin
+            assign sign_extension[i] = csa_carry[i][2*PARM_MANT + 2];
+        end
+    endgenerate
 
     generate
         genvar j;
@@ -61,18 +67,24 @@ module WallaceTree#(
     Compressor32 #(2*PARM_MANT + 3) LV1_2 (.A_i(pp_06_i),.B_i(pp_07_i),.C_i(pp_08_i),.Sum_o(csa_sum[2]),.Carry_o(csa_carry[2]));
     Compressor32 #(2*PARM_MANT + 3) LV1_3 (.A_i(pp_09_i),.B_i(pp_10_i),.C_i(pp_11_i),.Sum_o(csa_sum[3]),.Carry_o(csa_carry[3]));
 
-    Compressor32 #(2*PARM_MANT + 3) LV2_0 (.A_i(csa_sum[0]),.B_i(csa_shcy[0]),.C_i(csa_sum[1]),.Sum_o(csa_sum[4]),.Carry_o(csa_sum[4]));
-    Compressor32 #(2*PARM_MANT + 3) LV2_1 (.A_i(),.B_i(),.C_i(),.Sum_o(),.Carry_o());
-    Compressor32 #(2*PARM_MANT + 3) LV2_2 (.A_i(),.B_i(),.C_i(),.Sum_o(),.Carry_o());
-    
-    Compressor32 #(2*PARM_MANT + 3) LV3_0 (.A_i(),.B_i(),.C_i(),.Sum_o(),.Carry_o());
-    Compressor32 #(2*PARM_MANT + 3) LV3_1 (.A_i(),.B_i(),.C_i(),.Sum_o(),.Carry_o());
-    
-    Compressor42 #(2*PARM_MANT + 3) LV4_Final (.A_i(),.B_i(),.C_i(),.D_i().Sum_o(),.Carry_o(),.hidden_carry_msb());
+    Compressor32 #(2*PARM_MANT + 3) LV2_0 (.A_i(csa_sum[0] ),.B_i(csa_shcy[0]),.C_i(csa_sum[1] ),.Sum_o(csa_sum[4]),.Carry_o(csa_sum[4]  ));
+    Compressor32 #(2*PARM_MANT + 3) LV2_1 (.A_i(csa_shcy[1]),.B_i(csa_sum[2] ),.C_i(csa_shcy[2]),.Sum_o(csa_sum[5]),.Carry_o(csa_carry[5]));
+    Compressor32 #(2*PARM_MANT + 3) LV2_2 (.A_i(csa_sum[3] ),.B_i(csa_shcy[3]),.C_i(pp_12_i    ),.Sum_o(csa_sum[6]),.Carry_o(csa_carry[6]));
 
-    //answer producer
-    CarrySaveAdder #(2*PARM_MANT + 3) csa_Final (.A_i(csa_sum[9]),.B_i(csa_shcy[9]),.C_i(pp_12_i),.Sum_o(pp_sum_o),.Carry_o(pp_carry_o)); 
+    Compressor32 #(2*PARM_MANT + 3) LV3_0 (.A_i(csa_sum[4] ),.B_i(csa_shcy[4]),.C_i(csa_sum[5] ),.Sum_o(csa_sum[7]),.Carry_o(csa_carry[7]));
+    Compressor32 #(2*PARM_MANT + 3) LV3_1 (.A_i(csa_shcy[5]),.B_i(csa_sum[6] ),.C_i(csa_shcy[6]),.Sum_o(csa_sum[8]),.Carry_o(csa_carry[8]));
+    
+    Compressor42 #(2*PARM_MANT + 3)
+        LV4_Final (
+            .A_i(csa_sum[7]),
+            .B_i(csa_shcy[7]),
+            .C_i(csa_sum[8]),
+            .D_i(csa_shcy[8]),
+            .Sum_o(wallace_sum_o),
+            .Carry_o(wallace_carry_o),
+            .hidden_carry_msb(sign_extension[9])
+        );
 
-    // assign msb_cor_o = | csa_sig[9:3];
+    assign suppression_sign_extension_o = |sign_extension;
 
 endmodule
