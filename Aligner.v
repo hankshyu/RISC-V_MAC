@@ -45,7 +45,7 @@ module Aligner #(
 
     output [2*PARM_MANT + 2 : 0] Wallace_sum_aligned_o,
     output [2*PARM_MANT + 2 : 0] Wallace_carry_aligned_o,
-    output [PARM_EXP + 1 : 0] Exp_mv_neg, //done ,Minus_sft_amt_DO
+    output [PARM_EXP + 1 : 0] Exp_mv_neg_o, //done ,Minus_sft_amt_DO
     output reg Mant_sticky_sht_out_o);
     
     wire [PARM_EXP + 1 : 0] Exp_d;
@@ -54,7 +54,7 @@ module Aligner #(
 
     assign Exp_d = A_Exp_i - B_Exp_i - C_Exp_i + PARM_BIAS; // d = expA - (expB + expC - 127)
     assign Exp_mv = 27 - A_Exp_i + B_Exp_i + C_Exp_i - PARM_BIAS; // mv = 27 - d 
-    assign Exp_mv_neg = -27 + A_Exp_i - B_Exp_i - C_Exp_i + PARM_BIAS;
+    assign Exp_mv_neg_o = -27 + A_Exp_i - B_Exp_i - C_Exp_i + PARM_BIAS;
     assign Exp_mv_sign_o = Exp_mv[PARM_EXP + 1]; // the sign bit of the mv parameter
 
     assign Mv_halt_o = (~Exp_mv_sign_o) & (Exp_mv[PARM_EXP : 0] > 73); //right shift(+) is out of range, which is 74 or more
