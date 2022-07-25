@@ -201,7 +201,7 @@ module MAC32_top #(
     wire Exp_mv_sign;
     wire Mv_halt;
     
-    Aligner aligner(
+    PreNormalizer preNormalizer(
         .A_sign_i(A_Sign),
         .B_sign_i(B_Sign),
         .C_sign_i(C_Sign),
