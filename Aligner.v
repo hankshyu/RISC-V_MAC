@@ -43,8 +43,8 @@ module Aligner #(
     output Exp_mv_sign_o, //done, Sign_amt_DO
     output Mv_halt_o, //, Sft_stop_SO
 
-    output [2*PARM_MANT + 2 : 0] PP_sum_aligned_o,
-    output [2*PARM_MANT + 2 : 0] PP_carry_aligned_o,
+    output [2*PARM_MANT + 2 : 0] Wallace_sum_aligned_o,
+    output [2*PARM_MANT + 2 : 0] Wallace_carry_aligned_o,
     output [PARM_EXP + 1 : 0] Exp_mv_neg, //done ,Minus_sft_amt_DO
     output reg Mant_sticky_sht_out_o);
     
@@ -69,8 +69,8 @@ module Aligner #(
 
     wire Sign_datapth_tmp = B_sign_i ^ C_sign_i;
     assign Sign_aligned_o = (Exp_mv_sign_o)? A_sign_i : Sign_datapth_tmp;
-    assign PP_sum_aligned_o = (Exp_mv_sign_o)? 0 : Wallace_sum_i;
-    assign PP_carry_aligned_o = (Exp_mv_sign_o) ? 0 : Wallace_carry_i;
+    assign Wallace_sum_aligned_o = (Exp_mv_sign_o)? 0 : Wallace_sum_i;
+    assign Wallace_carry_aligned_o = (Exp_mv_sign_o) ? 0 : Wallace_carry_i;
 
     //output logic for A_Mant_aligned_o
     always @(*) begin
