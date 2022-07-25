@@ -144,7 +144,7 @@ module MAC32_top #(
     //Generate 13 Partial Product by Radix-4 Booth's Algorithm
     wire [2*PARM_MANT + 2 : 0] booth_PP [13 - 1: 0];
     
-    R4Booth R4Booth (
+    R4Booth R4Booth(
         .MantA_i(B_Mant),
         .MantB_i(C_Mant),
         
@@ -168,7 +168,7 @@ module MAC32_top #(
     wire [2*PARM_MANT + 2 : 0] Wallace_carry;
     wire Wallace_msb_cor;
 
-    WallaceTree WallaceTree (
+    WallaceTree wallaceTree(
         .pp_00_i(booth_PP[ 0]),
         .pp_01_i(booth_PP[ 1]),
         .pp_02_i(booth_PP[ 2]),
@@ -186,6 +186,45 @@ module MAC32_top #(
         .wallace_sum_o(Wallace_sum),
         .wallace_carry_o(Wallace_carry),
         .suppression_sign_extension_o(Wallace_msb_cor)
+    );
+
+    //Prenormalization of the augend, in parallel with multiplication.
+    wire [74 : 0] A_Mant_aligned;
+    wire signed [PARM_EXP + 1 : 0] Exp_aligned;
+    wire [2*PARM_MANT + 2 : 0] Wallace_sum_aligned;
+    wire [2*PARM_MANT + 2 : 0] Wallace_carry_aligned;
+    wire [PARM_EXP + 1 : 0] Exp_mv_neg;
+    wire Mant_sticky_sht_out;
+    wire sign_change_unknown = 1;
+    //global signals ...
+    wire Sign_aligned;
+    wire Exp_mv_sign;
+    wire Mv_halt;
+    
+    Aligner aligner(
+        .A_sign_i(A_Sign),
+        .B_sign_i(B_Sign),
+        .C_sign_i(C_Sign),
+        .Sub_Sign_i(Sub_Sign),
+        .A_Exp_i(A_Exp),
+        .B_Exp_i(B_Exp),
+        .C_Exp_i(C_Exp),
+        .A_Mant_i(A_Mant),
+        .Wallace_sum_i(Wallace_sum),
+        .Wallace_carry_i(Wallace_carry),
+        .sign_change_i(sign_change_unknown), //this is currently not complete......
+
+        .A_Mant_aligned_o(A_Mant_aligned),
+        .Exp_aligned_o(Exp_aligned),
+        .Sign_aligned_o(Sign_aligned),
+
+        .Exp_mv_sign_o(Exp_mv_sign), //done, Sign_amt_DO
+        .Mv_halt_o(Mv_halt), //, Sft_stop_SO
+
+        .Wallace_sum_aligned_o(Wallace_sum_aligned),
+        .Wallace_carry_aligned_o(Wallace_carry_aligned),
+        .Exp_mv_neg_o(Exp_mv_neg), //done ,Minus_sft_amt_DO
+        .Mant_sticky_sht_out_o(Mant_sticky_sht_out)
     );
 
 
