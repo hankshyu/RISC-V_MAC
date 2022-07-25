@@ -45,7 +45,7 @@ module WallaceTree#(
     wire  [2*PARM_MANT + 2 : 0] csa_sum [9 - 1: 0];
     wire  [2*PARM_MANT + 2 : 0] csa_carry [9 - 1: 0];
     
-    wire  [2*PARM_MANT + 3 : 0] csa_shcy [9 - 1: 0];
+    wire  [2*PARM_MANT + 2 : 0] csa_shcy [9 - 1: 0];
     wire  [9 : 3] sign_extension;
     generate
         genvar i;

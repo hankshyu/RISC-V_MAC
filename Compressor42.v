@@ -44,7 +44,7 @@ module Compressor42 #(
 
     Compressor32 down32(
         .A_i(top_sum),
-        .B_i(top_carry),
+        .B_i({top_carry<<1}),
         .C_i(D_i),
         .Sum_o(Sum_o),
         .Carry_o(Carry_o)
