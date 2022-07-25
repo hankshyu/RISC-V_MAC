@@ -69,17 +69,17 @@ module WallaceTree#(
 
     Compressor32 #(2*PARM_MANT + 3) LV2_0 (.A_i(csa_sum[0] ),.B_i(csa_shcy[0]),.C_i(csa_sum[1] ),.Sum_o(csa_sum[4]),.Carry_o(csa_carry[4]));
     Compressor32 #(2*PARM_MANT + 3) LV2_1 (.A_i(csa_shcy[1]),.B_i(csa_sum[2] ),.C_i(csa_shcy[2]),.Sum_o(csa_sum[5]),.Carry_o(csa_carry[5]));
-    Compressor32 #(2*PARM_MANT + 3) LV2_2 (.A_i(csa_sum[3] ),.B_i(csa_shcy[3]),.C_i(pp_12_i    ),.Sum_o(csa_sum[6]),.Carry_o(csa_carry[6]));
-
-    Compressor32 #(2*PARM_MANT + 3) LV3_0 (.A_i(csa_sum[4] ),.B_i(csa_shcy[4]),.C_i(csa_sum[5] ),.Sum_o(csa_sum[7]),.Carry_o(csa_carry[7]));
-    Compressor32 #(2*PARM_MANT + 3) LV3_1 (.A_i(csa_shcy[5]),.B_i(csa_sum[6] ),.C_i(csa_shcy[6]),.Sum_o(csa_sum[8]),.Carry_o(csa_carry[8]));
+    
+    Compressor32 #(2*PARM_MANT + 3) LV3_0 (.A_i(csa_sum[3] ),.B_i(csa_shcy[3]),.C_i(csa_sum[4] ),.Sum_o(csa_sum[6]),.Carry_o(csa_carry[6]));
+    Compressor32 #(2*PARM_MANT + 3) LV3_1 (.A_i(csa_shcy[4] ),.B_i(csa_shcy[5]),.C_i(csa_sum[5] ),.Sum_o(csa_sum[7]),.Carry_o(csa_carry[7]));
+    Compressor32 #(2*PARM_MANT + 3) LV3_2 (.A_i(csa_sum[6]),.B_i(csa_shcy[6] ),.C_i(csa_sum[7]),.Sum_o(csa_sum[8]),.Carry_o(csa_carry[8]));
     
     Compressor42 #(2*PARM_MANT + 3)
         LV4_Final (
-            .A_i(csa_sum[7]),
-            .B_i(csa_shcy[7]),
+            .A_i(csa_shcy[7]),
+            .B_i(csa_shcy[8]),
             .C_i(csa_sum[8]),
-            .D_i(csa_shcy[8]),
+            .D_i(pp_12_i),
             .Sum_o(wallace_sum_o),
             .Carry_o(wallace_carry_o),
             .hidden_carry_msb(sign_extension[9])
