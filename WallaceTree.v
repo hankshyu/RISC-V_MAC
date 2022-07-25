@@ -73,7 +73,8 @@ module WallaceTree#(
     Compressor32 #(2*PARM_MANT + 3) LV3_0 (.A_i(csa_sum[3] ),.B_i(csa_shcy[3]),.C_i(csa_sum[4] ),.Sum_o(csa_sum[6]),.Carry_o(csa_carry[6]));
     Compressor32 #(2*PARM_MANT + 3) LV3_1 (.A_i(csa_shcy[4] ),.B_i(csa_shcy[5]),.C_i(csa_sum[5] ),.Sum_o(csa_sum[7]),.Carry_o(csa_carry[7]));
     Compressor32 #(2*PARM_MANT + 3) LV3_2 (.A_i(csa_sum[6]),.B_i(csa_shcy[6] ),.C_i(csa_sum[7]),.Sum_o(csa_sum[8]),.Carry_o(csa_carry[8]));
-    
+
+    //output logic
     Compressor42 #(2*PARM_MANT + 3)
         LV4_Final (
             .A_i(csa_shcy[7]),
