@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 07/25/2022 07:42:31 PM
+// Create Date: 07/25/2022 10:50:12 PM
 // Design Name: 
-// Module Name: Aligner
+// Module Name: PreNormalizer
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -19,7 +19,8 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-module Aligner #(
+
+module PreNormalizer #(
     parameter PARM_EXP  = 8,
     parameter PARM_MANT = 23,
     parameter PARM_BIAS = 127
