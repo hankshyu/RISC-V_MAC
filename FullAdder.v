@@ -27,6 +27,6 @@ module FullAdder(
     output sum_o,
     output carry_o);
 
-    assign Sum_o = augend_i ^ addend_i ^ carry_i;
-    assign carry_i = (augend_i & addend_i) || (addend_i & carry_i) || (carry_i & augend_i);
+    assign sum_o = augend_i ^ addend_i ^ carry_i;
+    assign carry_o = (augend_i & addend_i) || (addend_i & carry_i) || (carry_i & augend_i);
 endmodule
