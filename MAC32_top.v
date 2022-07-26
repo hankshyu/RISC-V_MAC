@@ -235,6 +235,19 @@ module MAC32_top #(
     assign Wallace_sum_adjusted = (Exp_mv_sign)? 0 : Wallace_sum;
     assign Wallace_carry_adjusted = (Exp_mv_sign) ? 0 : Wallace_carry;
 
+    //Sums the Wallace outputs with A_Low
+    wire [2*PARM_MANT + 1 : 0] CSA_sum;
+    wire [2*PARM_MANT + 1 : 0] CSA_carry;
+    
+    Compressor32 #(2*PARM_MANT + 2) CarrySaveAdder (
+        .A_i(A_Mant_aligned[2*PARM_MANT + 1 : 0]), //A_low
+        .B_i(Wallace_sum_adjusted[2*PARM_MANT + 1 : 0]),
+        .C_i({Wallace_carry_adjusted[2*PARM_MANT : 0], 1'b0}),
+        .Sum_o(CSA_sum),
+        .Carry_o(CSA_carry)
+    );
+
+    
 
 
 endmodule
