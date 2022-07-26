@@ -47,5 +47,12 @@ module GrandAdder #(
    output [3 * PARM_MANT + 4 : 0]    B_LZA_o,
    output                            Minus_sticky_bit_o,
    output                            Sign_change_o);
-    
+
+//Adjustments to the LSB
+
+wire Carry_postcor = (Exp_mv_sign_i)? 0 : (~(|Sign_cor_i) ^ CSA_carry_i[2*PARM_MANT + 1]);
+
+
+
+
 endmodule
