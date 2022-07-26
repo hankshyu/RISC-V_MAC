@@ -41,12 +41,12 @@ module GrandAdder #(
    input                            C_Nan_i,
    
 
-   output reg [3*PARM_MANT + 4 : 0]         PosSum_o,
-   output                            Sign_o,
-   output [3*PARM_MANT + 4 : 0]    A_LZA_o,
-   output [3*PARM_MANT + 4 : 0]    B_LZA_o,
-   output                            Minus_sticky_bit_o,
-   output                            Sign_change_o);
+   output reg [3*PARM_MANT + 4 : 0] PosSum_o,
+   output                           Sign_o,
+   output [3*PARM_MANT + 4 : 0]     A_LZA_o,
+   output [3*PARM_MANT + 4 : 0]     B_LZA_o,
+   output                           Minus_sticky_bit_o,
+   output                           Sign_change_o);
 
 
 ////////////////////////////////////////////////////////////////////////////////////  
@@ -84,6 +84,22 @@ wire [3*PARM_MANT + 4 : 0] sub_minus = {{BH_i[PARM_MANT+2 : 0], 1'b0} - minus_or
 
 
 assign sign_o = Exp_mv_sign_i? Sign_aligned_i: (sum_uninv[PARM_MANT + 3] ^ Sign_aligned_i);
-assign Sign_change_o = 
+assign Sign_change_o = sum_uninv[PARM_MANT + 3];
+
+
+////////////////////////////////////////////////////////////////////////////////////
+//                  Sticky_bit                                                    //
+////////////////////////////////////////////////////////////////////////////////////
+// for Sign_amt_DI=1'b1, if is difficult to compute combined with other cases. 
+// When addition,   | (b*c) ; when substruction, | (b*c) for rounding excption trunction. 
+
+   assign Minus_sticky_bit_o = Exp_mv_sign_i && (minus_or_mantbc);
+
+/////////////////////////////////////////////////////////////////////////////////////
+//                  to LZA                                                         //
+/////////////////////////////////////////////////////////////////////////////////////
+
+   assign A_LZA_DO = PosSum_o;
+   assign B_LZA_DO = 74'd0 ;
 
 endmodule
