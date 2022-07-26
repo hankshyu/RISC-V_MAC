@@ -229,11 +229,11 @@ module MAC32_top #(
     );
 
     //adjust wallace sum to send in... 
-    wire [2*PARM_MANT + 2 : 0] Wallace_sum_aligned;
-    wire [2*PARM_MANT + 2 : 0] Wallace_carry_aligned;
+    wire [2*PARM_MANT + 2 : 0] Wallace_sum_adjusted;
+    wire [2*PARM_MANT + 2 : 0] Wallace_carry_adjusted;
     
-    assign Wallace_sum_aligned = (Exp_mv_sign)? 0 : Wallace_sum;
-    assign Wallace_carry_aligned = (Exp_mv_sign) ? 0 : Wallace_carry;
+    assign Wallace_sum_adjusted = (Exp_mv_sign)? 0 : Wallace_sum;
+    assign Wallace_carry_adjusted = (Exp_mv_sign) ? 0 : Wallace_carry;
 
 
 
