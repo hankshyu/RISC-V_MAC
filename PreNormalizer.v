@@ -52,7 +52,6 @@ module PreNormalizer #(
     wire [PARM_EXP + 1 : 0] Exp_d;
     wire [PARM_EXP + 1 : 0] Exp_mv;
 
-
     assign Exp_d = A_Exp_i - B_Exp_i - C_Exp_i + PARM_BIAS; // d = expA - (expB + expC - 127)
     assign Exp_mv = 27 - A_Exp_i + B_Exp_i + C_Exp_i - PARM_BIAS; // mv = 27 - d 
     assign Exp_mv_neg_o = -27 + A_Exp_i - B_Exp_i - C_Exp_i + PARM_BIAS;
