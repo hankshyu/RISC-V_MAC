@@ -25,7 +25,7 @@ module GrandAdder #(
 ) (
    input [2*PARM_MANT + 1 : 0]      CSA_sum_i,  // The sum of the former unit  
    input [2*PARM_MANT + 1 : 0]      CSA_carry_i,  // The carry-out of the former unit
-   input                            Sub_SI,
+   input                            Sub_SI_i,
    input [2 : 0]                    Sign_cor_i,//strange name
    input                            Exp_mv_sign_i,
    input                            Mv_halt_i,
@@ -41,10 +41,10 @@ module GrandAdder #(
    input                            C_Nan_i,
    
 
-   output [3 * PARM_MANT + 4 : 0]    PosSum_o,
+   output [3*PARM_MANT + 4 : 0]    PosSum_o,
    output                            Sign_o,
-   output [3 * PARM_MANT + 4 : 0]    A_LZA_o,
-   output [3 * PARM_MANT + 4 : 0]    B_LZA_o,
+   output [3*PARM_MANT + 4 : 0]    A_LZA_o,
+   output [3*PARM_MANT + 4 : 0]    B_LZA_o,
    output                            Minus_sticky_bit_o,
    output                            Sign_change_o);
 
@@ -52,6 +52,15 @@ module GrandAdder #(
 
 wire Carry_postcor = (Exp_mv_sign_i)? 0 : (~(|Sign_cor_i) ^ CSA_carry_i[2*PARM_MANT + 1]);
 
+wire Carry_uninv_ls;
+wire [2*PARM_MANT+1 : 0] Sum_uninv_ld;
+
+assign {Carry_uninv_ls, Sum_uninv_ld} =  CSA_sum_i + {Carry_postcor, CSA_carry_i[2*PARM_MANT : 0], Sub_SI_i};
+
+wire Carry_inv_ls;
+wire [2*PARM_MANT+2 : 0] Sum_inv_ld;
+
+assign {Carry_inv_ls, Sum_inv_ld} = {1'b1, ~CSA_sum_i, 1'b1} + {~Carry_postcor, ~CSA_carry_i[2*PARM_MANT : 0], ~Sub_SI_i};
 
 
 
