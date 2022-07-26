@@ -78,7 +78,8 @@ module PreNormalizer #(
         if(Exp_mv_sign_o)
             A_Mant_aligned_o = (A_Mant_i << 50);
         else if(~Mv_halt_o)
-            A_Mant_aligned_o = {Sub_Sign_i, Sub_Sign_i^A_Mant_aligned};
+            //A_Mant_aligned_o = {Sub_Sign_i, Sub_Sign_i^A_Mant_aligned};
+            A_Mant_aligned_o= Sub_Sign_i ? {1'b1,~A_Mant_aligned}:{1'b0,A_Mant_aligned};
         else 
             A_Mant_aligned_o = 0;
     end
