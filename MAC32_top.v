@@ -135,7 +135,7 @@ module MAC32_top #(
     //denormalized number has exponent 1 
     wire [PARM_EXP - 1: 0] A_Exp = A_DeN? PARM_EXP_ONE : A_i[PARM_XLEN - 2 : PARM_MANT];
     wire [PARM_EXP - 1: 0] B_Exp = B_DeN? PARM_EXP_ONE : B_i[PARM_XLEN - 2 : PARM_MANT];
-    wire [PARM_EXP - 1: 0] C_Exp = C_DeN? PARM_EXP_ONE : B_i[PARM_XLEN - 2 : PARM_MANT];
+    wire [PARM_EXP - 1: 0] C_Exp = C_DeN? PARM_EXP_ONE : C_i[PARM_XLEN - 2 : PARM_MANT];
     
     wire [PARM_MANT : 0] A_Mant = {A_Leadingbit, A_i[PARM_MANT - 1 : 0]};
     wire [PARM_MANT : 0] B_Mant = {B_Leadingbit, B_i[PARM_MANT - 1 : 0]};
@@ -195,7 +195,7 @@ module MAC32_top #(
     wire [2*PARM_MANT + 2 : 0] Wallace_carry_aligned;
     wire [PARM_EXP + 1 : 0] Exp_mv_neg;
     wire Mant_sticky_sht_out;
-    wire sign_change_unknown = 1;
+    wire sign_change_unknown = 1'b0;
     //global signals ...
     wire Sign_aligned;
     wire Exp_mv_sign;
