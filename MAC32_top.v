@@ -166,7 +166,7 @@ module MAC32_top #(
     //Sum 13 partial Product by Wallace Tree
     wire [2*PARM_MANT + 2 : 0] Wallace_sum;
     wire [2*PARM_MANT + 2 : 0] Wallace_carry;
-    wire Wallace_msb_cor;
+    wire Wallace_suppression_sign_extension;
 
     WallaceTree wallaceTree(
         .pp_00_i(booth_PP[ 0]),
@@ -185,7 +185,7 @@ module MAC32_top #(
         
         .wallace_sum_o(Wallace_sum),
         .wallace_carry_o(Wallace_carry),
-        .suppression_sign_extension_o(Wallace_msb_cor)
+        .suppression_sign_extension_o(Wallace_suppression_sign_extension)
     );
     
     //Prenormalization of the augend, in parallel with multiplication.
@@ -201,9 +201,12 @@ module MAC32_top #(
     assign Mv_halt = (~Exp_mv_sign) & (Exp_mv[PARM_EXP : 0] > 73); //right shift(+) is out of range, which is 74 or more, Sft_stop_SO
 
     //signals for prenormalizer:
-    wire sign_change_unknown = 1'b0;
+    wire SignFlip_ADD_PRN;
     
-    wire [74 : 0] A_Mant_aligned;
+    wire [3*PARM_MANT + 5 : 0] A_Mant_aligned;
+    wire [PARM_MANT + 3 : 0] A_Mant_aligned_high = A_Mant_aligned[3*PARM_MANT + 5 : 2*PARM_MANT + 2];
+    wire [2*PARM_MANT + 1 : 0] A_Mant_aligned_low = A_Mant_aligned[2*PARM_MANT + 1 : 0];
+    
     wire signed [PARM_EXP + 1 : 0] Exp_aligned;
     wire Mant_sticky_sht_out;
 
@@ -217,7 +220,7 @@ module MAC32_top #(
         .B_Exp_i(B_Exp),
         .C_Exp_i(C_Exp),
         .A_Mant_i(A_Mant),
-        .sign_change_i(sign_change_unknown), //this is currently not complete......
+        .Sign_flip_i(SignFlip_ADD_PRN), //this is currently not complete......
         .Mv_halt_i(Mv_halt),
         .Exp_mv_i(Exp_mv),
         .Exp_mv_sign_i(Exp_mv_sign),
@@ -240,14 +243,54 @@ module MAC32_top #(
     wire [2*PARM_MANT + 1 : 0] CSA_carry;
     
     Compressor32 #(2*PARM_MANT + 2) CarrySaveAdder (
-        .A_i(A_Mant_aligned[2*PARM_MANT + 1 : 0]), //A_low
+        .A_i(A_Mant_aligned_low), //A_low
         .B_i(Wallace_sum_adjusted[2*PARM_MANT + 1 : 0]),
         .C_i({Wallace_carry_adjusted[2*PARM_MANT : 0], 1'b0}),
         .Sum_o(CSA_sum),
         .Carry_o(CSA_carry)
     );
 
+    //correction based sign extenson is also in grand-adder.
+    //input signals
+
+    wire Wallace_adjusted_msb = Wallace_sum_adjusted[2*PARM_MANT + 2] & Wallace_carry_adjusted[2*PARM_MANT + 1];
+    wire [2:0] Adder_Correlated_sign = {Wallace_suppression_sign_extension, Wallace_carry_adjusted[2*PARM_MANT + 2] , Wallace_adjusted_msb};
     
+    //output signals
+    wire [73 : 0] PosSum;
+    wire [3*PARM_MANT + 4 : 0] A_LZA;
+    wire [3*PARM_MANT + 4 : 0] B_LZA;
+    wire Minus_sticky_bit;
+    
+    wire Adder_sign; //global signal for Sign_out_D
+
+   GrandAdder grandadder (
+    .CSA_sum_i(CSA_sum),  
+    .CSA_carry_i(CSA_carry),
+    .Sub_Sign_i(Sub_Sign),   
+    .Sign_cor_i(Adder_Correlated_sign),
+   
+    .Exp_mv_sign_i(Exp_mv_sign),
+    .Mv_halt_i(Mv_halt),
+    .Exp_mv_neg_i(Exp_mv_neg), 
+    .Sign_aligned_i(Sign_aligned),
+   
+    .A_Mant_aligned_high(A_Mant_aligned_high), //strange name
+   
+    .B_Inf_i(B_Inf),
+    .C_Inf_i(C_Inf),
+    .B_Zero_i(B_Zero),
+    .C_Zero_i(C_Zero), 
+    .B_NaN_i(B_NaN),
+    .C_Nan_i(C_NaN),
+   
+   .PosSum_o(PosSum),
+   .Sign_o(Adder_sign),
+   .A_LZA_o(A_LZA),
+   .B_LZA_o(B_LZA),
+   .Minus_sticky_bit_o(Minus_sticky_bit),
+   .Sign_change_o(SignFlip_ADD_PRN)
+   );
 
 
 endmodule
