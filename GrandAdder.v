@@ -30,7 +30,6 @@ module GrandAdder #(
     input Wallace_suppression_sign_extension_i,
     input [2*PARM_MANT + 2 : 2*PARM_MANT + 1] Wallace_carry_adjusted_2msb_i,  
     input Wallace_sum_adjusted_msb_i,     
-//     input [2 : 0]                    Adder_Correlated_sign_i,
 
     input                            Exp_mv_sign_i,
     input                            Mv_halt_i,
