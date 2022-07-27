@@ -276,7 +276,7 @@ module MAC32_top #(
     .Exp_mv_neg_i(Exp_mv_neg), 
     .Sign_aligned_i(Sign_aligned),
    
-    .A_Mant_aligned_high(A_Mant_aligned_high), //strange name
+    .A_Mant_aligned_high(A_Mant_aligned_high),
    
     .B_Inf_i(B_Inf),
     .C_Inf_i(C_Inf),
