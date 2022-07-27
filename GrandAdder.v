@@ -26,12 +26,14 @@ module GrandAdder #(
    input [2*PARM_MANT + 1 : 0]      CSA_sum_i,  // The sum of the former unit  
    input [2*PARM_MANT + 1 : 0]      CSA_carry_i,  // The carry-out of the former unit
    input                            Sub_Sign_i,
-   input [2 : 0]                    Sign_cor_i,//strange name
+   input [2 : 0]                    Adder_Correlated_sign_i,
+   
    input                            Exp_mv_sign_i,
    input                            Mv_halt_i,
-   input [PARM_MANT + 3 : 0]        BH_i, //strange name
-   input                            Sign_aligned_i,
    input [PARM_EXP + 1 : 0]         Exp_mv_neg_i, 
+   input                            Sign_aligned_i,
+   
+   input [PARM_MANT + 3 : 0]        A_Mant_aligned_high, 
    
    input                            B_Inf_i,
    input                            C_Inf_i,
@@ -42,18 +44,18 @@ module GrandAdder #(
    
 
    output reg [3*PARM_MANT + 4 : 0] PosSum_o,
-   output                           Sign_o,
+   output                           Adder_sign_o,
    output [3*PARM_MANT + 4 : 0]     A_LZA_o,
    output [3*PARM_MANT + 4 : 0]     B_LZA_o,
    output                           Minus_sticky_bit_o,
-   output                           Sign_change_o);
+   output                           Sign_flip_o);
 
 
 ////////////////////////////////////////////////////////////////////////////////////  
 //                  LSBs                                                          //
 ////////////////////////////////////////////////////////////////////////////////////
 
-    wire Carry_postcor = (Exp_mv_sign_i)? 0 : (~(|Sign_cor_i) ^ CSA_carry_i[2*PARM_MANT + 1]);
+    wire Carry_postcor = (Exp_mv_sign_i)? 0 : (~(|Adder_Correlated_sign_i) ^ CSA_carry_i[2*PARM_MANT + 1]);
 
     wire Carry_uninv_ls;
     wire [2*PARM_MANT+1 : 0] Sum_uninv_ld;
@@ -74,12 +76,12 @@ module GrandAdder #(
     wire [PARM_MANT + 3 : 0]sum_uninv_hd;
     wire [PARM_MANT + 3 : 0]sum_inv_hd;
 
-    assign {Carryout_uninv_hs, sum_uninv_hd} = (Carry_uninv_ls)? BH_i + 1 : BH_i;
-    assign {Carryout_inv_hs, sum_inv_hd} = (Carry_inv_ls)? ~BH_i : ~BH_i - 1;
+    assign {Carryout_uninv_hs, sum_uninv_hd} = (Carry_uninv_ls)? A_Mant_aligned_high + 1 : A_Mant_aligned_high;
+    assign {Carryout_inv_hs, sum_inv_hd} = (Carry_inv_ls)? ~A_Mant_aligned_high : ~A_Mant_aligned_high - 1;
 
     wire minus_or_mantbc = ~(B_Inf_i | C_Inf_i | B_Zero_i | C_Zero_i | B_NaN_i | C_Nan_i);
 
-    wire [3*PARM_MANT + 4 : 0] sub_minus = {{BH_i[PARM_MANT+2 : 0], 1'b0} - minus_or_mantbc, 47'd0};
+    wire [3*PARM_MANT + 4 : 0] sub_minus = {{A_Mant_aligned_high[PARM_MANT+2 : 0], 1'b0} - minus_or_mantbc, 47'd0};
    
     //outputlogic
     
@@ -87,15 +89,15 @@ module GrandAdder #(
         if(Mv_halt_i)
             PosSum_o = {{26'd0}, Sum_uninv_ld};
         else if(Exp_mv_sign_i)
-            PosSum_o = Sub_Sign_i? sub_minus : {BH_i[PARM_MANT+2 : 0], 48'd0};
+            PosSum_o = Sub_Sign_i? sub_minus : {A_Mant_aligned_high[PARM_MANT+2 : 0], 48'd0};
         else if(sum_uninv_hd[PARM_MANT + 3])
             PosSum_o = {sum_inv_hd[PARM_MANT + 2 : 0], Sum_inv_ld[2*PARM_MANT + 2 : 1]};
         else
             PosSum_o = {sum_uninv_hd[PARM_MANT + 2 : 0], Sum_uninv_ld};
     end
 
-    assign sign_o = Exp_mv_sign_i? Sign_aligned_i: (sum_uninv_hd[PARM_MANT + 3] ^ Sign_aligned_i);
-    assign Sign_change_o = sum_uninv_hd[PARM_MANT + 3];
+    assign Adder_sign_o = Exp_mv_sign_i? Sign_aligned_i: (sum_uninv_hd[PARM_MANT + 3] ^ Sign_aligned_i);
+    assign Sign_flip_o = sum_uninv_hd[PARM_MANT + 3];
 
 
 ////////////////////////////////////////////////////////////////////////////////////
