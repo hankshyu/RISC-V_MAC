@@ -268,8 +268,9 @@ module MAC32_top #(
     .CSA_sum_i(CSA_sum),  
     .CSA_carry_i(CSA_carry),
     .Sub_Sign_i(Sub_Sign),   
-    .Sign_cor_i(Adder_Correlated_sign),
-   
+    .Adder_Correlated_sign_i(Adder_Correlated_sign),
+    
+    //signals from exponent processors and prealigner
     .Exp_mv_sign_i(Exp_mv_sign),
     .Mv_halt_i(Mv_halt),
     .Exp_mv_neg_i(Exp_mv_neg), 
@@ -285,11 +286,11 @@ module MAC32_top #(
     .C_Nan_i(C_NaN),
    
    .PosSum_o(PosSum),
-   .Sign_o(Adder_sign),
+   .Adder_sign_o(Adder_sign),
    .A_LZA_o(A_LZA),
    .B_LZA_o(B_LZA),
    .Minus_sticky_bit_o(Minus_sticky_bit),
-   .Sign_change_o(SignFlip_ADD_PRN)
+   .Sign_flip_o(SignFlip_ADD_PRN)
    );
 
 
