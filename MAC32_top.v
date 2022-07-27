@@ -253,8 +253,8 @@ module MAC32_top #(
     //correction based sign extenson is also in grand-adder.
     //input signals
 
-    wire Wallace_adjusted_msb = Wallace_sum_adjusted[2*PARM_MANT + 2] & Wallace_carry_adjusted[2*PARM_MANT + 1];
-    wire [2:0] Adder_Correlated_sign = {Wallace_suppression_sign_extension, Wallace_carry_adjusted[2*PARM_MANT + 2] , Wallace_adjusted_msb};
+    // wire Wallace_adjusted_msb = Wallace_sum_adjusted[2*PARM_MANT + 2] & Wallace_carry_adjusted[2*PARM_MANT + 1];
+    // wire [2:0] Adder_Correlated_sign = {Wallace_suppression_sign_extension, Wallace_carry_adjusted[2*PARM_MANT + 2] , Wallace_adjusted_msb};
     
     //output signals
     wire [73 : 0] PosSum;
@@ -267,8 +267,12 @@ module MAC32_top #(
    GrandAdder grandadder (
     .CSA_sum_i(CSA_sum),  
     .CSA_carry_i(CSA_carry),
-    .Sub_Sign_i(Sub_Sign),   
-    .Adder_Correlated_sign_i(Adder_Correlated_sign),
+    .Sub_Sign_i(Sub_Sign),
+
+    .Wallace_suppression_sign_extension_i(Wallace_suppression_sign_extension),
+    .Wallace_carry_adjusted_2msb_i(Wallace_carry_adjusted[2*PARM_MANT + 2 : 2*PARM_MANT + 1]),  
+    .Wallace_sum_adjusted_msb_i(Wallace_sum_adjusted[2*PARM_MANT + 2]),  
+    //.Adder_Correlated_sign_i(Adder_Correlated_sign),
     
     //signals from exponent processors and prealigner
     .Exp_mv_sign_i(Exp_mv_sign),
