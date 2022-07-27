@@ -64,14 +64,13 @@ module GrandAdder #(
     wire Carry_postcor = (Exp_mv_sign_i)? 0 : ((~adder_Correlated_sign) ^ CSA_carry_i[2*PARM_MANT + 1]);
 
 
-    wire low_carry;
     wire [2*PARM_MANT+1 : 0] low_sum;
-    assign {low_carry, low_sum} =  CSA_sum_i + {Carry_postcor, CSA_carry_i[2*PARM_MANT : 0], Sub_Sign_i};
-
-    wire low_carry_inv;
+    wire low_carry;
     wire [2*PARM_MANT+2 : 0] low_sum_inv;
+    wire low_carry_inv;
+
+    assign {low_carry, low_sum} =  CSA_sum_i + {Carry_postcor, CSA_carry_i[2*PARM_MANT : 0], Sub_Sign_i};
     assign {low_carry_inv, low_sum_inv} = 2 + {1'b1, ~CSA_sum_i, 1'b1} + {~Carry_postcor, ~CSA_carry_i[2*PARM_MANT : 0], ~Sub_Sign_i, 1'b1};
-    
     //to is added, dont pick if Sub_SI = 0 
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -87,25 +86,26 @@ module GrandAdder #(
     assign {high_carry, high_sum} = (low_carry)? A_Mant_aligned_high + 1 : A_Mant_aligned_high;
     assign {high_carry_inv, high_sum_inv} = (low_carry_inv)? ~A_Mant_aligned_high : ~A_Mant_aligned_high - 1;
 
-    wire minus_or_mantbc = ~(B_Inf_i | C_Inf_i | B_Zero_i | C_Zero_i | B_NaN_i | C_Nan_i);
+    wire bc_strange = ~(B_Inf_i | C_Inf_i | B_Zero_i | C_Zero_i | B_NaN_i | C_Nan_i);
 
-    wire [3*PARM_MANT + 4 : 0] sub_minus = {{A_Mant_aligned_high[PARM_MANT+2 : 0], 1'b0} - minus_or_mantbc, 47'd0};
-   
+    wire [3*PARM_MANT + 4 : 0] sub_minus = {{A_Mant_aligned_high[PARM_MANT+2 : 0], 1'b0} - bc_strange, 47'd0};
+    
     //outputlogic
+    
+    assign Sign_flip_o = high_sum[PARM_MANT + 3];
+    assign Adder_sign_o = Exp_mv_sign_i? Sign_aligned_i: (Sign_flip_o ^ Sign_aligned_i);
     
     always @(*) begin
         if(Mv_halt_i)
             PosSum_o = {{26'd0}, low_sum};
-        else if(Exp_mv_sign_i)
+        else if(Exp_mv_sign_i) //b*c does not participate
             PosSum_o = Sub_Sign_i? sub_minus : {A_Mant_aligned_high[PARM_MANT+2 : 0], 48'd0};
-        else if(high_sum[PARM_MANT + 3])
+        else if(Sign_flip_o)
             PosSum_o = {high_sum_inv[PARM_MANT + 2 : 0], low_sum_inv[2*PARM_MANT + 2 : 1]};
         else
             PosSum_o = {high_sum[PARM_MANT + 2 : 0], low_sum};
     end
 
-    assign Adder_sign_o = Exp_mv_sign_i? Sign_aligned_i: (high_sum[PARM_MANT + 3] ^ Sign_aligned_i);
-    assign Sign_flip_o = high_sum[PARM_MANT + 3];
 
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -114,9 +114,9 @@ module GrandAdder #(
 // for Sign_amt_DI=1'b1, if is difficult to compute combined with other cases. 
 // When addition,   | (b*c) ; when substruction, | (b*c) for rounding excption trunction. 
 
-   assign Minus_sticky_bit_o = Exp_mv_sign_i && (minus_or_mantbc);
+   assign Minus_sticky_bit_o = Exp_mv_sign_i && (bc_strange);
 
-/////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// /////////////////
 //                  to LZA                                                         //
 /////////////////////////////////////////////////////////////////////////////////////
 
