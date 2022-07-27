@@ -112,7 +112,7 @@ module GrandAdder #(
 //                  to LZA                                                         //
 /////////////////////////////////////////////////////////////////////////////////////
 
-   assign A_LZA_DO = PosSum_o;
-   assign B_LZA_DO = 74'd0 ;
+   assign A_LZA_o = PosSum_o;
+   assign B_LZA_o = 74'd0 ;
 
 endmodule
