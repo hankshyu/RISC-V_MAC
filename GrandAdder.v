@@ -68,7 +68,6 @@ module GrandAdder #(
     wire [2*PARM_MANT+1 : 0] low_sum;
     assign {low_carry, low_sum} =  CSA_sum_i + {Carry_postcor, CSA_carry_i[2*PARM_MANT : 0], Sub_Sign_i};
 
-
     wire low_carry_inv;
     wire [2*PARM_MANT+2 : 0] low_sum_inv;
     assign {low_carry_inv, low_sum_inv} = 2 + {1'b1, ~CSA_sum_i, 1'b1} + {~Carry_postcor, ~CSA_carry_i[2*PARM_MANT : 0], ~Sub_Sign_i, 1'b1};
@@ -80,11 +79,13 @@ module GrandAdder #(
 ////////////////////////////////////////////////////////////////////////////////////
     //Incrementer
 
-    wire [PARM_MANT + 3 : 0]sum_uninv_hd;
-    wire [PARM_MANT + 3 : 0]sum_inv_hd;
+    wire [PARM_MANT + 3 : 0]high_sum;
+    wire high_carry; 
+    wire [PARM_MANT + 3 : 0]high_sum_inv;
+    wire high_carry_inv;
 
-    assign {Carryout_uninv_hs, sum_uninv_hd} = (low_carry)? A_Mant_aligned_high + 1 : A_Mant_aligned_high;
-    assign {Carryout_inv_hs, sum_inv_hd} = (low_carry_inv)? ~A_Mant_aligned_high : ~A_Mant_aligned_high - 1;
+    assign {high_carry, high_sum} = (low_carry)? A_Mant_aligned_high + 1 : A_Mant_aligned_high;
+    assign {high_carry_inv, high_sum_inv} = (low_carry_inv)? ~A_Mant_aligned_high : ~A_Mant_aligned_high - 1;
 
     wire minus_or_mantbc = ~(B_Inf_i | C_Inf_i | B_Zero_i | C_Zero_i | B_NaN_i | C_Nan_i);
 
@@ -97,14 +98,14 @@ module GrandAdder #(
             PosSum_o = {{26'd0}, low_sum};
         else if(Exp_mv_sign_i)
             PosSum_o = Sub_Sign_i? sub_minus : {A_Mant_aligned_high[PARM_MANT+2 : 0], 48'd0};
-        else if(sum_uninv_hd[PARM_MANT + 3])
-            PosSum_o = {sum_inv_hd[PARM_MANT + 2 : 0], low_sum_inv[2*PARM_MANT + 2 : 1]};
+        else if(high_sum[PARM_MANT + 3])
+            PosSum_o = {high_sum_inv[PARM_MANT + 2 : 0], low_sum_inv[2*PARM_MANT + 2 : 1]};
         else
-            PosSum_o = {sum_uninv_hd[PARM_MANT + 2 : 0], low_sum};
+            PosSum_o = {high_sum[PARM_MANT + 2 : 0], low_sum};
     end
 
-    assign Adder_sign_o = Exp_mv_sign_i? Sign_aligned_i: (sum_uninv_hd[PARM_MANT + 3] ^ Sign_aligned_i);
-    assign Sign_flip_o = sum_uninv_hd[PARM_MANT + 3];
+    assign Adder_sign_o = Exp_mv_sign_i? Sign_aligned_i: (high_sum[PARM_MANT + 3] ^ Sign_aligned_i);
+    assign Sign_flip_o = high_sum[PARM_MANT + 3];
 
 
 ////////////////////////////////////////////////////////////////////////////////////
