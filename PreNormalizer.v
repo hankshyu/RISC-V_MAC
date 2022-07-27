@@ -33,7 +33,7 @@ module PreNormalizer #(
     input [PARM_EXP - 1 : 0] B_Exp_i,
     input [PARM_EXP - 1 : 0] C_Exp_i,
     input [PARM_MANT : 0] A_Mant_i,
-    input sign_change_i, //this is unknown,
+    input Sign_flip_i, 
     input Mv_halt_i,
     input [PARM_EXP + 1 : 0] Exp_mv_i,
     input Exp_mv_sign_i,
@@ -68,7 +68,7 @@ module PreNormalizer #(
     wire [PARM_MANT : 0] Drop_bits_2complement = (~Drop_bits) + 1; //2's complemet of Drop_bits
     //output logic for Mant_sticky_sht_out_o
     always @(*) begin
-        if(Sub_Sign_i & (~sign_change_i))
+        if(Sub_Sign_i & (~Sign_flip_i))
             Mant_sticky_sht_out_o = (Mv_halt_i)? (|A_Mant_2compelemnt) : (|Drop_bits_2complement);
         else
             Mant_sticky_sht_out_o = (Mv_halt_i)? (|A_Mant_i) : (|Drop_bits);
