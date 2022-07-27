@@ -64,13 +64,13 @@ module GrandAdder #(
     wire Carry_postcor = (Exp_mv_sign_i)? 0 : ((~adder_Correlated_sign) ^ CSA_carry_i[2*PARM_MANT + 1]);
 
 
-    wire [2*PARM_MANT+1 : 0] low_sum;
+    wire [2*PARM_MANT + 1 : 0] low_sum;
     wire low_carry;
-    wire [2*PARM_MANT+2 : 0] low_sum_inv;
+    wire [2*PARM_MANT + 1 : 0] low_sum_inv;
     wire low_carry_inv;
 
     assign {low_carry, low_sum} =  CSA_sum_i + {Carry_postcor, CSA_carry_i[2*PARM_MANT : 0], Sub_Sign_i};
-    assign {low_carry_inv, low_sum_inv} = 2'b10 + {1'b1, ~CSA_sum_i, 1'b1} + {~Carry_postcor, ~CSA_carry_i[2*PARM_MANT : 0], ~Sub_Sign_i, 1'b1};
+    assign {low_carry_inv, low_sum_inv} = 2'b10 + {1'b1, ~CSA_sum_i} + {~Carry_postcor, ~CSA_carry_i[2*PARM_MANT : 0], ~Sub_Sign_i};
     //to is added, dont pick if Sub_SI = 0 
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -101,7 +101,7 @@ module GrandAdder #(
         else if(Exp_mv_sign_i) //b*c does not participate
             PosSum_o = Sub_Sign_i? sub_minus : {A_Mant_aligned_high[PARM_MANT+2 : 0], 48'd0};
         else if(Sign_flip_o)
-            PosSum_o = {high_sum_inv[PARM_MANT + 2 : 0], low_sum_inv[2*PARM_MANT + 2 : 1]};
+            PosSum_o = {high_sum_inv[PARM_MANT + 2 : 0], low_sum_inv};
         else
             PosSum_o = {high_sum[PARM_MANT + 2 : 0], low_sum};
     end
