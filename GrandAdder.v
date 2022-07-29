@@ -53,10 +53,7 @@ module GrandAdder #(
     output                           Sign_flip_o);
 
 
-////////////////////////////////////////////////////////////////////////////////////  
-//                  LSBs                                                          //
-////////////////////////////////////////////////////////////////////////////////////
-    //End Around Carry Adders
+    //End Around Carry Adders, LSBs
     wire wallace_adjusted_msb = Wallace_sum_adjusted_msb_i & Wallace_carry_adjusted_2msb_i[2*PARM_MANT + 1];
     wire adder_Correlated_sign = Wallace_suppression_sign_extension_i | Wallace_carry_adjusted_2msb_i[2*PARM_MANT + 2] | wallace_adjusted_msb;
 
@@ -72,10 +69,7 @@ module GrandAdder #(
     assign {low_carry_inv, low_sum_inv} = 2'b10 + {1'b1, ~CSA_sum_i} + {~Carry_postcor, ~CSA_carry_i[2*PARM_MANT : 0], ~Sub_Sign_i};
     //to is added, dont pick if Sub_SI = 0 
 
-////////////////////////////////////////////////////////////////////////////////////
-//                  MSBs (Incrementer)                                            //
-////////////////////////////////////////////////////////////////////////////////////
-    //Incrementer
+    //Incrementer, Work on MSBs
 
     wire [PARM_MANT + 3 : 0]high_sum;
     wire high_carry; 
@@ -85,9 +79,9 @@ module GrandAdder #(
     assign {high_carry, high_sum} = (low_carry)? A_Mant_aligned_high + 1 : A_Mant_aligned_high;
     assign {high_carry_inv, high_sum_inv} = (low_carry_inv)? ~A_Mant_aligned_high : ~A_Mant_aligned_high - 1;
 
-    wire bc_strange = ~(B_Inf_i | C_Inf_i | B_Zero_i | C_Zero_i | B_NaN_i | C_Nan_i);
+    wire bc_not_strange = ~(B_Inf_i | C_Inf_i | B_Zero_i | C_Zero_i | B_NaN_i | C_Nan_i);
 
-    wire [3*PARM_MANT + 4 : 0] sub_minus = {{A_Mant_aligned_high[PARM_MANT+2 : 0], 1'b0} - bc_strange, 47'd0};
+    wire [3*PARM_MANT + 4 : 0] sub_minus = {{A_Mant_aligned_high[PARM_MANT+2 : 0], 1'b0} - bc_not_strange, 47'd0};
     
     //outputlogic
     
@@ -111,7 +105,7 @@ module GrandAdder #(
 // for Sign_amt_DI=1'b1, if is difficult to compute combined with other cases. 
 // When addition,   | (b*c) ; when substruction, | (b*c) for rounding excption trunction. 
 
-   assign Minus_sticky_bit_o = Exp_mv_sign_i && (bc_strange);
+   assign Minus_sticky_bit_o = Exp_mv_sign_i && (bc_not_strange);
 
 //////////////////////////////////////////////////////////////////// /////////////////
 //                  to LZA                                                         //
