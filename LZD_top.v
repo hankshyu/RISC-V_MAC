@@ -31,11 +31,11 @@ module LZD_top #(
     wire [7:0] base_zeros;
     generate
         genvar i;
-        for(i = 0; i < 7; i = i+1)begin
+        for(i = 0; i < 8; i = i+1)begin
             LZD_Base #(8) lzd_base(
-                .data_i[],
-                .zero_i()
-            )
+                .base_data_i(data_i[72 - i*8 +: 8]),
+                .zero_i(base_zeros[i])
+            );
         end
     endgenerate
 
