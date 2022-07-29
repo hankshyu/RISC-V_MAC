@@ -36,7 +36,7 @@ module GrandAdder #(
     input [PARM_EXP + 1 : 0]         Exp_mv_neg_i, 
     input                            Sign_aligned_i,
 
-    input [PARM_MANT + 3 : 0]        A_Mant_aligned_high, 
+    input [PARM_MANT + 3 : 0]        A_Mant_aligned_high_i, 
 
     input                            B_Inf_i,
     input                            C_Inf_i,
@@ -54,10 +54,11 @@ module GrandAdder #(
 
 
     //End Around Carry Adders, LSBs
-    wire wallace_adjusted_msb = Wallace_sum_adjusted_msb_i & Wallace_carry_adjusted_2msb_i[2*PARM_MANT + 1];
-    wire adder_Correlated_sign = Wallace_suppression_sign_extension_i | Wallace_carry_adjusted_2msb_i[2*PARM_MANT + 2] | wallace_adjusted_msb;
+    wire wallace_msb_G = Wallace_sum_adjusted_msb_i & Wallace_carry_adjusted_2msb_i[2*PARM_MANT + 1];
+    //if Wallace's msb is 1, or will carry to 1
+    wire adder_Correlated_sign = Wallace_suppression_sign_extension_i | Wallace_carry_adjusted_2msb_i[2*PARM_MANT + 2] | wallace_msb_G;
 
-    wire Carry_postcor = (Exp_mv_sign_i)? 0 : ((~adder_Correlated_sign) ^ CSA_carry_i[2*PARM_MANT + 1]);
+    wire Carry_postcor = (~Exp_mv_sign_i) & ((~adder_Correlated_sign) ^ CSA_carry_i[2*PARM_MANT + 1]);
 
 
     wire [2*PARM_MANT + 1 : 0] low_sum;
@@ -65,23 +66,35 @@ module GrandAdder #(
     wire [2*PARM_MANT + 1 : 0] low_sum_inv;
     wire low_carry_inv;
 
-    assign {low_carry, low_sum} =  CSA_sum_i + {Carry_postcor, CSA_carry_i[2*PARM_MANT : 0], Sub_Sign_i};
-    assign {low_carry_inv, low_sum_inv} = 2'b10 + {1'b1, ~CSA_sum_i} + {~Carry_postcor, ~CSA_carry_i[2*PARM_MANT : 0], ~Sub_Sign_i};
-    //to is added, dont pick if Sub_SI = 0 
+    EACAdder #(PARM_MANT) eacadder(
+        .CSA_sum_i(CSA_sum_i),
+        .CSA_carry_i(CSA_carry_i),
+        .Carry_postcor_i(Carry_postcor),
+        .Sub_Sign_i(Sub_Sign_i),
+
+        .low_sum_o(low_sum),
+        .low_carry_o(low_carry),
+        .low_sum_inv_o(low_sum_inv),
+        .low_carry_inv_o(low_carry_inv)
+    );
 
     //Incrementer, Work on MSBs
 
     wire [PARM_MANT + 3 : 0]high_sum;
-    wire high_carry; 
     wire [PARM_MANT + 3 : 0]high_sum_inv;
-    wire high_carry_inv;
 
-    assign {high_carry, high_sum} = (low_carry)? A_Mant_aligned_high + 1 : A_Mant_aligned_high;
-    assign {high_carry_inv, high_sum_inv} = (low_carry_inv)? ~A_Mant_aligned_high : ~A_Mant_aligned_high - 1;
+    MSBIncrementer #(PARM_MANT) msbincrementer(
+        .low_carry_i(low_carry),
+        .low_carry_inv_i(low_carry_inv),
+        .A_Mant_aligned_high_i(A_Mant_aligned_high_i), 
+
+        .high_sum_o(high_sum),
+        .high_sum_inv_o(high_sum_inv)
+    );
 
     wire bc_not_strange = ~(B_Inf_i | C_Inf_i | B_Zero_i | C_Zero_i | B_NaN_i | C_Nan_i);
 
-    wire [3*PARM_MANT + 4 : 0] sub_minus = {{A_Mant_aligned_high[PARM_MANT+2 : 0], 1'b0} - bc_not_strange, 47'd0};
+    wire [3*PARM_MANT + 4 : 0] sub_minus = {{A_Mant_aligned_high_i[PARM_MANT+2 : 0], 1'b0} - bc_not_strange, 47'd0};
     
     //outputlogic
     
@@ -92,7 +105,7 @@ module GrandAdder #(
         if(Mv_halt_i)
             PosSum_o = {{26'd0}, low_sum};
         else if(Exp_mv_sign_i) //b*c does not participate
-            PosSum_o = Sub_Sign_i? sub_minus : {A_Mant_aligned_high[PARM_MANT+2 : 0], 48'd0};
+            PosSum_o = Sub_Sign_i? sub_minus : {A_Mant_aligned_high_i[PARM_MANT+2 : 0], 48'd0};
         else if(Sign_flip_o)
             PosSum_o = {high_sum_inv[PARM_MANT + 2 : 0], low_sum_inv};
         else
