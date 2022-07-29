@@ -33,7 +33,7 @@ module EACAdder #(
     output [2*PARM_MANT + 1 : 0] low_sum_inv_o,
     output low_carry_inv_o);
 
-    assign {low_carry, low_sum} =  CSA_sum_i + {Carry_postcor_i, CSA_carry_i[2*PARM_MANT : 0], Sub_Sign_i};
-    assign {low_carry_inv, low_sum_inv} = 2'b10 + {1'b1, ~CSA_sum_i} + {~Carry_postcor_i, ~CSA_carry_i[2*PARM_MANT : 0], ~Sub_Sign_i};
+    assign {low_carry_o, low_sum_o} =  CSA_sum_i + {Carry_postcor_i, CSA_carry_i[2*PARM_MANT : 0], Sub_Sign_i};
+    assign {low_carry_inv_o, low_sum_inv_o} = 2'b10 + {1'b1, ~CSA_sum_i} + {~Carry_postcor_i, ~CSA_carry_i[2*PARM_MANT : 0], ~Sub_Sign_i};
 
 endmodule
