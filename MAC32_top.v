@@ -310,10 +310,10 @@ module MAC32_top #(
     wire low_carry_inv;
 
     EACAdder #(PARM_MANT) eacadder(
-        .CSA_sum_i(CSA_sum_i),
-        .CSA_carry_i(CSA_carry_i),
+        .CSA_sum_i(CSA_sum),
+        .CSA_carry_i(CSA_carry),
         .Carry_postcor_i(Carry_postcor),
-        .Sub_Sign_i(Sub_Sign_i),
+        .Sub_Sign_i(Sub_Sign),
 
         .low_sum_o(low_sum),
         .low_carry_o(low_carry),
