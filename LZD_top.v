@@ -34,7 +34,7 @@ module LZD_top #(
     generate
         genvar i;
         for(i = 0; i < 8; i = i+1)begin
-            LZD_Base #(8) lzd_base(
+            ZeroDetector_Base #(8) lzd_base(
                 .base_data_i(data_i[(72 - i*8) -: 8]),
                 .zero_o(base_zeros[i])
             );
@@ -45,7 +45,7 @@ module LZD_top #(
     generate
         genvar j;
         for (j = 0; j < 4; j = j+1) begin
-            LZD_Group #(2) lzd_grouplv1(
+            ZeroDetector_Group #(2) lzd_grouplv1(
                 .group_data_i(base_zeros[j*2 +:2]),
                 .group_zero_o(lv1_zeros[j])
             );
@@ -53,18 +53,18 @@ module LZD_top #(
     endgenerate
 
     wire [1:0] lv2_zeros;
-    LZD_Group #(2) lzd_grouplv2_0(
+    ZeroDetector_Group #(2) lzd_grouplv2_0(
         .group_data_i(lv1_zeros[1:0]),
         .group_zero_o(lv2_zeros[0])
     );
 
-    LZD_Group #(2) lzd_grouplv2_1(
+    ZeroDetector_Group #(2) lzd_grouplv2_1(
         .group_data_i(lv1_zeros[3:2]),
         .group_zero_o(lv2_zeros[1])
     );
     
     wire lv3_zeros;
-    LZD_Group #(2) lzd_grouplv3(
+    LZDZeroDetector_Group_Group #(2) lzd_grouplv3(
         .group_data_i(lv2_zeros),
         .group_zero_o(lv3_zeros)
     );
