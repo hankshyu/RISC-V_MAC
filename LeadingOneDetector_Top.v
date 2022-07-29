@@ -34,7 +34,7 @@ module LeadingOneDetector_Top #(
     generate
         genvar i;
         for(i = 0; i < 8; i = i+1)begin
-            LZD_Base #(8) lzd_base(
+            ZeroDetector_Base #(8) lzd_base(
                 .base_data_i(data_i[(72 - i*8) -: 8]),
                 .zero_o(base_zeros[i])
             );
@@ -45,7 +45,7 @@ module LeadingOneDetector_Top #(
     generate
         genvar j;
         for (j = 0; j < 4; j = j+1) begin
-            LZD_Group #(2) lzd_grouplv1(
+            ZeroDetector_Group #(2) lzd_grouplv1(
                 .group_data_i(base_zeros[j*2 +:2]),
                 .group_zero_o(lv1_zeros[j])
             );
@@ -53,18 +53,18 @@ module LeadingOneDetector_Top #(
     endgenerate
 
     wire [1:0] lv2_zeros;
-    LZD_Group #(2) lzd_grouplv2_0(
+    ZeroDetector_Group #(2) lzd_grouplv2_0(
         .group_data_i(lv1_zeros[1:0]),
         .group_zero_o(lv2_zeros[0])
     );
 
-    LZD_Group #(2) lzd_grouplv2_1(
+    ZeroDetector_Group #(2) lzd_grouplv2_1(
         .group_data_i(lv1_zeros[3:2]),
         .group_zero_o(lv2_zeros[1])
     );
     
     wire lv3_zeros;
-    LZD_Group #(2) lzd_grouplv3(
+    ZeroDetector_Group #(2) lzd_grouplv3(
         .group_data_i(lv2_zeros),
         .group_zero_o(lv3_zeros)
     );
@@ -85,8 +85,8 @@ module LeadingOneDetector_Top #(
             else if(data_i[3]) shift_num_o = 69;
             else if(data_i[2]) shift_num_o = 70;
             else if(data_i[1]) shift_num_o = 71;
-            else if(data_i[0]) shift_num_o = 72;
-            else shift_num_o = {PARM_SHIFTZERO{1'b1}}; //when all zero 
+            else shift_num_o = 72; //when all zero or data_i[0]
+            
         end
         else begin //1 appears in 72 : 9
             if(lv2_zeros[0])begin // 1 appears in 40 : 9
