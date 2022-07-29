@@ -220,7 +220,7 @@ module MAC32_top #(
         .B_Exp_i(B_Exp),
         .C_Exp_i(C_Exp),
         .A_Mant_i(A_Mant),
-        .Sign_flip_i(SignFlip_ADD_PRN), //this is currently not complete......
+        .Sign_flip_i(SignFlip_ADD_PRN), 
         .Mv_halt_i(Mv_halt),
         .Exp_mv_i(Exp_mv),
         .Exp_mv_sign_i(Exp_mv_sign),
@@ -280,7 +280,7 @@ module MAC32_top #(
     .Exp_mv_neg_i(Exp_mv_neg), 
     .Sign_aligned_i(Sign_aligned),
    
-    .A_Mant_aligned_high(A_Mant_aligned_high),
+    .A_Mant_aligned_high_i(A_Mant_aligned_high),
    
     .B_Inf_i(B_Inf),
     .C_Inf_i(C_Inf),
