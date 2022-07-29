@@ -257,45 +257,113 @@ module MAC32_top #(
     // wire [2:0] Adder_Correlated_sign = {Wallace_suppression_sign_extension, Wallace_carry_adjusted[2*PARM_MANT + 2] , Wallace_adjusted_msb};
     
     //output signals
-    wire [73 : 0] PosSum;
+    reg [73 : 0] PosSum;
     wire [3*PARM_MANT + 4 : 0] A_LZA;
     wire [3*PARM_MANT + 4 : 0] B_LZA;
     wire Minus_sticky_bit;
     
     wire Adder_sign; //global signal for Sign_out_D
 
-   GrandAdder grandadder (
-    .CSA_sum_i(CSA_sum),  
-    .CSA_carry_i(CSA_carry),
-    .Sub_Sign_i(Sub_Sign),
+//    GrandAdder grandadder (
+//     .CSA_sum_i(CSA_sum),  
+//     .CSA_carry_i(CSA_carry),
+//     .Sub_Sign_i(Sub_Sign),
 
-    .Wallace_suppression_sign_extension_i(Wallace_suppression_sign_extension),
-    .Wallace_carry_adjusted_2msb_i(Wallace_carry_adjusted[2*PARM_MANT + 2 : 2*PARM_MANT + 1]),  
-    .Wallace_sum_adjusted_msb_i(Wallace_sum_adjusted[2*PARM_MANT + 2]),  
-    //.Adder_Correlated_sign_i(Adder_Correlated_sign),
+//     .Wallace_suppression_sign_extension_i(Wallace_suppression_sign_extension),
+//     .Wallace_carry_adjusted_2msb_i(Wallace_carry_adjusted[2*PARM_MANT + 2 : 2*PARM_MANT + 1]),  
+//     .Wallace_sum_adjusted_msb_i(Wallace_sum_adjusted[2*PARM_MANT + 2]),  
+//     //.Adder_Correlated_sign_i(Adder_Correlated_sign),
     
-    //signals from exponent processors and prealigner
-    .Exp_mv_sign_i(Exp_mv_sign),
-    .Mv_halt_i(Mv_halt),
-    .Exp_mv_neg_i(Exp_mv_neg), 
-    .Sign_aligned_i(Sign_aligned),
+//     //signals from exponent processors and prealigner
+//     .Exp_mv_sign_i(Exp_mv_sign),
+//     .Mv_halt_i(Mv_halt),
+//     .Exp_mv_neg_i(Exp_mv_neg), 
+//     .Sign_aligned_i(Sign_aligned),
    
-    .A_Mant_aligned_high_i(A_Mant_aligned_high),
+//     .A_Mant_aligned_high_i(A_Mant_aligned_high),
    
-    .B_Inf_i(B_Inf),
-    .C_Inf_i(C_Inf),
-    .B_Zero_i(B_Zero),
-    .C_Zero_i(C_Zero), 
-    .B_NaN_i(B_NaN),
-    .C_Nan_i(C_NaN),
+//     .B_Inf_i(B_Inf),
+//     .C_Inf_i(C_Inf),
+//     .B_Zero_i(B_Zero),
+//     .C_Zero_i(C_Zero), 
+//     .B_NaN_i(B_NaN),
+//     .C_Nan_i(C_NaN),
    
-   .PosSum_o(PosSum),
-   .Adder_sign_o(Adder_sign),
-   .A_LZA_o(A_LZA),
-   .B_LZA_o(B_LZA),
-   .Minus_sticky_bit_o(Minus_sticky_bit),
-   .Sign_flip_o(SignFlip_ADD_PRN)
-   );
+//    .PosSum_o(PosSum),
+//    .Adder_sign_o(Adder_sign),
+//    .A_LZA_o(A_LZA),
+//    .B_LZA_o(B_LZA),
+//    .Minus_sticky_bit_o(Minus_sticky_bit),
+//    .Sign_flip_o(SignFlip_ADD_PRN)
+//    );
 
+    //End Around Carry Adders, LSBs
 
+    wire wallace_msb_G = Wallace_sum_adjusted[2*PARM_MANT + 2] & Wallace_carry_adjusted[2*PARM_MANT + 1];
+    //if Wallace's msb is 1, or will carry to 1
+    wire adder_Correlated_sign = Wallace_suppression_sign_extension | Wallace_carry_adjusted[2*PARM_MANT + 2] | wallace_msb_G;
+    wire Carry_postcor = (~Exp_mv_sign) & ((~adder_Correlated_sign) ^ CSA_carry[2*PARM_MANT + 1]);
+    
+    wire [2*PARM_MANT + 1 : 0] low_sum;
+    wire low_carry;
+    wire [2*PARM_MANT + 1 : 0] low_sum_inv;
+    wire low_carry_inv;
+
+    EACAdder #(PARM_MANT) eacadder(
+        .CSA_sum_i(CSA_sum_i),
+        .CSA_carry_i(CSA_carry_i),
+        .Carry_postcor_i(Carry_postcor),
+        .Sub_Sign_i(Sub_Sign_i),
+
+        .low_sum_o(low_sum),
+        .low_carry_o(low_carry),
+        .low_sum_inv_o(low_sum_inv),
+        .low_carry_inv_o(low_carry_inv)
+    );
+
+    //Incrementer, Work on MSBs
+    wire [PARM_MANT + 3 : 0]high_sum;
+    wire [PARM_MANT + 3 : 0]high_sum_inv;
+
+    MSBIncrementer #(PARM_MANT) msbincrementer(
+        .low_carry_i(low_carry),
+        .low_carry_inv_i(low_carry_inv),
+        .A_Mant_aligned_high_i(A_Mant_aligned_high), 
+
+        .high_sum_o(high_sum),
+        .high_sum_inv_o(high_sum_inv)
+    );
+
+    wire bc_not_strange = ~(B_Inf | C_Inf | B_Zero | C_Zero | B_NaN | C_NaN);
+    wire [3*PARM_MANT + 4 : 0] sub_minus = {{A_Mant_aligned_high[PARM_MANT+2 : 0], 1'b0} - bc_not_strange, 47'd0};
+
+    //Output of the Adder stage...
+    assign SignFlip_ADD_PRN = high_sum[PARM_MANT + 3];
+    assign Adder_sign = Exp_mv_sign? Sign_aligned: (SignFlip_ADD_PRN ^ Sign_aligned);
+    
+    always @(*) begin
+        if(Mv_halt)
+            PosSum = {{26'd0}, low_sum};
+        else if(Exp_mv_sign) //b*c does not participate
+            PosSum = Sub_Sign? sub_minus : {A_Mant_aligned_high[PARM_MANT+2 : 0], 48'd0};
+        else if(SignFlip_ADD_PRN)
+            PosSum = {high_sum_inv[PARM_MANT + 2 : 0], low_sum_inv};
+        else
+            PosSum = {high_sum[PARM_MANT + 2 : 0], low_sum};
+    end
+
+////////////////////////////////////////////////////////////////////////////////////
+//                  Sticky_bit                                                    //
+////////////////////////////////////////////////////////////////////////////////////
+// for Sign_amt_DI=1'b1, if is difficult to compute combined with other cases. 
+// When addition,   | (b*c) ; when substruction, | (b*c) for rounding excption trunction. 
+
+   assign Minus_sticky_bit = Exp_mv_sign && (bc_not_strange);
+
+//////////////////////////////////////////////////////////////////// /////////////////
+//                  to LZA                                                         //
+/////////////////////////////////////////////////////////////////////////////////////
+
+   assign A_LZA_o = PosSum;
+   assign B_LZA_o = 74'd0 ;
 endmodule
