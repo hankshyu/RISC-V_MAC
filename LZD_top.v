@@ -35,7 +35,7 @@ module LZD_top #(
         genvar i;
         for(i = 0; i < 8; i = i+1)begin
             LZD_Base #(8) lzd_base(
-                .base_data_i(data_i[72 - i*8 +: 8]),
+                .base_data_i(data_i[(72 - i*8) -: 8]),
                 .zero_o(base_zeros[i])
             );
         end
@@ -54,12 +54,12 @@ module LZD_top #(
 
     wire [1:0] lv2_zeros;
     LZD_Group #(2) lzd_grouplv2_0(
-        .group_data_i(lv1_zeros[0 : 1]),
+        .group_data_i(lv1_zeros[1:0]),
         .group_zero_o(lv2_zeros[0])
     );
 
     LZD_Group #(2) lzd_grouplv2_1(
-        .group_data_i(lv1_zeros[2 : 3]),
+        .group_data_i(lv1_zeros[3:2]),
         .group_zero_o(lv2_zeros[1])
     );
     
