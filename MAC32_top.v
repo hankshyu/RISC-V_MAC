@@ -352,18 +352,20 @@ module MAC32_top #(
             PosSum = {high_sum[PARM_MANT + 2 : 0], low_sum};
     end
 
-////////////////////////////////////////////////////////////////////////////////////
-//                  Sticky_bit                                                    //
-////////////////////////////////////////////////////////////////////////////////////
-// for Sign_amt_DI=1'b1, if is difficult to compute combined with other cases. 
-// When addition,   | (b*c) ; when substruction, | (b*c) for rounding excption trunction. 
 
+    // for Sign_amt_DI=1'b1, if is difficult to compute combined with other cases. 
+    // When addition,   | (b*c) ; when substruction, | (b*c) for rounding excption trunction. 
    assign Minus_sticky_bit = Exp_mv_sign && (bc_not_strange);
 
-//////////////////////////////////////////////////////////////////// /////////////////
-//                  to LZA                                                         //
-/////////////////////////////////////////////////////////////////////////////////////
 
-   assign A_LZA_o = PosSum;
-   assign B_LZA_o = 74'd0 ;
+    //leading one anticipator, detects the shift amount necessary for normalization
+    wire [PARM_LEADONE_WIDTH - 1 : 0] shift_num;
+    wire allzero;
+    
+    LeadingOneDetector_Top #(.X_LEN(74))
+    leadingonedetector (
+        .data_i(PosSum),
+        .shift_num_o(shift_num),
+        .allzero_o(allzero)
+    );
 endmodule
