@@ -25,8 +25,8 @@ module LZD_Base #(
     parameter XLEN = 8
 ) (
     input [XLEN - 1: 0] base_data_i,
-    output zero_i );
+    output zero_o );
 
-    assign zero_i = (base_data_i == 8'd0);
+    assign zero_o = (base_data_i == 8'd0);
     
 endmodule
