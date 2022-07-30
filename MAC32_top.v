@@ -86,7 +86,7 @@ module MAC32_top #(
     parameter PARM_MANT_PRENORM  = 24; //?
     parameter PARM_BIAS         = 127;
     parameter PARM_HALF_BIAS     = 63;
-    parameter PARM_LEADONE_WIDTH = 7; //?
+    parameter PARM_LEADONE_WIDTH = 7;
     parameter PARM_EXP_ZERO     = 8'h00;
     parameter PARM_EXP_ONE      = 8'h01; //used in this
     parameter PARM_EXP_INF      = 8'hff; //used in SpecialCaseDetector
