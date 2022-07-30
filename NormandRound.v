@@ -69,6 +69,29 @@ module NormandRound #(
     output  Inexact_o 
     );
 
+    //Exponent corrections and normalization by results from LOA
+
+    wire [PARM_LEADONE_WIDTH - 1 : 0] Shift_num = (Exp_mv_sign_i | Mant_i[3*PARM_MANT + 4])? 0 : Shift_num_i; // if the leading is 1, or it shifts to the right
+    
+    reg [PARM_EXP : 0] norm_amt;
+    always @(*) begin
+        if(Exp_i[PARM_EXP + 1]) norm_amt = 0; // the expoent overflows
+        else if(Exp_i > Shift_num) norm_amt = Shift_num; // assure that exp would not < 0
+        else norm_amt =  Exp_i[PARM_EXP : 0] - 1; //Denormalized Numbers
+    end
+
+    wire [3*PARM_MANT + 4 : 0] Mant_norm = Mant_i << norm_amt;
+    
+    reg [PARM_EXP + 1 : 0] Exp_norm;
+    always @(*) begin
+        if(Exp_i[PARM_EXP + 1]) Exp_norm = 0; // the expoent overflows
+        else if(Exp_i > Shift_num) Exp_norm = Exp_i - Shift_num; // assure that exp would not < 0
+        else Exp_norm = 1; //Denormalized Numbers
+    end
+
+    wire [PARM_EXP + 1 : 0] Exp_norm_mone = Exp_i - Shift_num - 1;
+    
+
 
     
 endmodule
