@@ -342,4 +342,43 @@ module MAC32_top #(
     wire [PARM_MANT - 1 : 0] Mant_result;
 
     assign result_o = {Sign_result, Exp_result, Mant_result}; //outputlogic
+
+    NormandRound normandround(
+    .Mant_i(PosSum),
+    .Exp_i(Exp_aligned),
+    .Sign_i(Adder_sign),
+
+    .Shift_num_i(shift_num),
+    .Allzero_i(allzero),
+    .Exp_mv_sign_i(Exp_mv_sign),
+
+    .Sub_Sign_i(Sub_Sign),
+    .A_Exp_raw_i(A_i[PARM_XLEN - 2 : PARM_MANT]), // This is different from A_Exp, since we would like the "raw" bits
+    .A_Mant_i(A_Mant),
+    .A_Sign_i(A_Sign),
+    .Rounding_mode_i(rounding_mode_i),
+
+    .A_DeN_i(A_DeN),
+    .A_Inf_i(A_Inf),
+    .B_Inf_i(B_Inf),
+    .C_Inf_i(C_Inf),
+    .A_Zero_i(A_Zero),
+    .B_Zero_i(B_Zero),
+    .C_Zero_i(C_Zero),
+    .A_NaN_i(A_NaN),
+    .B_NaN_i(B_NaN),
+    .c_NaN_i(C_NaN),
+
+    .Mant_sticky_sht_out_i(Mant_sticky_sht_out),
+    .Minus_sticky_bit_i(Minus_sticky_bit),
+
+    .Sign_result_o(Sign_result),
+    .Exp_result_o(Exp_result),
+    .Mant_result_o(Mant_result),
+    .Invalid_o(NV_o),
+    .Overflow_o(OF_o),
+    .Underflow_o(UF_o),
+    .Inexact_o(NX_o)
+    );
 endmodule
+
