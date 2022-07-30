@@ -91,6 +91,10 @@ module NormandRound #(
 
     wire [PARM_EXP + 1 : 0] Exp_norm_mone = Exp_i - Shift_num - 1;
     
+    //if Exp < 0, shift Right
+    wire [PARM_EXP + 1 : 0] Exp_max_rs = Exp_i[PARM_EXP : 0] + 74;
+    wire [PARM_EXP + 1 : 0] Rs_count = (~Exp_i + 1) + 1; // -Exp_i + 1
+    wire [3*PARM_MANT + 6 : 0] Rs_Mant = {Mant_i, 2'd0} >> Rs_count;
 
 
     
