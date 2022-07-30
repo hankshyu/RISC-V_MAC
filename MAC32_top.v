@@ -57,7 +57,7 @@ module MAC32_top #(
     //input stall_i,
     //input req_i,
 
-    input [PARM_RM - 1 : 0] rounding_mode_i,
+    input [PARM_RM - 1 : 0] Rounding_mode_i,
 
 
     input [PARM_XLEN - 1 : 0] A_i,
@@ -65,16 +65,15 @@ module MAC32_top #(
     input [PARM_XLEN - 1 : 0] C_i,
 
     // T (result_o) = A + (B * C)
-    output [PARM_XLEN - 1 : 0] result_o,
+    output [PARM_XLEN - 1 : 0] Result_o,
     //output ready_o,
     
     //Accrued exceptions (fflags)
-    output reg NV_o,
+    output NV_o,
     //output reg DZ_o,  //would not occur in Multiplication or Addition
-    output reg OF_o,
-    output reg UF_o,
-    output reg NX_o
-);
+    output OF_o,
+    output UF_o,
+    output NX_o );
 
     parameter PARM_RM_RNE       = 3'b000;
     parameter PARM_RM_RTZ       = 3'b001;
@@ -341,7 +340,7 @@ module MAC32_top #(
     wire [PARM_EXP - 1 : 0] Exp_result;
     wire [PARM_MANT - 1 : 0] Mant_result;
 
-    assign result_o = {Sign_result, Exp_result, Mant_result}; //outputlogic
+    assign Result_o = {Sign_result, Exp_result, Mant_result}; //outputlogic
 
     NormandRound normandround(
     .Mant_i(PosSum),
@@ -356,7 +355,7 @@ module MAC32_top #(
     .A_Exp_raw_i(A_i[PARM_XLEN - 2 : PARM_MANT]), // This is different from A_Exp, since we would like the "raw" bits
     .A_Mant_i(A_Mant),
     .A_Sign_i(A_Sign),
-    .Rounding_mode_i(rounding_mode_i),
+    .Rounding_mode_i(Rounding_mode_i),
 
     .A_DeN_i(A_DeN),
     .A_Inf_i(A_Inf),
