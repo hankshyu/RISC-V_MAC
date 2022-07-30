@@ -265,39 +265,6 @@ module MAC32_top #(
     
     wire Adder_sign; //global signal for Sign_out_D
 
-//    GrandAdder grandadder (
-//     .CSA_sum_i(CSA_sum),  
-//     .CSA_carry_i(CSA_carry),
-//     .Sub_Sign_i(Sub_Sign),
-
-//     .Wallace_suppression_sign_extension_i(Wallace_suppression_sign_extension),
-//     .Wallace_carry_adjusted_2msb_i(Wallace_carry_adjusted[2*PARM_MANT + 2 : 2*PARM_MANT + 1]),  
-//     .Wallace_sum_adjusted_msb_i(Wallace_sum_adjusted[2*PARM_MANT + 2]),  
-//     //.Adder_Correlated_sign_i(Adder_Correlated_sign),
-    
-//     //signals from exponent processors and prealigner
-//     .Exp_mv_sign_i(Exp_mv_sign),
-//     .Mv_halt_i(Mv_halt),
-//     .Exp_mv_neg_i(Exp_mv_neg), 
-//     .Sign_aligned_i(Sign_aligned),
-   
-//     .A_Mant_aligned_high_i(A_Mant_aligned_high),
-   
-//     .B_Inf_i(B_Inf),
-//     .C_Inf_i(C_Inf),
-//     .B_Zero_i(B_Zero),
-//     .C_Zero_i(C_Zero), 
-//     .B_NaN_i(B_NaN),
-//     .C_Nan_i(C_NaN),
-   
-//    .PosSum_o(PosSum),
-//    .Adder_sign_o(Adder_sign),
-//    .A_LZA_o(A_LZA),
-//    .B_LZA_o(B_LZA),
-//    .Minus_sticky_bit_o(Minus_sticky_bit),
-//    .Sign_flip_o(SignFlip_ADD_PRN)
-//    );
-
     //End Around Carry Adders, LSBs
 
     wire wallace_msb_G = Wallace_sum_adjusted[2*PARM_MANT + 2] & Wallace_carry_adjusted[2*PARM_MANT + 1];
@@ -373,6 +340,6 @@ module MAC32_top #(
     wire Sign_result;
     wire [PARM_EXP - 1 : 0] Exp_result;
     wire [PARM_MANT - 1 : 0] Mant_result;
-    
+
     assign result_o = {Sign_result, Exp_result, Mant_result}; //outputlogic
 endmodule
