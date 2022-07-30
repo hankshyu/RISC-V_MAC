@@ -42,7 +42,7 @@ module NormandRound #(
 
     input Sub_Sign_i,
     input [PARM_EXP - 1 : 0] A_Exp_raw_i,
-    input [PARM_MANT - 1 : 0] A_Mant_i,
+    input [PARM_MANT : 0] A_Mant_i,
     input A_Sign_i,
     input [PARM_RM - 1 : 0] Rounding_mode_i,
 
@@ -66,8 +66,9 @@ module NormandRound #(
     output  Invalid_o,
     output  Overflow_o,
     output  Underflow_o,
-    output  Inexact_o );
+    output  Inexact_o 
+    );
 
-    
+
     
 endmodule
