@@ -57,7 +57,7 @@ module MAC32_top #(
     //input stall_i,
     //input req_i,
 
-    //input [PARM_RM - 1 : 0] rounding_mode_i,
+    input [PARM_RM - 1 : 0] rounding_mode_i,
 
 
     input [PARM_XLEN - 1 : 0] A_i,
