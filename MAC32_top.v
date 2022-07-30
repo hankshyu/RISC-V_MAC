@@ -65,7 +65,7 @@ module MAC32_top #(
     input [PARM_XLEN - 1 : 0] C_i,
 
     // T (result_o) = A + (B * C)
-    output reg [PARM_XLEN - 1 : 0] result_o,
+    output [PARM_XLEN - 1 : 0] result_o,
     //output ready_o,
     
     //Accrued exceptions (fflags)
@@ -76,10 +76,11 @@ module MAC32_top #(
     output reg NX_o
 );
 
-    parameter PARM_RM_RNE       = 3'd0;
-    parameter PARM_RM_RTZ       = 3'd1;
-    parameter PARM_RM_RDN       = 3'd2;
-    parameter PARM_RM_RUP       = 3'd3;
+    parameter PARM_RM_RNE       = 3'b000;
+    parameter PARM_RM_RTZ       = 3'b001;
+    parameter PARM_RM_RDN       = 3'b010;
+    parameter PARM_RM_RUP       = 3'b011;
+    parameter PARM_RM_RMM       = 3'b100;
     parameter PARM_PC            = 5; //?
     parameter PARM_EXP          = 8;
     parameter PARM_MANT         = 23;
@@ -368,4 +369,10 @@ module MAC32_top #(
         .shift_num_o(shift_num),
         .allzero_o(allzero)
     );
+
+    wire Sign_result;
+    wire [PARM_EXP - 1 : 0] Exp_result;
+    wire [PARM_MANT - 1 : 0] Mant_result;
+    
+    assign result_o = {Sign_result, Exp_result, Mant_result}; //outputlogic
 endmodule
