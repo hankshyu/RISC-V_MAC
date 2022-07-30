@@ -32,15 +32,21 @@ module NormandRound #(
     parameter PARM_RM_RMM       = 3'b100,
     parameter PARM_MANT_NAN     = 23'b100_0000_0000_0000_0000_0000
 ) (
-    input Mant_i,
-    input Exp_i,
+    input [3*PARM_MANT + 4 : 0]Mant_i,
+    input [PARM_EXP + 1 : 0]Exp_i,
     input Sign_i,
 
-    input shift_num_i,
-    input allzero_i,
+    input [PARM_LEADONE_WIDTH - 1 : 0] Shift_num_i,
+    input Allzero_i,
+    input Exp_mv_sign_i,
 
+    input Sub_Sign_i,
+    input [PARM_EXP - 1 : 0] A_Exp_raw_i,
+    input [PARM_MANT - 1 : 0] A_Mant_i,
+    input A_Sign_i,
+    input [PARM_RM - 1 : 0] Rounding_mode_i,
 
-
+    input A_DeN_i,
     input A_Inf_i,
     input B_Inf_i,
     input C_Inf_i,
@@ -61,5 +67,7 @@ module NormandRound #(
     output  Overflow_o,
     output  Underflow_o,
     output  Inexact_o );
+
+    
     
 endmodule
