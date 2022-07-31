@@ -75,26 +75,51 @@ module NormandRound #(
     
     reg [PARM_EXP : 0] norm_amt;
     always @(*) begin
-        if(Exp_i[PARM_EXP + 1]) norm_amt = 0; // the expoent overflows
-        else if(Exp_i > Shift_num) norm_amt = Shift_num; // assure that exp would not < 0
-        else norm_amt =  Exp_i[PARM_EXP : 0] - 1; //Denormalized Numbers
+        if(Exp_i[PARM_EXP + 1]) 
+            norm_amt = 0; // the expoent overflows
+        else if(Exp_i > Shift_num) 
+            norm_amt = Shift_num; // assure that exp would not < 0
+        else 
+            norm_amt =  Exp_i[PARM_EXP : 0] - 1; //Denormalized Numbers
     end
 
     wire [3*PARM_MANT + 4 : 0] Mant_norm = Mant_i << norm_amt;
     
     reg [PARM_EXP + 1 : 0] Exp_norm;
     always @(*) begin
-        if(Exp_i[PARM_EXP + 1]) Exp_norm = 0; // the expoent overflows
-        else if(Exp_i > Shift_num) Exp_norm = Exp_i - Shift_num; // assure that exp would not < 0
-        else Exp_norm = 1; //Denormalized Numbers
+        if(Exp_i[PARM_EXP + 1]) 
+            Exp_norm = 0; // the expoent overflows
+        else if(Exp_i > Shift_num) 
+            Exp_norm = Exp_i - Shift_num; // assure that exp would not < 0
+        else 
+            Exp_norm = 1; //Denormalized Numbers
     end
 
     wire [PARM_EXP + 1 : 0] Exp_norm_mone = Exp_i - Shift_num - 1;
     
     //if Exp < 0, shift Right
+
     wire [PARM_EXP + 1 : 0] Exp_max_rs = Exp_i[PARM_EXP : 0] + 74;
-    wire [PARM_EXP + 1 : 0] Rs_count = (~Exp_i + 1) + 1; // -Exp_i + 1
+    wire [PARM_EXP + 1 : 0] Rs_count = (~Exp_i + 1) + 1; // -Exp_i + 1, number of right shifts to get a denormalized number.
     wire [3*PARM_MANT + 6 : 0] Rs_Mant = {Mant_i, 2'd0} >> Rs_count;
+
+
+
+    //Sticky bit
+    reg [2*PARM_MANT + 1 : 0] Mant_sticky_changed;
+    
+    always @(*) begin
+        if(Exp_norm[PARM_EXP + 1]) 
+            Mant_sticky_changed = Rs_Mant [2*PARM_MANT + 3 : 2];
+        else if(Exp_norm == 0) 
+            Mant_sticky_changed = Mant_norm[2*PARM_MANT + 2 : 1];
+        else if(Exp_norm[3*PARM_MANT + 4]) 
+            Mant_sticky_changed = Mant_norm[2*PARM_MANT + 1 : 0];
+        else 
+            Mant_sticky_changed = {Mant_norm[2*PARM_MANT : 0], 1'b0};
+    end
+    
+
 
 
     
