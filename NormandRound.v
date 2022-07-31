@@ -60,12 +60,12 @@ module NormandRound #(
     input Mant_sticky_sht_out_i,
     input Minus_sticky_bit_i,
 
-    output Sign_result_o,
+    output reg Sign_result_o,
     output [PARM_EXP - 1 : 0] Exp_result_o,
     output [PARM_MANT - 1 : 0] Mant_result_o,
     output  Invalid_o,
-    output  Overflow_o,
-    output  Underflow_o,
+    output reg Overflow_o,
+    output reg Underflow_o,
     output  Inexact_o 
     );
 
@@ -121,7 +121,6 @@ module NormandRound #(
 
     wire Sticky_one = (|Mant_sticky_changed) || Mant_sticky_sht_out_i || Minus_sticky_bit_i;
 
-    wire Mant_sticky;
 
     wire includeNaN = A_NaN_i | B_NaN_i | C_NaN_i;
     wire zeromulinf = (B_Zero_i & C_Inf_i) | (C_Zero_i & B_Inf_i);
@@ -129,6 +128,68 @@ module NormandRound #(
 
     assign Invalid_o = (includeNaN | zeromulinf | subinf);
     
+    reg Mant_sticky;
+    reg [PARM_MANT : 0] Mant_result_norm; // 24 bit
+    reg [PARM_EXP - 1 : 0] Exp_result_norm; // 8 bit
+    reg [1 : 0] Mant_lower;
+
+
+    always @(*) begin
+        //assign value to avoid latches
+        Overflow_o = 1'b0;
+        Underflow_o = 1'b0;
+        Mant_result_norm = 0;
+        Exp_result_norm = 0;
+        Mant_lower = 2'b00;
+        Sign_result_o = 1'b0;
+        Mant_sticky = 1'b0;
+
+        if(Invalid_o)begin
+            Mant_result_norm = {1'b0, PARM_MANT_NAN}; //PARM_MANT_NAN is 23 bit
+            Exp_result_norm = 8'b1111_1111;
+
+        end
+        else if(A_Inf_i | B_Inf_i | C_Inf_i)begin
+            Overflow_o = 1;
+            Exp_result_norm = 8'b1111_1111;
+            Sign_result_o = Sign_i;
+
+        end
+        else if(Exp_mv_sign_i)begin 
+            Underflow_o = A_DeN_i;
+            Mant_result_norm = A_Mant_i;
+            Exp_result_norm = A_Exp_raw_i;
+            Sign_result_o = A_Sign_i;
+            Mant_sticky = Sticky_one; // When the exponent move left (negative), sticky bit would come from Mant_sticky
+            
+        end
+        else if(Allzero_i)begin
+            Sign_result_o = Sign_i;
+
+        end
+        else if(Exp_i[PARM_EXP + 1])begin // the exponent is negative
+            
+            if(~Exp_max_rs[PARM_EXP + 1])begin // exponent would <0 after right shift (too negative)
+                Overflow_o = 1;
+                Sign_result_o = Sign_i;
+            end
+            else begin // denormalized number
+                Underflow_o = 1;
+                Mant_result_norm = {1'b0, Rs_Mant[3*PARM_MANT + 6 : 2*PARM_MANT + 6]};
+                Mant_lower = Rs_Mant[2*PARM_MANT + 5 : 2*PARM_MANT + 4];
+                Sign_result_o = Sign_i;
+                Mant_sticky = Sticky_one;
+            end
+        end
+        else if(Exp_norm[PARM_EXP] & (~Mant_norm[3*PARM_MANT + 4]) & (Mant_norm[3*PARM_MANT + 3 : 2*PARM_MANT+3] != 0))begin //NaN, Exp_norm = 256
+            Mant_result_norm = {1'b0, PARM_MANT_NAN}; //PARM_MANT_NAN is 23 bit
+            Exp_result_norm = 8'b1111_1111;
+        end
+        else if(Exp_i[PARM_EXP - 1 : 0] == 8'b1111_1111)begin
+            
+        end
+    end
+
 
 
 
