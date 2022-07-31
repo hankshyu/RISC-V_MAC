@@ -55,7 +55,7 @@ module NormandRound #(
     input C_Zero_i,
     input A_NaN_i,
     input B_NaN_i,
-    input c_NaN_i,
+    input C_NaN_i,
 
     input Mant_sticky_sht_out_i,
     input Minus_sticky_bit_i,
@@ -118,6 +118,14 @@ module NormandRound #(
         else 
             Mant_sticky_changed = {Mant_norm[2*PARM_MANT : 0], 1'b0};
     end
+
+    wire Sticky_one = (|Mant_sticky_changed) || Mant_sticky_sht_out_i || Minus_sticky_bit_i;
+
+    wire Mant_sticky;
+
+    wire includeNaN = A_NaN_i | B_NaN_i | C_NaN_i;
+
+
     
 
 
