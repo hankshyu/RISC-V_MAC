@@ -366,7 +366,7 @@ module MAC32_top #(
     .C_Zero_i(C_Zero),
     .A_NaN_i(A_NaN),
     .B_NaN_i(B_NaN),
-    .c_NaN_i(C_NaN),
+    .C_NaN_i(C_NaN),
 
     .Mant_sticky_sht_out_i(Mant_sticky_sht_out),
     .Minus_sticky_bit_i(Minus_sticky_bit),
