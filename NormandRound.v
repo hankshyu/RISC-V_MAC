@@ -180,15 +180,52 @@ module NormandRound #(
                 Sign_result_o = Sign_i;
                 Mant_sticky = Sticky_one;
             end
+            
         end
         else if(Exp_norm[PARM_EXP] & (~Mant_norm[3*PARM_MANT + 4]) & (Mant_norm[3*PARM_MANT + 3 : 2*PARM_MANT+3] != 0))begin //NaN, Exp_norm = 256
             Mant_result_norm = {1'b0, PARM_MANT_NAN}; //PARM_MANT_NAN is 23 bit
             Exp_result_norm = 8'b1111_1111;
+
         end
-        else if(Exp_i[PARM_EXP - 1 : 0] == 8'b1111_1111)begin
+        else if(Exp_norm[PARM_EXP - 1 : 0] == 8'b1111_1111)begin
             
+            if(Mant_norm[3*PARM_MANT + 4])begin // NaN
+                Overflow_o = 1;
+                Mant_result_norm = {1'b0, PARM_MANT_NAN};
+                Exp_result_norm = 8'b1111_1111;
+                Sign_result_o = Sign_i;
+    
+            end
+            else if(Mant_norm[3*PARM_MANT + 4 : 2*PARM_MANT + 4] == 0)begin //Infinity
+                Overflow_o = 1;
+                Exp_result_norm = 8'b1111_1111;
+                Sign_result_o = Sign_i;
+            end
+            else begin // Normal numbers
+                Mant_result_norm  = Mant_norm [3*PARM_MANT + 3 : 2*PARM_MANT + 3];
+                Exp_result_norm = 8'b1111_1110; //254
+                Mant_lower = Mant_norm[2*PARM_MANT + 2 : 2*PARM_MANT + 1];
+                Sign_result_o = Sign_i;
+                Mant_sticky = Sticky_one;
+            end
+
+        end
+        else if(Exp_norm[PARM_EXP])begin //Infinity
+            Overflow_o = 1;
+            Exp_result_norm = 8'b1111_1111;
+            Sign_result_o = Sign_i;
+
+        end
+        else if(Exp_norm == 1)begin // Zero
+            if(Mant_norm[3*PARM_MANT + 4])begin //Normal Number
+                
+            end
+            else begin //Denormalized Number
+                
+            end
         end
     end
+
 
 
 
