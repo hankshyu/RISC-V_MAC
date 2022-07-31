@@ -124,6 +124,12 @@ module NormandRound #(
     wire Mant_sticky;
 
     wire includeNaN = A_NaN_i | B_NaN_i | C_NaN_i;
+    wire zeromulinf = (B_Zero_i & C_Inf_i) | (C_Zero_i & B_Inf_i);
+    wire subinf = (Sub_Sign_i & A_Inf_i & (B_Inf_i | C_Inf_i));
+
+    assign Invalid_o = (includeNaN | zeromulinf | subinf);
+    
+
 
 
     
