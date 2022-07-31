@@ -182,7 +182,7 @@ module NormandRound #(
             end
 
         end
-        else if(Exp_norm[PARM_EXP] & (~Mant_norm[3*PARM_MANT + 4]) & (Mant_norm[3*PARM_MANT + 3 : 2*PARM_MANT+3] != 0))begin //NaN, Exp_norm = 256
+        else if((Exp_norm[PARM_EXP : 0] == 256) & (~Mant_norm[3*PARM_MANT + 4]) & (Mant_norm[3*PARM_MANT + 3 : 2*PARM_MANT+3] != 0))begin //NaN, Exp_norm = 256
             Mant_result_norm = {1'b0, PARM_MANT_NAN}; //PARM_MANT_NAN is 23 bit
             Exp_result_norm = 8'b1111_1111;
 
@@ -288,13 +288,4 @@ module NormandRound #(
     assign Exp_result_o = Exp_result_norm + Mant_renormalize;
 
 
-
-
-
-
-    
-
-
-
-    
 endmodule
