@@ -258,7 +258,35 @@ module NormandRound #(
     end
 
     //Rounding
-    
+
+    wire [PARM_MANT :0] Mant_upper = Mant_result_norm;
+
+
+    assign Inexact_o = (|Mant_lower) || Mant_sticky;
+
+    reg Mant_roundup;// Whether to round up or not
+    always @(*) begin
+        case (Rounding_mode_i)
+            PARM_RM_RNE:
+                Mant_roundup = Mant_lower[1] & (Mant_lower[0] | Mant_sticky | Mant_upper[0]);
+            PARM_RM_RTZ:
+                Mant_roundup = 0;
+            PARM_RM_RDN:
+                Mant_roundup = Inexact_o & (~Sign_i);
+            PARM_RM_RUP:
+                Mant_roundup = Inexact_o & Sign_i;
+            default:
+                Mant_roundup = 0;
+        endcase
+    end
+
+    wire [PARM_MANT + 1 : 0] Mant_upper_rounded = Mant_upper + Mant_roundup;
+    wire Mant_renormalize = Mant_upper_rounded[PARM_MANT + 1];
+
+    //output logic
+    assign Mant_result_o = (Mant_renormalize)? Mant_upper_rounded[PARM_MANT : 1] : Mant_upper_rounded[PARM_MANT - 1 : 0];
+    assign Exp_result_o = Exp_result_norm + Mant_renormalize;
+
 
 
 
