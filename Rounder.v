@@ -5,7 +5,7 @@
 // 
 // Create Date: 07/30/2022 10:47:12 AM
 // Design Name: 
-// Module Name: NormandRound
+// Module Name: Rounder
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -15,6 +15,7 @@
 // 
 // Revision:
 // Revision 0.01 - File Created
+// Revision 0.02 - File Renamed
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
