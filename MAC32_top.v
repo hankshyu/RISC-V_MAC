@@ -144,7 +144,7 @@ module MAC32_top #(
     //Generate 13 Partial Product by Radix-4 Booth's Algorithm
     wire [2*PARM_MANT + 2 : 0] booth_PP [13 - 1: 0];
     
-    R4Booth R4Booth(
+    R4Booth r4Booth(
         .MantA_i(B_Mant),
         .MantB_i(C_Mant),
         
@@ -242,7 +242,7 @@ module MAC32_top #(
     wire [2*PARM_MANT + 1 : 0] CSA_sum;
     wire [2*PARM_MANT + 1 : 0] CSA_carry;
     
-    Compressor32 #(2*PARM_MANT + 2) CarrySaveAdder (
+    Compressor32 #(2*PARM_MANT + 2) carrySaveAdder (
         .A_i(A_Mant_aligned_low), //A_low
         .B_i(Wallace_sum_adjusted[2*PARM_MANT + 1 : 0]),
         .C_i({Wallace_carry_adjusted[2*PARM_MANT : 0], 1'b0}),
