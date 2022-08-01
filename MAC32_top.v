@@ -336,6 +336,26 @@ module MAC32_top #(
         .allzero_o(allzero)
     );
 
+    //Shift the exponent according to the result of LeadingOneDetector
+    wire [3*PARM_MANT + 4 : 0] Mant_norm;
+    wire [PARM_EXP + 1 : 0] Exp_norm;
+    wire [PARM_EXP + 1 : 0] Exp_norm_mone;
+    wire [PARM_EXP + 1 : 0] Exp_max_rs;
+    wire [3*PARM_MANT + 6 : 0] Rs_Mant;
+
+    Normalizer normalizer(
+    .Mant_i(PosSum),
+    .Exp_i(Exp_aligned),
+    .Shift_num_i(shift_num),
+    .Exp_mv_sign_i(Exp_mv_sign),
+
+    .Mant_norm_o(Mant_norm),
+    .Exp_norm_o(Exp_norm),
+    .Exp_norm_mone_o(Exp_norm_mone),
+    .Exp_max_rs_o(Exp_max_rs),
+    .Rs_Mant_o(Rs_Mant)
+    );
+
     wire Sign_result;
     wire [PARM_EXP - 1 : 0] Exp_result;
     wire [PARM_MANT - 1 : 0] Mant_result;
