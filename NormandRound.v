@@ -59,6 +59,12 @@ module NormandRound #(
     input Mant_sticky_sht_out_i,
     input Minus_sticky_bit_i,
 
+    input [3*PARM_MANT + 4 : 0] Mant_norm_i,
+    input [PARM_EXP + 1 : 0] Exp_norm_i,
+    input [PARM_EXP + 1 : 0] Exp_norm_mone_i,
+    input [PARM_EXP + 1 : 0] Exp_max_rs_i,
+    input [3*PARM_MANT + 6 : 0] Rs_Mant_i,
+
     
 
     output reg Sign_result_o,
@@ -70,41 +76,11 @@ module NormandRound #(
     output  Inexact_o 
     );
 
-    //Exponent corrections and normalization by results from LOA
-
-    wire [PARM_LEADONE_WIDTH - 1 : 0] Shift_num = (Exp_mv_sign_i | Mant_i[3*PARM_MANT + 4])? 0 : Shift_num_i; //If the exponent < 0, or it has a leading one (1xxxxxx....)
-    
-    reg [PARM_EXP : 0] norm_amt;
-    always @(*) begin
-        if(Exp_i[PARM_EXP + 1]) 
-            norm_amt = 0; // the expoent overflows
-        else if(Exp_i > Shift_num) 
-            norm_amt = Shift_num; // assure that exp would not < 0
-        else 
-            norm_amt =  Exp_i[PARM_EXP : 0] - 1; //Denormalized Numbers, has exponent of 0, representing -126
-    end
-
-    wire [3*PARM_MANT + 4 : 0] Mant_norm = Mant_i << norm_amt;
-    
-    reg [PARM_EXP + 1 : 0] Exp_norm;
-    always @(*) begin
-        if(Exp_i[PARM_EXP + 1]) 
-            Exp_norm = 0; // the expoent overflows
-        else if(Exp_i > Shift_num) 
-            Exp_norm = Exp_i - Shift_num; // assure that exp would not < 0
-        else 
-            Exp_norm = 1; //Denormalized Numbers, has exponent of 0, representing -126
-    end
-
-    wire [PARM_EXP + 1 : 0] Exp_norm_mone = Exp_i - Shift_num - 1;
-    
-    //if Exp < 0, shift Right
-
-    wire [PARM_EXP + 1 : 0] Exp_max_rs = Exp_i[PARM_EXP : 0] + 74;
-    wire [PARM_EXP + 1 : 0] Rs_count = (~Exp_i + 1) + 1; // -Exp_i + 1, number of right shifts to get a denormalized number.
-    wire [3*PARM_MANT + 6 : 0] Rs_Mant = {Mant_i, 2'd0} >> Rs_count;
-
-
+    wire [3*PARM_MANT + 4 : 0] Mant_norm = Mant_norm_i;
+    wire [PARM_EXP + 1 : 0] Exp_norm = Exp_norm_i;
+    wire [PARM_EXP + 1 : 0] Exp_norm_mone = Exp_norm_mone_i;
+    wire [PARM_EXP + 1 : 0] Exp_max_rs = Exp_max_rs_i;
+    wire [3*PARM_MANT + 6 : 0] Rs_Mant = Rs_Mant_i;
     //Sticky bit
 
     reg [2*PARM_MANT + 1 : 0] Mant_sticky_changed;
