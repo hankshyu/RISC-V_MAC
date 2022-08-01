@@ -153,7 +153,7 @@ module NormandRound #(
             Sign_result_o = Sign_i; // or A_Sign_i, the same
 
         end
-        else if(Exp_mv_sign_i)begin 
+        else if(Exp_mv_sign_i)begin // Only A counts 
             Underflow_o = A_DeN_i;
             Mant_result_norm = A_Mant_i;
             Exp_result_norm = A_Exp_raw_i;
@@ -161,7 +161,7 @@ module NormandRound #(
             Mant_sticky = Sticky_one; // When the exponent move left (negative), sticky bit would come from Mant_sticky
             
         end
-        else if(Allzero_i)begin // possibly a 1
+        else if(Allzero_i)begin
             Sign_result_o = Sign_i;
 
         end
@@ -233,7 +233,8 @@ module NormandRound #(
             end
             else begin //Denormalized Number
                 Underflow_o = 1;
-                Mant_result_norm = Mant_norm[2*PARM_MANT + 3: 2*PARM_MANT + 2];
+                Mant_result_norm = Mant_norm[3*PARM_MANT + 4: 2*PARM_MANT + 4];
+                Mant_lower = Mant_norm[2*PARM_MANT + 3 : 2*PARM_MANT + 2];
                 Sign_result_o = Sign_i;
                 Mant_sticky = Sticky_one;
             end
