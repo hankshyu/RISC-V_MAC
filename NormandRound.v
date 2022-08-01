@@ -59,6 +59,8 @@ module NormandRound #(
     input Mant_sticky_sht_out_i,
     input Minus_sticky_bit_i,
 
+    
+
     output reg Sign_result_o,
     output [PARM_EXP - 1 : 0] Exp_result_o,
     output [PARM_MANT - 1 : 0] Mant_result_o,
