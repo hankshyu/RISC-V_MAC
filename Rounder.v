@@ -19,7 +19,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-module NormandRound #(
+module Rounder #(
     parameter PARM_LEADONE_WIDTH = 7,
     parameter PARM_EXP          = 8,
     parameter PARM_MANT         = 23,
@@ -31,11 +31,10 @@ module NormandRound #(
     parameter PARM_RM_RMM       = 3'b100,
     parameter PARM_MANT_NAN     = 23'b100_0000_0000_0000_0000_0000
 ) (
-    input [3*PARM_MANT + 4 : 0]Mant_i,
+
     input [PARM_EXP + 1 : 0]Exp_i,
     input Sign_i,
 
-    input [PARM_LEADONE_WIDTH - 1 : 0] Shift_num_i,
     input Allzero_i,
     input Exp_mv_sign_i,
 
@@ -71,27 +70,19 @@ module NormandRound #(
     output  Invalid_o,
     output reg Overflow_o,
     output reg Underflow_o,
-    output  Inexact_o 
-    );
-
-    wire [3*PARM_MANT + 4 : 0] Mant_norm = Mant_norm_i;
-    wire [PARM_EXP + 1 : 0] Exp_norm = Exp_norm_i;
-    wire [PARM_EXP + 1 : 0] Exp_norm_mone = Exp_norm_mone_i;
-    wire [PARM_EXP + 1 : 0] Exp_max_rs = Exp_max_rs_i;
-    wire [3*PARM_MANT + 6 : 0] Rs_Mant = Rs_Mant_i;
+    output  Inexact_o );
 
     //Sticky bit
-
     reg [2*PARM_MANT + 1 : 0] Mant_sticky_changed;
     always @(*) begin
-        if(Exp_norm[PARM_EXP + 1]) 
-            Mant_sticky_changed = Rs_Mant [2*PARM_MANT + 3 : 2];
-        else if(Exp_norm == 0) 
-            Mant_sticky_changed = Mant_norm[2*PARM_MANT + 2 : 1];
-        else if(Mant_norm[3*PARM_MANT + 4] | Exp_norm == 0) 
-            Mant_sticky_changed = Mant_norm[2*PARM_MANT + 1 : 0];
+        if(Exp_norm_i[PARM_EXP + 1]) 
+            Mant_sticky_changed = Rs_Mant_i [2*PARM_MANT + 3 : 2];
+        else if(Exp_norm_i == 0) 
+            Mant_sticky_changed = Mant_norm_i[2*PARM_MANT + 2 : 1];
+        else if(Mant_norm_i[3*PARM_MANT + 4] | Exp_norm_i == 0) 
+            Mant_sticky_changed = Mant_norm_i[2*PARM_MANT + 1 : 0];
         else 
-            Mant_sticky_changed = {Mant_norm[2*PARM_MANT : 0], 1'b0};
+            Mant_sticky_changed = {Mant_norm_i[2*PARM_MANT : 0], 1'b0};
     end
 
     wire Sticky_one = (|Mant_sticky_changed) || Mant_sticky_sht_out_i || Minus_sticky_bit_i;
@@ -144,90 +135,90 @@ module NormandRound #(
         end
         else if(Exp_i[PARM_EXP + 1])begin 
             
-            if(~Exp_max_rs[PARM_EXP + 1])begin // exponent would <0 after right shift (too negative)
+            if(~Exp_max_rs_i[PARM_EXP + 1])begin // exponent would <0 after right shift (too negative)
                 Overflow_o = 1;
                 Sign_result_o = Sign_i;
             end
             else begin // denormalized number
                 Underflow_o = 1;
-                Mant_result_norm = {1'b0, Rs_Mant[3*PARM_MANT + 6 : 2*PARM_MANT + 6]};
-                Mant_lower = Rs_Mant[2*PARM_MANT + 5 : 2*PARM_MANT + 4];
+                Mant_result_norm = {1'b0, Rs_Mant_i[3*PARM_MANT + 6 : 2*PARM_MANT + 6]};
+                Mant_lower = Rs_Mant_i[2*PARM_MANT + 5 : 2*PARM_MANT + 4];
                 Sign_result_o = Sign_i;
                 Mant_sticky = Sticky_one;
             end
 
         end
-        else if((Exp_norm[PARM_EXP : 0] == 256) & (~Mant_norm[3*PARM_MANT + 4]) & (Mant_norm[3*PARM_MANT + 3 : 2*PARM_MANT+3] != 0))begin //NaN, Exp_norm = 256
+        else if((Exp_norm_i[PARM_EXP : 0] == 256) & (~Mant_norm_i[3*PARM_MANT + 4]) & (Mant_norm_i[3*PARM_MANT + 3 : 2*PARM_MANT+3] != 0))begin //NaN, Exp_norm_i = 256
             Mant_result_norm = {1'b0, PARM_MANT_NAN}; //PARM_MANT_NAN is 23 bit
             Exp_result_norm = 8'b1111_1111;
 
         end
-        else if(Exp_norm[PARM_EXP - 1 : 0] == 8'b1111_1111)begin
+        else if(Exp_norm_i[PARM_EXP - 1 : 0] == 8'b1111_1111)begin
             
-            if(Mant_norm[3*PARM_MANT + 4])begin // NaN
+            if(Mant_norm_i[3*PARM_MANT + 4])begin // NaN
                 Overflow_o = 1;
                 Mant_result_norm = {1'b0, PARM_MANT_NAN};
                 Exp_result_norm = 8'b1111_1111;
                 Sign_result_o = Sign_i;
     
             end
-            else if(Mant_norm[3*PARM_MANT + 4 : 2*PARM_MANT + 4] == 0)begin //Infinity
+            else if(Mant_norm_i[3*PARM_MANT + 4 : 2*PARM_MANT + 4] == 0)begin //Infinity
                 Overflow_o = 1;
                 Exp_result_norm = 8'b1111_1111;
                 Sign_result_o = Sign_i;
             end
             else begin // Normal numbers
-                Mant_result_norm  = Mant_norm [3*PARM_MANT + 3 : 2*PARM_MANT + 3];
+                Mant_result_norm  = Mant_norm_i [3*PARM_MANT + 3 : 2*PARM_MANT + 3];
                 Exp_result_norm = 8'b1111_1110; //254
-                Mant_lower = Mant_norm[2*PARM_MANT + 2 : 2*PARM_MANT + 1];
+                Mant_lower = Mant_norm_i[2*PARM_MANT + 2 : 2*PARM_MANT + 1];
                 Sign_result_o = Sign_i;
                 Mant_sticky = Sticky_one;
             end
 
         end
-        else if(Exp_norm[PARM_EXP])begin //Infinity
+        else if(Exp_norm_i[PARM_EXP])begin //Infinity
             Overflow_o = 1;
             Exp_result_norm = 8'b1111_1111;
             Sign_result_o = Sign_i;
 
         end
-        else if(Exp_norm == 0)begin // 0 denormalized
+        else if(Exp_norm_i == 0)begin // 0 denormalized
             Underflow_o = 1;
-            Mant_result_norm = {1'b0, Mant_norm[3*PARM_MANT + 4 : 2*PARM_MANT + 5]};
-            Mant_lower = Mant_norm[2*PARM_MANT + 4 : 2*PARM_MANT + 3];
+            Mant_result_norm = {1'b0, Mant_norm_i[3*PARM_MANT + 4 : 2*PARM_MANT + 5]};
+            Mant_lower = Mant_norm_i[2*PARM_MANT + 4 : 2*PARM_MANT + 3];
             Sign_result_o = Sign_i;
             Mant_sticky = Sticky_one;
             
         end
-        else if(Exp_norm == 1)begin // 0
+        else if(Exp_norm_i == 1)begin // 0
 
-            if(Mant_norm[3*PARM_MANT + 4])begin //Normal Number
-                Mant_result_norm = Mant_norm[3*PARM_MANT + 4 : 2*PARM_MANT + 4];
+            if(Mant_norm_i[3*PARM_MANT + 4])begin //Normal Number
+                Mant_result_norm = Mant_norm_i[3*PARM_MANT + 4 : 2*PARM_MANT + 4];
                 Exp_result_norm = 1;
-                Mant_lower = Mant_norm[2*PARM_MANT + 3 : 2*PARM_MANT + 2];
+                Mant_lower = Mant_norm_i[2*PARM_MANT + 3 : 2*PARM_MANT + 2];
                 Sign_result_o = Sign_i;
                 Mant_sticky = Sticky_one;
             end
             else begin //Denormalized Number
                 Underflow_o = 1;
-                Mant_result_norm = Mant_norm[3*PARM_MANT + 4: 2*PARM_MANT + 4];
-                Mant_lower = Mant_norm[2*PARM_MANT + 3 : 2*PARM_MANT + 2];
+                Mant_result_norm = Mant_norm_i[3*PARM_MANT + 4: 2*PARM_MANT + 4];
+                Mant_lower = Mant_norm_i[2*PARM_MANT + 3 : 2*PARM_MANT + 2];
                 Sign_result_o = Sign_i;
                 Mant_sticky = Sticky_one;
             end
 
         end
-        else if(~Mant_norm[3*PARM_MANT + 4])begin
-            Mant_result_norm = Mant_norm[3*PARM_MANT + 3 : 2*PARM_MANT + 3];
-            Exp_result_norm = Exp_norm_mone[PARM_MANT - 1 : 0];
-            Mant_lower = Mant_norm[2*PARM_MANT + 2 : 2*PARM_MANT + 1];
+        else if(~Mant_norm_i[3*PARM_MANT + 4])begin
+            Mant_result_norm = Mant_norm_i[3*PARM_MANT + 3 : 2*PARM_MANT + 3];
+            Exp_result_norm = Exp_norm_mone_i[PARM_MANT - 1 : 0];
+            Mant_lower = Mant_norm_i[2*PARM_MANT + 2 : 2*PARM_MANT + 1];
             Sign_result_o = Sign_i;
             Mant_sticky = Sticky_one;
         end
         else begin 
-            Mant_result_norm = Mant_norm[3*PARM_MANT + 4 : 2*PARM_MANT + 4];
-            Exp_result_norm = Exp_norm[PARM_MANT - 1 : 0];
-            Mant_lower = Mant_norm[2*PARM_MANT + 3 : 2*PARM_MANT + 2];
+            Mant_result_norm = Mant_norm_i[3*PARM_MANT + 4 : 2*PARM_MANT + 4];
+            Exp_result_norm = Exp_norm_i[PARM_MANT - 1 : 0];
+            Mant_lower = Mant_norm_i[2*PARM_MANT + 3 : 2*PARM_MANT + 2];
             Sign_result_o = Sign_i;
             Mant_sticky = Sticky_one;
         end
