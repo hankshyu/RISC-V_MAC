@@ -147,10 +147,10 @@ module NormandRound #(
             Exp_result_norm = 8'b1111_1111;
 
         end
-        else if(A_Inf_i | B_Inf_i | C_Inf_i)begin
-            Overflow_o = 1;
+        else if(A_Inf_i | B_Inf_i | C_Inf_i)begin // the result is Infinity
+            Overflow_o = 1; // Infinity should not raise the Oveflow flat...
             Exp_result_norm = 8'b1111_1111;
-            Sign_result_o = Sign_i;
+            Sign_result_o = Sign_i; // or A_Sign_i, the same
 
         end
         else if(Exp_mv_sign_i)begin 
@@ -161,11 +161,11 @@ module NormandRound #(
             Mant_sticky = Sticky_one; // When the exponent move left (negative), sticky bit would come from Mant_sticky
             
         end
-        else if(Allzero_i)begin
+        else if(Allzero_i)begin // possibly a 1
             Sign_result_o = Sign_i;
 
         end
-        else if(Exp_i[PARM_EXP + 1])begin // the exponent is negative
+        else if(Exp_i[PARM_EXP + 1])begin 
             
             if(~Exp_max_rs[PARM_EXP + 1])begin // exponent would <0 after right shift (too negative)
                 Overflow_o = 1;
@@ -257,16 +257,13 @@ module NormandRound #(
 
     //Rounding
 
-    wire [PARM_MANT :0] Mant_upper = Mant_result_norm;
-
-
     assign Inexact_o = (|Mant_lower) || Mant_sticky;
 
     reg Mant_roundup;// Whether to round up or not
     always @(*) begin
         case (Rounding_mode_i)
             PARM_RM_RNE:
-                Mant_roundup = Mant_lower[1] & (Mant_lower[0] | Mant_sticky | Mant_upper[0]);
+                Mant_roundup = Mant_lower[1] & (Mant_lower[0] | Mant_sticky | Mant_result_norm[0]);
             PARM_RM_RTZ:
                 Mant_roundup = 0;
             PARM_RM_RDN:
@@ -278,12 +275,11 @@ module NormandRound #(
         endcase
     end
 
-    wire [PARM_MANT + 1 : 0] Mant_upper_rounded = Mant_upper + Mant_roundup;
+    wire [PARM_MANT + 1 : 0] Mant_upper_rounded = Mant_result_norm + Mant_roundup;
     wire Mant_renormalize = Mant_upper_rounded[PARM_MANT + 1];
 
     //output logic
     assign Mant_result_o = (Mant_renormalize)? Mant_upper_rounded[PARM_MANT : 1] : Mant_upper_rounded[PARM_MANT - 1 : 0];
     assign Exp_result_o = Exp_result_norm + Mant_renormalize;
-
 
 endmodule
