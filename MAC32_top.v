@@ -363,9 +363,11 @@ module MAC32_top #(
     assign Result_o = {Sign_result, Exp_result, Mant_result}; //outputlogic
 
     NormandRound normandround(
+    .Mant_i(PosSum),
     .Exp_i(Exp_aligned),
     .Sign_i(Adder_sign),
 
+    .Shift_num_i(shift_num),
     .Allzero_i(allzero),
     .Exp_mv_sign_i(Exp_mv_sign),
 
