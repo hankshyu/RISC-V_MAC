@@ -64,7 +64,7 @@ module Normalizer#(
             Exp_norm_o = 1; //Denormalized Numbers, has exponent of 0, representing -126
     end
 
-    assign Exp_norm_mone = Exp_i - Shift_num - 1;
+    assign Exp_norm_mone_o = Exp_i - Shift_num - 1;
     
     //if Exp < 0, shift Right
 
