@@ -391,6 +391,12 @@ module MAC32_top #(
     .Mant_sticky_sht_out_i(Mant_sticky_sht_out),
     .Minus_sticky_bit_i(Minus_sticky_bit),
 
+    .Mant_norm_i(Mant_norm),
+    .Exp_norm_i(Exp_norm),
+    .Exp_norm_mone_i(Exp_norm_mone),
+    .Exp_max_rs_i(Exp_max_rs),
+    .Rs_Mant_i(Rs_Mant),
+
     .Sign_result_o(Sign_result),
     .Exp_result_o(Exp_result),
     .Mant_result_o(Mant_result),
