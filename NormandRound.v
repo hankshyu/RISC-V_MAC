@@ -103,16 +103,15 @@ module NormandRound #(
     wire [3*PARM_MANT + 6 : 0] Rs_Mant = {Mant_i, 2'd0} >> Rs_count;
 
 
-
     //Sticky bit
+
     reg [2*PARM_MANT + 1 : 0] Mant_sticky_changed;
-    
     always @(*) begin
         if(Exp_norm[PARM_EXP + 1]) 
             Mant_sticky_changed = Rs_Mant [2*PARM_MANT + 3 : 2];
         else if(Exp_norm == 0) 
             Mant_sticky_changed = Mant_norm[2*PARM_MANT + 2 : 1];
-        else if(Exp_norm[3*PARM_MANT + 4]) 
+        else if(Mant_norm[3*PARM_MANT + 4] | Exp_norm == 0) 
             Mant_sticky_changed = Mant_norm[2*PARM_MANT + 1 : 0];
         else 
             Mant_sticky_changed = {Mant_norm[2*PARM_MANT : 0], 1'b0};
