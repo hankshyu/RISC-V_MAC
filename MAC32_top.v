@@ -103,8 +103,8 @@ module MAC32_top #(
     wire A_Zero, B_Zero, C_Zero;
     wire A_NaN, B_NaN, C_NaN;
     wire A_DeN, B_DeN, C_DeN;
-
     
+
     SpecialCaseDetector #(
         .PARM_XLEN(PARM_XLEN),
         .PARM_EXP(PARM_EXP),
@@ -119,6 +119,7 @@ module MAC32_top #(
         .A_Inf_o(A_Inf),
         .B_Inf_o(B_Inf),
         .C_Inf_o(C_Inf),
+
         .A_Zero_o(A_Zero),
         .B_Zero_o(B_Zero),
         .C_Zero_o(C_Zero),
@@ -149,6 +150,7 @@ module MAC32_top #(
     //Generate 13 Partial Product by Radix-4 Booth's Algorithm
     wire [2*PARM_MANT + 2 : 0] booth_PP [13 - 1: 0];
     
+
     R4Booth #(
         .PARM_MANT(PARM_MANT)
         ) r4Booth (
@@ -171,10 +173,12 @@ module MAC32_top #(
 
     );
 
+
     //Sum 13 partial Product by Wallace Tree
     wire [2*PARM_MANT + 2 : 0] Wallace_sum;
     wire [2*PARM_MANT + 2 : 0] Wallace_carry;
     wire Wallace_suppression_sign_extension;
+
 
     WallaceTree #(
         .PARM_MANT(PARM_MANT)
@@ -199,6 +203,7 @@ module MAC32_top #(
 
     );
     
+
     //Prenormalization of the augend, in parallel with multiplication.
     //global signals ...
     wire Sign_aligned;
@@ -241,6 +246,7 @@ module MAC32_top #(
         .Sign_aligned_o(Sign_aligned),
         .Mant_sticky_sht_out_o(Mant_sticky_sht_out)
     );
+
 
     //adjust wallace sum to send in... 
     wire [2*PARM_MANT + 2 : 0] Wallace_sum_adjusted;
