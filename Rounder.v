@@ -21,16 +21,16 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module Rounder #(
-    parameter PARM_LEADONE_WIDTH = 7,
-    parameter PARM_EXP          = 8,
-    parameter PARM_MANT         = 23,
-    parameter PARM_RM            = 3,
-    parameter PARM_RM_RNE       = 3'b000,
-    parameter PARM_RM_RTZ       = 3'b001,
-    parameter PARM_RM_RDN       = 3'b010,
-    parameter PARM_RM_RUP       = 3'b011,
-    parameter PARM_RM_RMM       = 3'b100,
-    parameter PARM_MANT_NAN     = 23'b100_0000_0000_0000_0000_0000
+    parameter PARM_RM               = 3,
+    parameter PARM_RM_RNE           = 3'b000,
+    parameter PARM_RM_RTZ           = 3'b001,
+    parameter PARM_RM_RDN           = 3'b010,
+    parameter PARM_RM_RUP           = 3'b011,
+    parameter PARM_RM_RMM           = 3'b100,
+    parameter PARM_MANT_NAN         = 23'b100_0000_0000_0000_0000_0000,
+    parameter PARM_EXP              = 8,
+    parameter PARM_MANT             = 23,
+    parameter PARM_LEADONE_WIDTH    = 7
 ) (
 
     input [PARM_EXP + 1 : 0]Exp_i,
