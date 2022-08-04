@@ -383,7 +383,8 @@ module MAC32_top #(
         .Mant_i(PosSum),
         .Exp_i(Exp_aligned),
         .Shift_num_i(shift_num),
-        .Exp_mv_sign_i(Exp_mv_sign),        
+        .Exp_mv_sign_i(Exp_mv_sign),
+            
         .Mant_norm_o(Mant_norm),
         .Exp_norm_o(Exp_norm),
         .Exp_norm_mone_o(Exp_norm_mone),
