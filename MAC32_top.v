@@ -80,18 +80,12 @@ module MAC32_top #(
     output NX_o );
 
 
-    parameter PARM_PC            = 5; //?
     parameter PARM_EXP          = 8;
     parameter PARM_MANT         = 23;
-    parameter PARM_MANT_PRENORM  = 24; //?
     parameter PARM_BIAS         = 127;
-    parameter PARM_HALF_BIAS     = 63;
     parameter PARM_LEADONE_WIDTH = 7;
-    parameter PARM_EXP_ZERO     = 8'h00;
     parameter PARM_EXP_ONE      = 8'h01; //used in this
-    parameter PARM_EXP_INF      = 8'hff; //used in SpecialCaseDetector
     parameter PARM_MANT_NAN     = 23'b100_0000_0000_0000_0000_0000; //RISC-V defines canonical NaN to be 0x7fc0_0000
-    parameter PARM_MANT_ZERO    = 23'd0; //used in SpecialCaseDetector
 
 
     //inputs wires of specialCaseDetectors
