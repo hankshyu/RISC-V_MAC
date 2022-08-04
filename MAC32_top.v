@@ -105,7 +105,12 @@ module MAC32_top #(
     wire A_DeN, B_DeN, C_DeN;
 
     
-    SpecialCaseDetector specialCaseDetector(
+    SpecialCaseDetector #(
+        .PARM_XLEN(PARM_XLEN),
+        .PARM_EXP(PARM_EXP),
+        .PARM_MANT(PARM_MANT)
+
+        )specialCaseDetector(
         .A_i(A_i),
         .B_i(B_i),
         .C_i(C_i),
@@ -124,6 +129,7 @@ module MAC32_top #(
         .A_DeN_o(A_DeN),
         .B_DeN_o(B_DeN),
         .C_DeN_o(C_DeN)
+        
     );
 
 
