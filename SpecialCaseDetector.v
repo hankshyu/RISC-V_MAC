@@ -28,9 +28,9 @@ module SpecialCaseDetector #(
     input [PARM_XLEN - 1 : 0] A_i,
     input [PARM_XLEN - 1 : 0] B_i,
     input [PARM_XLEN - 1 : 0] C_i,
-    input A_Leadingbit,
-    input B_Leadingbit,
-    input C_Leadingbit,
+    input A_Leadingbit_i,
+    input B_Leadingbit_i,
+    input C_Leadingbit_i,
     
     output A_Inf_o,
     output B_Inf_o,
@@ -50,9 +50,9 @@ module SpecialCaseDetector #(
     parameter PARM_MANT_ZERO    = 23'd0;
 
     
-    wire A_ExpZero = ~A_Leadingbit;
-    wire B_ExpZero = ~B_Leadingbit;
-    wire C_ExpZero = ~C_Leadingbit;
+    wire A_ExpZero = ~A_Leadingbit_i;
+    wire B_ExpZero = ~B_Leadingbit_i;
+    wire C_ExpZero = ~C_Leadingbit_i;
 
     wire A_ExpFull = (A_i[PARM_XLEN - 2 : PARM_MANT] == PARM_EXP_FULL);
     wire B_ExpFull = (B_i[PARM_XLEN - 2 : PARM_MANT] == PARM_EXP_FULL);
