@@ -384,7 +384,7 @@ module MAC32_top #(
         .Exp_i(Exp_aligned),
         .Shift_num_i(shift_num),
         .Exp_mv_sign_i(Exp_mv_sign),
-            
+
         .Mant_norm_o(Mant_norm),
         .Exp_norm_o(Exp_norm),
         .Exp_norm_mone_o(Exp_norm_mone),
@@ -398,19 +398,27 @@ module MAC32_top #(
 
     assign Result_o = {Sign_result, Exp_result, Mant_result}; //outputlogic
 
-    Rounder rounder(
+    Rounder #(
+    .PARM_RM(PARM_RM),     
+    .PARM_RM_RNE(PARM_RM_RNE),       
+    .PARM_RM_RTZ(PARM_RM_RTZ),       
+    .PARM_RM_RDN(PARM_RM_RDN),       
+    .PARM_RM_RUP(PARM_RM_RUP),       
+    .PARM_RM_RMM(PARM_RM_RMM),       
+    .PARM_MANT_NAN(PARM_MANT_NAN),     
+    .PARM_EXP(PARM_EXP),          
+    .PARM_MANT(PARM_MANT),         
+    .PARM_LEADONE_WIDTH(PARM_LEADONE_WIDTH)
+    ) rounder (
     .Exp_i(Exp_aligned),
     .Sign_i(Adder_sign),
-
     .Allzero_i(allzero),
     .Exp_mv_sign_i(Exp_mv_sign),
-
     .Sub_Sign_i(Sub_Sign),
     .A_Exp_raw_i(A_i[PARM_XLEN - 2 : PARM_MANT]), // This is different from A_Exp, since we would like the "raw" bits
     .A_Mant_i(A_Mant),
     .A_Sign_i(A_Sign),
     .Rounding_mode_i(Rounding_mode_i),
-
     .A_DeN_i(A_DeN),
     .A_Inf_i(A_Inf),
     .B_Inf_i(B_Inf),
@@ -421,10 +429,8 @@ module MAC32_top #(
     .A_NaN_i(A_NaN),
     .B_NaN_i(B_NaN),
     .C_NaN_i(C_NaN),
-
     .Mant_sticky_sht_out_i(Mant_sticky_sht_out),
     .Minus_sticky_bit_i(Minus_sticky_bit),
-
     .Mant_norm_i(Mant_norm),
     .Exp_norm_i(Exp_norm),
     .Exp_norm_mone_i(Exp_norm_mone),
