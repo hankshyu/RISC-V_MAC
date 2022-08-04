@@ -109,14 +109,13 @@ module MAC32_top #(
         .PARM_XLEN(PARM_XLEN),
         .PARM_EXP(PARM_EXP),
         .PARM_MANT(PARM_MANT)
-
-        )specialCaseDetector(
+        ) specialCaseDetector (
         .A_i(A_i),
         .B_i(B_i),
         .C_i(C_i),
-        .A_Leadingbit(A_Leadingbit),
-        .B_Leadingbit(B_Leadingbit),
-        .C_Leadingbit(C_Leadingbit),
+        .A_Leadingbit_i(A_Leadingbit),
+        .B_Leadingbit_i(B_Leadingbit),
+        .C_Leadingbit_i(C_Leadingbit),
         .A_Inf_o(A_Inf),
         .B_Inf_o(B_Inf),
         .C_Inf_o(C_Inf),
@@ -129,7 +128,7 @@ module MAC32_top #(
         .A_DeN_o(A_DeN),
         .B_DeN_o(B_DeN),
         .C_DeN_o(C_DeN)
-        
+
     );
 
 
@@ -150,7 +149,9 @@ module MAC32_top #(
     //Generate 13 Partial Product by Radix-4 Booth's Algorithm
     wire [2*PARM_MANT + 2 : 0] booth_PP [13 - 1: 0];
     
-    R4Booth r4Booth(
+    R4Booth #(
+        .PARM_MANT(PARM_MANT)
+        ) r4Booth (
         .MantA_i(B_Mant),
         .MantB_i(C_Mant),
         
@@ -167,6 +168,7 @@ module MAC32_top #(
         .pp_10_o(booth_PP[10]),
         .pp_11_o(booth_PP[11]),
         .pp_12_o(booth_PP[12])
+
     );
 
     //Sum 13 partial Product by Wallace Tree
@@ -174,7 +176,9 @@ module MAC32_top #(
     wire [2*PARM_MANT + 2 : 0] Wallace_carry;
     wire Wallace_suppression_sign_extension;
 
-    WallaceTree wallaceTree(
+    WallaceTree #(
+        .PARM_MANT(PARM_MANT)
+        ) wallaceTree (
         .pp_00_i(booth_PP[ 0]),
         .pp_01_i(booth_PP[ 1]),
         .pp_02_i(booth_PP[ 2]),
@@ -192,6 +196,7 @@ module MAC32_top #(
         .wallace_sum_o(Wallace_sum),
         .wallace_carry_o(Wallace_carry),
         .suppression_sign_extension_o(Wallace_suppression_sign_extension)
+
     );
     
     //Prenormalization of the augend, in parallel with multiplication.
