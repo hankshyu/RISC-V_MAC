@@ -129,7 +129,6 @@ module MAC32_top #(
         .A_DeN_o(A_DeN),
         .B_DeN_o(B_DeN),
         .C_DeN_o(C_DeN)
-
     );
 
 
@@ -170,7 +169,6 @@ module MAC32_top #(
         .pp_10_o(booth_PP[10]),
         .pp_11_o(booth_PP[11]),
         .pp_12_o(booth_PP[12])
-
     );
 
 
@@ -200,7 +198,6 @@ module MAC32_top #(
         .wallace_sum_o(Wallace_sum),
         .wallace_carry_o(Wallace_carry),
         .suppression_sign_extension_o(Wallace_suppression_sign_extension)
-
     );
     
 
@@ -227,7 +224,11 @@ module MAC32_top #(
     wire Mant_sticky_sht_out;
 
 
-    PreNormalizer preNormalizer(
+    PreNormalizer #(
+        .PARM_EXP(PARM_EXP),
+        .PARM_MANT(PARM_MANT),
+        .PARM_BIAS(PARM_BIAS)
+        ) preNormalizer (
         .A_sign_i(A_Sign),
         .B_sign_i(B_Sign),
         .C_sign_i(C_Sign),
@@ -259,10 +260,13 @@ module MAC32_top #(
     wire [2*PARM_MANT + 1 : 0] CSA_sum;
     wire [2*PARM_MANT + 1 : 0] CSA_carry;
     
-    Compressor32 #(2*PARM_MANT + 2) carrySaveAdder (
+    Compressor32 #(
+        .XLEN(2*PARM_MANT + 2)
+        ) carrySaveAdder (
         .A_i(A_Mant_aligned_low), //A_low
         .B_i(Wallace_sum_adjusted[2*PARM_MANT + 1 : 0]),
         .C_i({Wallace_carry_adjusted[2*PARM_MANT : 0], 1'b0}),
+
         .Sum_o(CSA_sum),
         .Carry_o(CSA_carry)
     );
@@ -293,7 +297,10 @@ module MAC32_top #(
     wire [2*PARM_MANT + 1 : 0] low_sum_inv;
     wire low_carry_inv;
 
-    EACAdder #(PARM_MANT) eacadder(
+
+    EACAdder #(
+        .PARM_MANT(PARM_MANT)
+        ) eacadder (
         .CSA_sum_i(CSA_sum),
         .CSA_carry_i(CSA_carry),
         .Carry_postcor_i(Carry_postcor),
@@ -305,11 +312,15 @@ module MAC32_top #(
         .low_carry_inv_o(low_carry_inv)
     );
 
+
     //Incrementer, Work on MSBs
     wire [PARM_MANT + 3 : 0]high_sum;
     wire [PARM_MANT + 3 : 0]high_sum_inv;
 
-    MSBIncrementer #(PARM_MANT) msbincrementer(
+
+    MSBIncrementer #(
+        .PARM_MANT(PARM_MANT)
+        ) msbincrementer (
         .low_carry_i(low_carry),
         .low_carry_inv_i(low_carry_inv),
         .A_Mant_aligned_high_i(A_Mant_aligned_high), 
@@ -317,6 +328,7 @@ module MAC32_top #(
         .high_sum_o(high_sum),
         .high_sum_inv_o(high_sum_inv)
     );
+
 
     wire bc_not_strange = ~(B_Inf | C_Inf | B_Zero | C_Zero | B_NaN | C_NaN);
     wire [3*PARM_MANT + 4 : 0] sub_minus = {{A_Mant_aligned_high[PARM_MANT+2 : 0], 1'b0} - bc_not_strange, 47'd0};
@@ -349,6 +361,7 @@ module MAC32_top #(
     LeadingOneDetector_Top #(.X_LEN(74))
     leadingonedetector (
         .data_i(PosSum),
+
         .shift_num_o(shift_num),
         .allzero_o(allzero)
     );
