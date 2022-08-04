@@ -268,8 +268,6 @@ module MAC32_top #(
     //correction based sign extenson is also in grand-adder.
     //input signals
 
-    // wire Wallace_adjusted_msb = Wallace_sum_adjusted[2*PARM_MANT + 2] & Wallace_carry_adjusted[2*PARM_MANT + 1];
-    // wire [2:0] Adder_Correlated_sign = {Wallace_suppression_sign_extension, Wallace_carry_adjusted[2*PARM_MANT + 2] , Wallace_adjusted_msb};
     
     //output signals
     reg [73 : 0] PosSum;
