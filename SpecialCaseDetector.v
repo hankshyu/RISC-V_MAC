@@ -23,9 +23,8 @@
 module SpecialCaseDetector #(
     parameter PARM_XLEN         = 32,
     parameter PARM_EXP          = 8,
-    parameter PARM_MANT         = 23,
-    parameter PARM_EXP_FULL     = 8'hff,
-    parameter PARM_MANT_ZERO    = 23'd0
+    parameter PARM_MANT         = 23
+
 ) (
     input [PARM_XLEN - 1 : 0] A_i,
     input [PARM_XLEN - 1 : 0] B_i,
@@ -48,7 +47,7 @@ module SpecialCaseDetector #(
     output C_DeN_o);
 
 
-
+    wire [PARM_EXP - 1: 0] PARM_EXP_FULL = {PARM_EXP{1'b1}}; // parameter of exponent full of 1s
 
     
     wire A_ExpZero = ~A_Leadingbit_i;
@@ -59,9 +58,9 @@ module SpecialCaseDetector #(
     wire B_ExpFull = (B_i[PARM_XLEN - 2 : PARM_MANT] == PARM_EXP_FULL);
     wire C_ExpFull = (C_i[PARM_XLEN - 2 : PARM_MANT] == PARM_EXP_FULL);
 
-    wire A_MantZero = (A_i[PARM_MANT - 1 : 0] == PARM_MANT_ZERO);
-    wire B_MantZero = (B_i[PARM_MANT - 1 : 0] == PARM_MANT_ZERO);
-    wire C_MantZero = (C_i[PARM_MANT - 1 : 0] == PARM_MANT_ZERO);
+    wire A_MantZero = (A_i[PARM_MANT - 1 : 0] == 0);
+    wire B_MantZero = (B_i[PARM_MANT - 1 : 0] == 0);
+    wire C_MantZero = (C_i[PARM_MANT - 1 : 0] == 0);
 
 
 
