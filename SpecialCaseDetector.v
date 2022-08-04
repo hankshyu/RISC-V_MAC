@@ -21,9 +21,11 @@
 
 
 module SpecialCaseDetector #(
-    parameter PARM_XLEN     = 32,
-    parameter PARM_EXP      = 8,
-    parameter PARM_MANT     = 23
+    parameter PARM_XLEN         = 32,
+    parameter PARM_EXP          = 8,
+    parameter PARM_MANT         = 23,
+    parameter PARM_EXP_FULL     = 8'hff,
+    parameter PARM_MANT_ZERO    = 23'd0
 ) (
     input [PARM_XLEN - 1 : 0] A_i,
     input [PARM_XLEN - 1 : 0] B_i,
@@ -46,8 +48,7 @@ module SpecialCaseDetector #(
     output C_DeN_o);
 
 
-    parameter PARM_EXP_FULL     = 8'hff;
-    parameter PARM_MANT_ZERO    = 23'd0;
+
 
     
     wire A_ExpZero = ~A_Leadingbit_i;
