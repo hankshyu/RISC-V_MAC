@@ -49,8 +49,13 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module MAC32_top #(
-   parameter PARM_RM            = 3,
-   parameter PARM_XLEN          = 32
+    parameter PARM_RM       = 3,
+    parameter PARM_XLEN     = 32,
+    parameter PARM_RM_RNE   = 3'b000,
+    parameter PARM_RM_RTZ   = 3'b001,
+    parameter PARM_RM_RDN   = 3'b010,
+    parameter PARM_RM_RUP   = 3'b011,
+    parameter PARM_RM_RMM   = 3'b100
 ) (
     //input clk_i,
     //input rst_i,
@@ -59,27 +64,22 @@ module MAC32_top #(
 
     input [PARM_RM - 1 : 0] Rounding_mode_i,
 
-
     input [PARM_XLEN - 1 : 0] A_i,
     input [PARM_XLEN - 1 : 0] B_i,
     input [PARM_XLEN - 1 : 0] C_i,
 
-    // T (result_o) = A + (B * C)
-    output [PARM_XLEN - 1 : 0] Result_o,
+    
+    output [PARM_XLEN - 1 : 0] Result_o, // T (result_o) = A + (B * C)
     //output ready_o,
     
     //Accrued exceptions (fflags)
     output NV_o,
-    //output reg DZ_o,  //would not occur in Multiplication or Addition
+    //output DZ_o,  //would not occur in Multiplication or Addition
     output OF_o,
     output UF_o,
     output NX_o );
 
-    parameter PARM_RM_RNE       = 3'b000;
-    parameter PARM_RM_RTZ       = 3'b001;
-    parameter PARM_RM_RDN       = 3'b010;
-    parameter PARM_RM_RUP       = 3'b011;
-    parameter PARM_RM_RMM       = 3'b100;
+
     parameter PARM_PC            = 5; //?
     parameter PARM_EXP          = 8;
     parameter PARM_MANT         = 23;
