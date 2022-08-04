@@ -21,9 +21,9 @@
 
 
 module Normalizer#(
-    parameter PARM_LEADONE_WIDTH    = 7,
     parameter PARM_EXP              = 8,
-    parameter PARM_MANT             = 23
+    parameter PARM_MANT             = 23,
+    parameter PARM_LEADONE_WIDTH    = 7
 ) (
     input [3*PARM_MANT + 4 : 0]Mant_i,
     input [PARM_EXP + 1 : 0]Exp_i,
