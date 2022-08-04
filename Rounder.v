@@ -236,9 +236,9 @@ module Rounder #(
                 Mant_roundup = Mant_lower[1] & (Mant_lower[0] | Mant_sticky | Mant_result_norm[0]);
             PARM_RM_RTZ:
                 Mant_roundup = 0;
-            PARM_RM_RDN:
-                Mant_roundup = Inexact_o & (~Sign_i);
             PARM_RM_RUP:
+                Mant_roundup = Inexact_o & (~Sign_i);
+            PARM_RM_RDN:
                 Mant_roundup = Inexact_o & Sign_i;
             default:
                 Mant_roundup = 0;
