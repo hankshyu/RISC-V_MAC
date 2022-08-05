@@ -408,9 +408,11 @@ module MAC32_top #(
     .Exp_mv_sign_i(Exp_mv_sign),
     .Sub_Sign_i(Sub_Sign),
     .A_Exp_raw_i(A_i[PARM_XLEN - 2 : PARM_MANT]), // This is different from A_Exp, since we would like the "raw" bits
+    .Rounding_mode_i(Rounding_mode_i),
     .A_Mant_i(A_Mant),
     .A_Sign_i(A_Sign),
-    .Rounding_mode_i(Rounding_mode_i),
+    .B_Sign_i(B_Sign),
+    .C_Sign_i(C_Sign),
     .A_DeN_i(A_DeN),
     .A_Inf_i(A_Inf),
     .B_Inf_i(B_Inf),
