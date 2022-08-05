@@ -117,7 +117,7 @@ module Rounder #(
 
         end
         else if(A_Inf_i | B_Inf_i | C_Inf_i)begin // the result is Infinity
-            Overflow_o = 1; // Infinity should not raise the Oveflow flat...
+            //Overflow_o = 1; // Infinity should not raise the Oveflow flag...
             Exp_result_norm = 8'b1111_1111;
             Sign_result_o = Sign_i; // or A_Sign_i, the same
 
