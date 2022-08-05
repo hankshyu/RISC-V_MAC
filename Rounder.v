@@ -42,8 +42,10 @@ module Rounder #(
     input Sub_Sign_i,
     input [PARM_EXP - 1 : 0] A_Exp_raw_i,
     input [PARM_MANT : 0] A_Mant_i,
-    input A_Sign_i,
     input [PARM_RM - 1 : 0] Rounding_mode_i,
+    input A_Sign_i,
+    input B_Sign_i,
+    input C_Sign_i,
 
     input A_DeN_i,
     input A_Inf_i,
@@ -117,9 +119,11 @@ module Rounder #(
 
         end
         else if(A_Inf_i | B_Inf_i | C_Inf_i)begin // the result is Infinity
-            //Overflow_o = 1; // Infinity should not raise the Oveflow flag...
+            //Operations on infinite operands are usually exact and therefore signal no exceptions
             Exp_result_norm = 8'b1111_1111;
-            Sign_result_o = Sign_i; // or A_Sign_i, the same
+            //If there's two infinities, they must be the same, if there's 3, it's the same with a
+            if(A_Inf_i) Sign_result_o = A_Sign_i;
+            else Sign_result_o = B_Sign_i ^ C_Sign_i; 
 
         end
         else if(Exp_mv_sign_i)begin // Only A counts 
