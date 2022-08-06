@@ -275,6 +275,7 @@ module MAC32_top_tb;
         a = 32'h00000000; //+0
         b = 32'h00000000; //+0
         c = 32'h80000000; //-0
+        
         @(posedge clk)
         testlabel("b) sth + 0 = sth");
         a = 32'h4425f1ec; //663.780029296875
@@ -308,6 +309,10 @@ module MAC32_top_tb;
         a = 32'h00017669; //1.34313056507e-40 (denormalized)
         b = 32'h80217669; //-3.07304893356e-39 (denormalized)
         c = 32'h00000000; //+0
+        @(posedge clk)
+        b = 32'h00217669; //3.07304893356e-39 (denormalized)
+        c = 32'h80000000; //-0
+        a = 32'h80017669; //-1.34313056507e-40 (denormalized)
         
         @(posedge clk)
         testlabel("c) Zero + Something & Result is Inexact");
@@ -324,8 +329,8 @@ module MAC32_top_tb;
         c = 32'h4de60c29; //482444576
         @(posedge clk)
         a = 32'h80000000; //-0
-        b = 32'h4c5c0000; //57671680
-        c = 32'hcde60c29; //-482444576
+        b = 32'hcde60c29; //-482444576
+        c = 32'h4c5c0000; //57671680
         @(posedge clk)
         a = 32'h80000000; //-0
         b = 32'h00023c21; //2.05241179577e-40(denormalized)
@@ -333,6 +338,10 @@ module MAC32_top_tb;
         @(posedge clk)
         a = 32'h00000000; //+0
         b = 32'h7ce15ed9; //9.36152425747e+36
+        c = 32'h00005cd9; //3.33074631985e-41(denormalized)
+        @(posedge clk)
+        a = 32'h80000000; //-0
+        b = 32'hbf800000; //-1
         c = 32'h00005cd9; //3.33074631985e-41(denormalized)
 
 
