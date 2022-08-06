@@ -299,6 +299,7 @@ module MAC32_top #(
         .CSA_carry_i(CSA_carry),
         .Carry_postcor_i(Carry_postcor),
         .Sub_Sign_i(Sub_Sign),
+        .A_Zero_i(A_Zero),//This is added to deal with false Sub_Sign_i(If a is -0)
 
         .low_sum_o(low_sum),
         .low_carry_o(low_carry),
