@@ -123,8 +123,8 @@ module MAC32_top_tb;
 
         @(posedge clk)
         label = 1;
-        ob_rm = 2'b00;
-        my_rm = 3'b000;
+        //ob_rm = 2'b00;
+        my_rm = 3'b001; // use RTZ
         $display("RISC-V Multiply-accumulate Testbench");
         testtype("Invalid Operation Test");
         $display("a) computational operation on a NaN");
@@ -357,23 +357,93 @@ module MAC32_top_tb;
         testlabel("d) Zero + Something & Result is Exact");
         a = 32'h00000000; //+0
         b = 32'hfe580000; //-7.17783117724e+37
-        c = 32'h86d80000; //-8.12501695288e-35
-        @(posedge clk) //NX Flag = 0  //TODO: Incorrect (NX flag should not fire...)
-        a = 32'h00000000; //+0
+        c = 32'h86ec0000; //-8.87733333741e-35
+        @(posedge clk)
+        a = 32'h80000000; //-0
         b = 32'hfe580000; //-7.17783117724e+37
-        c = 32'h06d80000; //+8.12501695288e-35
-        @(posedge clk) //NX Flag = 0  //TODO: Incorrect (NX flag should not fire...)
+        c = 32'h06ec0000; //8.87733333741e-35
+        
+        @(posedge clk)
+        $display("");
         a = 32'h00000000; //+0
-        b = 32'h06d80000; //+8.12501695288e-35
-        c = 32'hfe580000; //-7.17783117724e+37
+        b = 32'h58fff000; //2.25125005787e+15
+        c = 32'h4efff000; //2146959360.0
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h58fff000; //2.25125005787e+15
+        c = 32'hcefff000; //-2146959360.0
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'hd8fff000; //-2.25125005787e+15
+        c = 32'h4efff000; //2146959360.0
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'hd8fff000; //-2.25125005787e+15
+        c = 32'hcefff000; //-2146959360.0
+        @(posedge clk)
+        a = 32'h80000000; //-0
+        b = 32'h58fff000; //2.25125005787e+15
+        c = 32'h4efff000; //2146959360.0
+        @(posedge clk)
+        a = 32'h80000000; //-0
+        b = 32'h58fff000; //2.25125005787e+15
+        c = 32'hcefff000; //-2146959360.0
+        @(posedge clk)
+        a = 32'h80000000; //-0
+        b = 32'hd8fff000; //-2.25125005787e+15
+        c = 32'h4efff000; //2146959360.0
+        @(posedge clk)
+        a = 32'h80000000; //-0
+        b = 32'hd8fff000; //-2.25125005787e+15
+        c = 32'hcefff000; //-2146959360.0
+        
+        
+        
+        @(posedge clk)
+        $display("");
+        a = 32'h00000000; //+0
+        b = 32'h7efff000; //1.70099645086e+38(mantissa left is all 1)
+        c = 32'h02fff000; //3.76066356767e-37(mantissa left is all 1)
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'hfefff000; //-1.70099645086e+38(mantissa left is all 1)
+        c = 32'h02fff000; //3.76066356767e-37(mantissa left is all 1)
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h7efff000; //1.70099645086e+38(mantissa left is all 1)
+        c = 32'h82fff000; //-3.76066356767e-37(mantissa left is all 1)
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'hfefff000; //-1.70099645086e+38(mantissa left is all 1)
+        c = 32'h82fff000; //-3.76066356767e-37(mantissa left is all 1) 
+        @(posedge clk)         
+        a = 32'h80000000; //-0
+        b = 32'h7efff000; //1.70099645086e+38(mantissa left is all 1)
+        c = 32'h02fff000; //3.76066356767e-37(mantissa left is all 1)
+        @(posedge clk)
+        a = 32'h80000000; //-0
+        b = 32'hfefff000; //-1.70099645086e+38(mantissa left is all 1)
+        c = 32'h02fff000; //3.76066356767e-37(mantissa left is all 1)
+        @(posedge clk)
+        a = 32'h80000000; //-0
+        b = 32'h7efff000; //1.70099645086e+38(mantissa left is all 1)
+        c = 32'h82fff000; //-3.76066356767e-37(mantissa left is all 1)
+        @(posedge clk)
+        a = 32'h80000000; //-0
+        b = 32'hfefff000; //-1.70099645086e+38(mantissa left is all 1)
+        c = 32'h82fff000; //-3.76066356767e-37(mantissa left is all 1)  
+
+        
         @(posedge clk) //NX Flag = 0
+        $display("");
         a = 32'h00000000; //+0
         b = 32'h4c5c0000; //57671680
         c = 32'h4f660000; //3858759680
         @(posedge clk) //NX Flag = 0
-        a = 32'h00000000; //+0
+        a = 32'h80000000; //-0
         c = 32'hcf660000; //-3858759680
         b = 32'h4c5c0000; //57671680
+        
         @(posedge clk)
         a = 32'h00000000; //+0
         b = 32'h7ce15ed9; //9.36152425747e+36
@@ -383,8 +453,6 @@ module MAC32_top_tb;
         b = 32'hbf800000; //-1
         c = 32'h00005cd9; //3.33074631985e-41(denormalized)
 
-
-
         @(posedge clk)
         a = 32'h00000000; //+0
         b = 32'hfe580000; //-7.17783117724e+37
@@ -392,7 +460,6 @@ module MAC32_top_tb;
 
 
         @(posedge clk)
-
         a = 32'hc288ae14; //-68.339996337890625
         b = 32'h00000000; //+0
         c = 32'h421a851f; //38.630001068115234375
@@ -400,7 +467,6 @@ module MAC32_top_tb;
         a = 32'hc288ae14; //-68.339996337890625
         b = 32'h80000000; //-0
         c = 32'h421a851f; //38.630001068115234375
-        
         @(posedge clk) // This leads to incorrect result...
         a = 32'h004889a0; //6.66152627087e-39 (denormalized)
         b = 32'h7cdab59f; //9.08483542861e+36
