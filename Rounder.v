@@ -192,7 +192,7 @@ module Rounder #(
             Sign_result_o = Sign_i;
 
         end
-        else if(Exp_norm_i == 0)begin // 0 denormalized
+        else if(Exp_norm_i == 10'd0)begin // 0 denormalized
             Underflow_o = 1;
             Mant_result_norm = {1'b0, Mant_norm_i[3*PARM_MANT + 4 : 2*PARM_MANT + 5]};
             Mant_lower = Mant_norm_i[2*PARM_MANT + 4 : 2*PARM_MANT + 3];
@@ -200,7 +200,7 @@ module Rounder #(
             Mant_sticky = Sticky_one;
             
         end
-        else if(Exp_norm_i == 1)begin // 0
+        else if(Exp_norm_i == 10'd1)begin // 0
 
             if(Mant_norm_i[3*PARM_MANT + 4])begin //Normal Number
                 Mant_result_norm = Mant_norm_i[3*PARM_MANT + 4 : 2*PARM_MANT + 4];
@@ -218,14 +218,14 @@ module Rounder #(
             end
 
         end
-        else if(~Mant_norm_i[3*PARM_MANT + 4])begin
+        else if(~Mant_norm_i[3*PARM_MANT + 4])begin // number with 0X.XX
             Mant_result_norm = Mant_norm_i[3*PARM_MANT + 3 : 2*PARM_MANT + 3];
             Exp_result_norm = Exp_norm_mone_i[PARM_MANT - 1 : 0];
             Mant_lower = Mant_norm_i[2*PARM_MANT + 2 : 2*PARM_MANT + 1];
             Sign_result_o = Sign_i;
             Mant_sticky = Sticky_one;
         end
-        else begin 
+        else begin // number with 1X.XX
             Mant_result_norm = Mant_norm_i[3*PARM_MANT + 4 : 2*PARM_MANT + 4];
             Exp_result_norm = Exp_norm_i[PARM_MANT - 1 : 0];
             Mant_lower = Mant_norm_i[2*PARM_MANT + 3 : 2*PARM_MANT + 2];
