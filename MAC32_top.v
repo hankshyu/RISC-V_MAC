@@ -202,8 +202,12 @@ module MAC32_top #(
     wire Mv_halt;
 
     //Exponent Processor
+    //d = expA - (expB + expC - bias[127])
+    //mv = 27 - d = expB + expC - expA + 100
+    
     wire [PARM_EXP + 1 : 0] Exp_mv = 27 - A_Exp + B_Exp + C_Exp - PARM_BIAS; // d = expA - (expB + expC - 127), mv = 27 - d 
     wire [PARM_EXP + 1 : 0] Exp_mv_neg = -27 + A_Exp - B_Exp - C_Exp + PARM_BIAS; //Minus_sft_amt_DO
+
     assign Exp_mv_sign = Exp_mv[PARM_EXP + 1]; // the sign bit of the mv parameter, Sign_amt_DO
     assign Mv_halt = (~Exp_mv_sign) & (Exp_mv[PARM_EXP : 0] > 73); //right shift(+) is out of range, which is 74 or more, Sft_stop_SO
 
