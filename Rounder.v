@@ -126,6 +126,11 @@ module Rounder #(
             else Sign_result_o = B_Sign_i ^ C_Sign_i; 
 
         end
+        else if(B_Zero_i | C_Zero_i)begin // for situation of sth + sth*0 / sth + 0*sth
+            Mant_result_norm = A_Mant_i;
+            Exp_result_norm = A_Exp_raw_i;
+            Sign_result_o = A_Sign_i;
+        end
         else if(Exp_mv_sign_i)begin // Only A counts 
             Underflow_o = A_DeN_i;
             Mant_result_norm = A_Mant_i;
