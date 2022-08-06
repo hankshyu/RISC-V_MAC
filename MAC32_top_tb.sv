@@ -277,7 +277,7 @@ module MAC32_top_tb;
         c = 32'h80000000; //-0
         
         @(posedge clk)
-        testlabel("b) Zero + Something");
+        testlabel("b) Zero + Something & Result is Inexact");
         a = 32'h00000000; //+0
         b = 32'hc288ae14; //-68.339996337890625
         c = 32'h421a851f; //38.630001068115234375
@@ -285,22 +285,57 @@ module MAC32_top_tb;
         a = 32'h80000000; //-0
         b = 32'hc288ae14; //-68.339996337890625
         c = 32'h421a851f; //38.630001068115234375
-        @(posedge clk) //incorrect(Flag incorrect)
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h4c5c0000; //57671680
+        c = 32'h4de60c29; //482444576
+        @(posedge clk)
+        a = 32'h80000000; //-0
+        b = 32'h4c5c0000; //57671680
+        c = 32'hcde60c29; //-482444576
+        @(posedge clk)
+        a = 32'h80000000; //-0
+        b = 32'h00023c21; //2.05241179577e-40(denormalized)
+        c = 32'h77611cc1; //4.56582027998e+33
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h7ce15ed9; //9.36152425747e+36
+        c = 32'h00005cd9; //3.33074631985e-41(denormalized)
+
+
+        @(posedge clk) //NX Flag = 0
+        testlabel("c) Zero + Something & Result is Exact");
         a = 32'h00000000; //+0
         b = 32'hfe580000; //-7.17783117724e+37
         c = 32'h86d80000; //-8.12501695288e-35
-        @(posedge clk)
+        @(posedge clk) //NX Flag = 0  //TODO: Incorrect (NX flag should not fire...)
         a = 32'h00000000; //+0
         b = 32'hfe580000; //-7.17783117724e+37
         c = 32'h06d80000; //+8.12501695288e-35
+        @(posedge clk) //NX Flag = 0  //TODO: Incorrect (NX flag should not fire...)
+        a = 32'h00000000; //+0
+        b = 32'h06d80000; //+8.12501695288e-35
+        c = 32'hfe580000; //-7.17783117724e+37
+        
+        @(posedge clk) //NX Flag = 0
+        a = 32'h00000000; //+0
+        b = 32'h4c5c0000; //57671680
+        c = 32'h4f660000; //3858759680
+        @(posedge clk) //NX Flag = 0
+        a = 32'h00000000; //+0
+        c = 32'hcf660000; //-3858759680
+        b = 32'h4c5c0000; //57671680
+
+
+
         @(posedge clk)
         a = 32'h00000000; //+0
         b = 32'hfe580000; //-7.17783117724e+37
-        c = 32'h06d80000; //+8.12501695288e-35
+        c = 32'h805a0817; //-8.26809674334e-39 (denormalized number)
 
 
         @(posedge clk)
-        testlabel("c) Something + Zero");
+        testlabel("d) Something + Zero");
         a = 32'hc288ae14; //-68.339996337890625
         b = 32'h00000000; //+0
         c = 32'h421a851f; //38.630001068115234375
