@@ -275,8 +275,6 @@ module MAC32_top #(
     
     //output signals
     reg [73 : 0] PosSum;
-    wire [3*PARM_MANT + 4 : 0] A_LZA;
-    wire [3*PARM_MANT + 4 : 0] B_LZA;
     wire Minus_sticky_bit;
     
     wire Adder_sign; //global signal for Sign_out_D
