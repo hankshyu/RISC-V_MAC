@@ -259,7 +259,7 @@ module MAC32_top_tb;
         //Overflow and Underflows.....
         @(posedge clk)
         testtype("Coke Zero");
-        testlabel("a)Zero + Zero x Zero");
+        testlabel("a) 0 + 0 x 0, lots of zeros");
         a = 32'h00000000; //+0.0
         b = 32'h00000000; //+0.0
         c = 32'h00000000; //+0.0
@@ -275,9 +275,42 @@ module MAC32_top_tb;
         a = 32'h00000000; //+0
         b = 32'h00000000; //+0
         c = 32'h80000000; //-0
+        @(posedge clk)
+        testlabel("b) sth + 0 = sth");
+        a = 32'h4425f1ec; //663.780029296875
+        b = 32'h45197e5d; //2455.8976
+        c = 32'h00000000; //+0
+        @(posedge clk)
+        a = 32'h7735f1ed; //3.69028347337e+33
+        b = 32'h80000000; //-0
+        c = 32'h81b476e9; //-6.629218494e-38
+        @(posedge clk)
+        a = 32'h7735f1ed; //3.69028347337e+33
+        b = 32'h00000000; //+0
+        c = 32'h81b476e9; //-6.629218494e-38
+        @(posedge clk)
+        a = 32'h81b476e9; //-6.629218494e-38
+        b = 32'h7735f1ed; //3.69028347337e+33
+        c = 32'h80000000; //-0
+        @(posedge clk)
+        a = 32'h7735f1ed; //3.69028347337e+33
+        b = 32'h01b476e9; //6.629218494e-38
+        c = 32'h00000000; //+0
+        @(posedge clk)
+        a = 32'h81b476e9; //-6.629218494e-38
+        b = 32'h73b476e9; //2.85957403269e+31
+        c = 32'h80000000; //-0
+        @(posedge clk)
+        a = 32'h81b476e9; //-6.629218494e-38
+        b = 32'h73b476e9; //2.85957403269e+31
+        c = 32'h00000000; //+0
+        @(posedge clk)
+        a = 32'h00017669; //1.34313056507e-40 (denormalized)
+        b = 32'h80217669; //-3.07304893356e-39 (denormalized)
+        c = 32'h00000000; //+0
         
         @(posedge clk)
-        testlabel("b) Zero + Something & Result is Inexact");
+        testlabel("c) Zero + Something & Result is Inexact");
         a = 32'h00000000; //+0
         b = 32'hc288ae14; //-68.339996337890625
         c = 32'h421a851f; //38.630001068115234375
@@ -304,7 +337,7 @@ module MAC32_top_tb;
 
 
         @(posedge clk) //NX Flag = 0
-        testlabel("c) Zero + Something & Result is Exact");
+        testlabel("d) Zero + Something & Result is Exact");
         a = 32'h00000000; //+0
         b = 32'hfe580000; //-7.17783117724e+37
         c = 32'h86d80000; //-8.12501695288e-35
@@ -335,7 +368,7 @@ module MAC32_top_tb;
 
 
         @(posedge clk)
-        testlabel("d) Something + Zero");
+
         a = 32'hc288ae14; //-68.339996337890625
         b = 32'h00000000; //+0
         c = 32'h421a851f; //38.630001068115234375
