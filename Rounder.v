@@ -82,7 +82,7 @@ module Rounder #(
             Mant_sticky_changed = Rs_Mant_i [2*PARM_MANT + 3 : 2];
         else if(Exp_norm_i == 0) 
             Mant_sticky_changed = Mant_norm_i[2*PARM_MANT + 2 : 1];
-        else if(Mant_norm_i[3*PARM_MANT + 4] | Exp_norm_i == 0) 
+        else if(Mant_norm_i[3*PARM_MANT + 4]) // | Exp_norm_i == 0
             Mant_sticky_changed = Mant_norm_i[2*PARM_MANT + 1 : 0];
         else 
             Mant_sticky_changed = {Mant_norm_i[2*PARM_MANT : 0], 1'b0};
