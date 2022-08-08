@@ -84,7 +84,7 @@ module MAC32_top #(
     parameter PARM_MANT         = 23;
     parameter PARM_BIAS         = 127;
     parameter PARM_LEADONE_WIDTH = 7;
-    parameter PARM_EXP_ONE      = 8'h01; //used in this
+    parameter PARM_EXP_ONE      = 8'h01; 
     parameter PARM_MANT_NAN     = 23'b100_0000_0000_0000_0000_0000; //RISC-V defines canonical NaN to be 0x7fc0_0000
 
 
