@@ -69,8 +69,8 @@ module Rounder #(
     input [3*PARM_MANT + 6 : 0] Rs_Mant_i,
 
     output reg Sign_result_o,
-    output [PARM_EXP - 1 : 0] Exp_result_o,
-    output [PARM_MANT - 1 : 0] Mant_result_o,
+    output reg [PARM_EXP - 1 : 0] Exp_result_o,
+    output reg [PARM_MANT - 1 : 0] Mant_result_o,
     output  Invalid_o,
     output reg Overflow_o,
     output reg Underflow_o,
@@ -293,10 +293,11 @@ module Rounder #(
                 Mant_roundup = Mant_lower[1] & (Mant_lower[0] | Mant_sticky | Mant_result_norm[0]);
             PARM_RM_RTZ:
                 Mant_roundup = 0;
-            PARM_RM_RUP:
-                Mant_roundup = Inexact_o & (~Sign_i);
             PARM_RM_RDN:
                 Mant_roundup = Inexact_o & Sign_i;
+            PARM_RM_RUP:
+                Mant_roundup = Inexact_o & (~Sign_i);
+
             default:
                 Mant_roundup = 0;
         endcase
@@ -323,8 +324,49 @@ module Rounder #(
     // exception shall be signaled.
     
     //output logic
-    
-    assign Mant_result_o = (Mant_renormalize)? Mant_upper_rounded[PARM_MANT : 1] : Mant_upper_rounded[PARM_MANT - 1 : 0];
-    assign Exp_result_o = Exp_result_norm + Mant_renormalize;
+
+    always @(*) begin
+        if(Overflow_o)begin
+            case (Rounding_mode_i)
+                PARM_RM_RNE:
+                    Mant_result_o = 0; // to Inf
+                PARM_RM_RTZ:
+                    Mant_result_o = {PARM_MANT{1'b1}};//to Largest Finite Number
+                PARM_RM_RDN:
+                    Mant_result_o = (Sign_result_o)? 0 : {PARM_MANT{1'b1}}; //+: to largest Finite Number -: to Inf
+                PARM_RM_RUP:
+                    Mant_result_o = (Sign_result_o)? {PARM_MANT{1'b1}} : 0; //+: to Inf  -: to most negative Finite Number
+                PARM_RM_RMM:
+                    Mant_result_o = 0; // to Inf
+                default:
+                    Mant_result_o = 0;
+            endcase
+        end
+        else if(Mant_renormalize)
+            Mant_result_o = Mant_upper_rounded[PARM_MANT : 1];
+        else 
+            Mant_result_o = Mant_upper_rounded[PARM_MANT - 1 : 0];
+    end
+
+    always@(*)begin
+        if(Overflow_o)begin
+            case (Rounding_mode_i)
+                PARM_RM_RNE:
+                    Exp_result_o = {PARM_EXP{1'b1}}; // to Inf
+                PARM_RM_RTZ:
+                    Exp_result_o = {{(PARM_EXP-1){1'b1}},1'b0}; ////to Largest Finite Number, exp = 1111_1110
+                PARM_RM_RDN:
+                    Exp_result_o = (Sign_result_o)? {PARM_EXP{1'b1}} : {{(PARM_EXP-1){1'b1}},1'b0};
+                PARM_RM_RUP:
+                    Exp_result_o = (Sign_result_o)? {{(PARM_EXP-1){1'b1}},1'b0} : {PARM_EXP{1'b1}};
+                PARM_RM_RMM:
+                    Exp_result_o = {PARM_EXP{1'b1}}; // to Inf
+                default:
+                    Mant_roundup = 0;
+            endcase
+        end
+        else 
+            Exp_result_o = Exp_result_norm + Mant_renormalize;
+    end
 
 endmodule
