@@ -605,6 +605,7 @@ module MAC32_top_tb;
 
 
         @(posedge clk)//Sticky bit = 1
+        printblank();
         print("If about to overflow....");
         my_rm = PARM_RM_RTZ;
         a = 32'h72000000; //2.53530120046e+30 (Mant empty, exp = 2^101)
@@ -625,17 +626,21 @@ module MAC32_top_tb;
         b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
         c = 32'h3f800000; //1
         @(posedge clk)//Should be Overflow....
-        a = 32'h73800000; //2.53530120046e+30 (Mant empty, exp = 2^103)
+        a = 32'h73800000; //2.53530120046e+30 (Mant empty, exp = 2^104)
         b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
         c = 32'h3f800000; //1
         @(posedge clk)//Should be Overflow....
-        a = 32'h74000000; //2.53530120046e+30 (Mant empty, exp = 2^103)
+        a = 32'h74000000; //2.53530120046e+30 (Mant empty, exp = 2^105)
         b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
         c = 32'h3f800000; //1
         @(posedge clk)//Should be Overflow....
-        a = 32'h74000000; //2.53530120046e+30 (Mant empty, exp = 2^103)
+        a = 32'h74800000; //2.53530120046e+30 (Mant empty, exp = 2^106)
         b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
         c = 32'h3f800000; //1
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h4d7fffff; //268435440.0(Mant full * 2 ^ 27) // If the exponent = 127's overflow won't be caught
+        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
 
         
 
