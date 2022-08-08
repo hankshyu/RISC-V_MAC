@@ -537,7 +537,7 @@ module MAC32_top_tb;
         b = 32'h8007ff00; //-7.34325236857e-40
         c = 32'hff7ff000; //-3.40199290171e+38(mantissa left is all 1)
 
-        //Overflow (IEEE 754)
+        //Overflow (IEEE 754-2008)
         // The overflow exception shall be signaled if and only if the destination format’s largest finite number is
         // exceeded in magnitude by what would have been the rounded floating-point result (see 4) were the exponent
         // range unbounded. The default result shall be determined by the rounding-direction attribute and the sign of
