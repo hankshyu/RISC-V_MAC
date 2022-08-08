@@ -87,13 +87,22 @@ module MAC32_top_tb;
     // .Flag_NX_SO(ob_NX),
     // .Flag_IV_SO(ob_IV)
     // );
-    task automatic printblank();
-        $display("");
-    endtask //automatic
 
+    
     task automatic print(input string str);
         $display("%s",str);
     endtask //automatic
+
+    task automatic printnoln(input string str);
+        $write("%s",str);
+    endtask //automatic
+
+
+    task automatic printblank();
+        print("");
+    endtask //automatic
+
+
     task showresult;
         begin
             $write("%03d %8h(%13e) + %8h(%13e) x %8h(%13e) = %8h(%13e)\t",label,a,$bitstoshortreal(a),b,$bitstoshortreal(b),c,$bitstoshortreal(c),my_result,$bitstoshortreal(my_result));
@@ -108,9 +117,10 @@ module MAC32_top_tb;
 
     task automatic testtype(input string tt);
         begin
-            $display("=============================================================================================================================================");
+            printblank();
+            print("=============================================================================================================================================");
             $display("******* %s",tt);
-            $display("=============================================================================================================================================");
+            print("=============================================================================================================================================");
         end
 
     endtask //automatic
@@ -133,6 +143,9 @@ module MAC32_top_tb;
         label = 1;
         //ob_rm = 2'b00;
         my_rm = 3'b001; // use RTZ
+        printblank();
+        printblank();
+        printblank();
         print("RISC-V Multiply-accumulate Testbench");
         testtype("Invalid Operation Test");
         print("a) computational operation on a NaN");
@@ -510,7 +523,7 @@ module MAC32_top_tb;
 
         
         @(posedge clk) //NX Flag = 0
-        printblank();
+        testtype("Overflows, It's too much... to much to hold ");
         a = 32'h00000000; //+0
         b = 32'h4c5c0000; //57671680
         c = 32'h4f660000; //3858759680
@@ -551,7 +564,7 @@ module MAC32_top_tb;
 
         
         @(posedge clk)
-        testtype("Overflows, It's too much... to much to hold ");
+
 
         a = 32'h0000_0000; //0
         b = 32'h05b00000;  //1.65509604596E-35
