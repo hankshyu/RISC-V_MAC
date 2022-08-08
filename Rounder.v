@@ -16,6 +16,7 @@
 // Revision:
 // Revision 0.01 - File Created
 // Revision 0.02 - File Renamed
+// Revision 1.00 - Invalid_o shall raise whilst Overflow/Underflow
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
@@ -235,8 +236,10 @@ module Rounder #(
     end
 
     //Rounding
-
-    assign Inexact_o = (|Mant_lower) || Mant_sticky;
+    // IEEE 754
+    // 7.6 Inexact (emphaisis added): 
+    // When all of these exceptions are handled by default, the inexact flag is always raised when either the overflow or underflow flag is raised.
+    assign Inexact_o = (|Mant_lower) || Mant_sticky || Overflow_o ||Underflow_o;
 
     reg Mant_roundup;// Whether to round up or not
     always @(*) begin
