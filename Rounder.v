@@ -103,7 +103,7 @@ module Rounder #(
     reg [PARM_EXP - 1 : 0] Exp_result_norm; // 8 bit
     reg [1 : 0] Mant_lower;
 
-    //wires soley for degub:
+    //wires soley for debug:
     wire dbg_w1 = Invalid_o;
     wire dbg_w2 = A_Inf_i | B_Inf_i | C_Inf_i;
     wire dbg_w3 = B_Zero_i | C_Zero_i;
@@ -297,7 +297,9 @@ module Rounder #(
                 Mant_roundup = Inexact_o & Sign_i;
             PARM_RM_RUP:
                 Mant_roundup = Inexact_o & (~Sign_i);
-
+            PARM_RM_RMM:
+                //TODO
+                Mant_roundup = 1'bz;
             default:
                 Mant_roundup = 0;
         endcase
