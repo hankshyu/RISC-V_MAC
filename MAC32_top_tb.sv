@@ -21,6 +21,12 @@
 
 module MAC32_top_tb;
 
+    parameter PARM_RM_RNE           = 3'b000;
+    parameter PARM_RM_RTZ           = 3'b001;
+    parameter PARM_RM_RDN           = 3'b010;
+    parameter PARM_RM_RUP           = 3'b011;
+    parameter PARM_RM_RMM           = 3'b100;
+
     reg clk;
     reg [25-1 : 0] label;
     reg [32-1 : 0] a;
@@ -32,6 +38,7 @@ module MAC32_top_tb;
 
     reg [1 : 0] ob_rm;
     reg [2 : 0] my_rm;
+
     wire [31:0] ob_result;
     wire ob_OF, ob_UF, ob_NX, ob_IV;
 
@@ -550,6 +557,7 @@ module MAC32_top_tb;
 
         @(posedge clk) 
         testtype("Overflows, It's too much... to much to hold ");
+        testlabel("Overflow happens solely at Multiplication");
         a = 32'h00000000; //+0
         b = 32'h7445ecd1; //6.27249565725e+31
         c = 32'h7cf526d7; //1.01832039677e+37
@@ -557,11 +565,15 @@ module MAC32_top_tb;
         a = 32'h80000000; //-0
         b = 32'h7445ecd1; //6.27249565725e+31
         c = 32'hfcf526d7; //-1.01832039677e+37
-        @(posedge clk) // Should be exact but ovf
+        @(posedge clk) 
         a = 32'h80000000; //-0
         b = 32'h64b57000; //2.6775449023e+22
         c = 32'h6cb73000; //1.77168078865e+27
+
+        
         @(posedge clk)
+        testlabel("Overflow happens solely at Addition");
+
         a = 32'h3f800000; //1
         b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
         c = 32'h3f800000; //1
@@ -573,24 +585,41 @@ module MAC32_top_tb;
         a = 32'h7445ecd1; //6.27249565725e+31
         b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
         c = 32'h3f800000; //1
-        @(posedge clk)
+
+        @(posedge clk)//Sticky bit = 1
         print("If about to overflow....");
-        a = 32'h48800000; //262144.0 (Mant empty, exp - 2^18)
-        b = 32'h55ffffff; //3.51843699917e+13 (Mant full, exp = 2^44)
+        my_rm = PARM_RM_RTZ;
+        a = 32'h72000000; //2.53530120046e+30 (Mant empty, exp = 2^101)
+        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX, exp = 2^127)
         c = 32'h3f800000; //1
         @(posedge clk)
-        my_rm = 3'b011;
-        a = 32'h48800000; //262144.0 (Mant empty, exp - 2^18)
-        b = 32'h55ffffff; //3.51843699917e+13 (Mant full, exp = 2^44)
+        my_rm = PARM_RM_RUP;
+        a = 32'h72000000; //2.53530120046e+30 (Mant empty, exp = 2^101)
+        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
         c = 32'h3f800000; //1
-        @(posedge clk)
-        my_rm = 3'b011;
-        a = 32'h48800000; //262144.0 (Mant empty, exp - 2^18)
-        b = 32'h55ffffff; //3.51843699917e+13 (Mant full, exp = 2^44)
+        @(posedge clk)//Guard bit = 1
+        my_rm = PARM_RM_RTZ;
+        a = 32'h72800000; //2.53530120046e+30 (Mant empty, exp = 2^102)
+        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
         c = 32'h3f800000; //1
+        @(posedge clk)//Round bit = 1
+        a = 32'h73000000; //2.53530120046e+30 (Mant empty, exp = 2^103)
+        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
+        c = 32'h3f800000; //1
+        @(posedge clk)//Should be Overflow....
+        a = 32'h73800000; //2.53530120046e+30 (Mant empty, exp = 2^103)
+        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
+        c = 32'h3f800000; //1
+        @(posedge clk)//Should be Overflow....
+        a = 32'h74000000; //2.53530120046e+30 (Mant empty, exp = 2^103)
+        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
+        c = 32'h3f800000; //1
+        @(posedge clk)//Should be Overflow....
+        a = 32'h74000000; //2.53530120046e+30 (Mant empty, exp = 2^103)
+        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
+        c = 32'h3f800000; //1
+
         
-
-
 
         @(posedge clk)
         printblank();
@@ -786,6 +815,16 @@ module MAC32_top_tb;
         a = 32'hb7800000;  //1.52587890625e-05
         b = 32'hbf800000; //1
         c = 32'h43fffff0; //511.999969482
+        @(posedge clk)
+        my_rm = PARM_RM_RTZ;
+        a = 32'h48800000; //262144.0 (Mant empty, exp - 2^18)
+        b = 32'h55ffffff; //3.51843699917e+13 (Mant full, exp = 2^44)
+        c = 32'h3f800000; //1
+        @(posedge clk)
+        my_rm = PARM_RM_RUP;
+        a = 32'h48800000; //262144.0 (Mant empty, exp - 2^18)
+        b = 32'h55ffffff; //3.51843699917e+13 (Mant full, exp = 2^44)
+        c = 32'h3f800000; //1
         
         @(posedge clk) 
         my_rm = 3;
