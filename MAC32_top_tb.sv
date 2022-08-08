@@ -574,9 +574,21 @@ module MAC32_top_tb;
         b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
         c = 32'h3f800000; //1
         @(posedge clk)
-        a = 32'hf445ecd1; //-6.27249565725e+31
-        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
-        c = 32'hbf800000; //-1
+        print("If about to overflow....");
+        a = 32'h48800000; //262144.0 (Mant empty, exp - 2^18)
+        b = 32'h55ffffff; //3.51843699917e+13 (Mant full, exp = 2^44)
+        c = 32'h3f800000; //1
+        @(posedge clk)
+        my_rm = 3'b011;
+        a = 32'h48800000; //262144.0 (Mant empty, exp - 2^18)
+        b = 32'h55ffffff; //3.51843699917e+13 (Mant full, exp = 2^44)
+        c = 32'h3f800000; //1
+        @(posedge clk)
+        my_rm = 3'b011;
+        a = 32'h48800000; //262144.0 (Mant empty, exp - 2^18)
+        b = 32'h55ffffff; //3.51843699917e+13 (Mant full, exp = 2^44)
+        c = 32'h3f800000; //1
+        
 
 
 
