@@ -112,10 +112,10 @@ module MAC32_top_tb;
             if(my_rm == 3'b011) $write("[RUP]");
             if(my_rm == 3'b100) $write("[RMM]");
             $write(" %8h(%13e) + %8h(%13e) x %8h(%13e) = %8h(%13e)\t",a,$bitstoshortreal(a),b,$bitstoshortreal(b),c,$bitstoshortreal(c),my_result,$bitstoshortreal(my_result));
-            if(my_NV) $write("NV (Invalid)");
-            if(my_OF) $write("OF (Overflw)");
-            if(my_UF) $write("UF (Underfw)");
-            if(my_NX) $write("NX (Inexact)");
+            if(my_NV) $write("  NV(Invalid)");
+            if(my_OF) $write("  OF(Overflw)");
+            if(my_UF) $write("  UF(Underfw)");
+            if(my_NX) $write("  NX(Inexact)");
             $display(";");
         end
         
