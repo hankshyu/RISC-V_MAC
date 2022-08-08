@@ -103,6 +103,34 @@ module Rounder #(
     reg [PARM_EXP - 1 : 0] Exp_result_norm; // 8 bit
     reg [1 : 0] Mant_lower;
 
+    //wires soley for degub:
+    wire dbg_w1 = Invalid_o;
+    wire dbg_w2 = A_Inf_i | B_Inf_i | C_Inf_i;
+    wire dbg_w3 = B_Zero_i | C_Zero_i;
+    wire dbg_w4 = Exp_mv_sign_i;
+    wire dbg_w5 = Allzero_i;
+
+    wire dbg_w6 = Exp_i[PARM_EXP + 1];
+    wire dbg_w6_1 = ~Exp_max_rs_i[PARM_EXP + 1];
+    wire dbg_w6_2 = (dbg_w6 & ~dbg_w6_1);
+    
+    wire dbg_w7 = ((Exp_norm_i[PARM_EXP : 0] == 256) & (~Mant_norm_i[3*PARM_MANT + 4]) & (Mant_norm_i[3*PARM_MANT + 3 : 2*PARM_MANT+3] != 0));
+    
+    wire dbg_w8 = (Exp_norm_i[PARM_EXP - 1 : 0] == 8'b1111_1111);
+    wire dbg_w8_1 = Mant_norm_i[3*PARM_MANT + 4];
+    wire dbg_w8_2 = (Mant_norm_i[3*PARM_MANT + 4 : 2*PARM_MANT + 4] == 0);
+    wire dbg_w8_3 = (dbg_w8 & ~dbg_w8_1 & ~dbg_w8_2);
+
+    wire dbg_w9 = Exp_norm_i[PARM_EXP];
+    wire dbg_w10 = Exp_norm_i == 10'd0;
+    
+    wire dbg_w11 = Exp_norm_i == 10'd1;
+    wire dbg_w11_1 = Mant_norm_i[3*PARM_MANT + 4];
+    wire dbg_w11_2 = dbg_w11 & ~dbg_w11_1;
+
+    wire dbg_w12 = ~Mant_norm_i[3*PARM_MANT + 4];
+    wire dbg_w13 = ~(dbg_w1 | dbg_w2 | dbg_w3 | dbg_w4 | dbg_w5 | dbg_w6 | dbg_w7 | dbg_w8 | dbg_w9 | dbg_w10 | dbg_w11 | dbg_w12);
+
 
     always @(*) begin
         //assign value to avoid latches
@@ -113,13 +141,14 @@ module Rounder #(
         Mant_lower = 2'b00;
         Sign_result_o = 1'b0;
         Mant_sticky = 1'b0;
-
-        if(Invalid_o)begin
+//dbg_w1
+        if(Invalid_o)begin 
             Mant_result_norm = {1'b0, PARM_MANT_NAN}; //PARM_MANT_NAN is 23 bit
             Exp_result_norm = 8'b1111_1111;
 
         end
-        else if(A_Inf_i | B_Inf_i | C_Inf_i)begin // the result is Infinity
+//dbg_w2
+        else if(A_Inf_i | B_Inf_i | C_Inf_i)begin // the result is Infinity     
             //Operations on infinite operands are usually exact and therefore signal no exceptions
             Exp_result_norm = 8'b1111_1111;
             //If there's two infinities, they must be the same, if there's 3, it's the same with a
@@ -127,11 +156,13 @@ module Rounder #(
             else Sign_result_o = B_Sign_i ^ C_Sign_i; 
 
         end
+//dbg_w3
         else if(B_Zero_i | C_Zero_i)begin // for situation of sth + sth*0 / sth + 0*sth
             Mant_result_norm = A_Mant_i;
             Exp_result_norm = A_Exp_raw_i;
             Sign_result_o = A_Sign_i;
         end
+//dbg_w4
         else if(Exp_mv_sign_i)begin // Only A counts 
             Underflow_o = A_DeN_i;
             Mant_result_norm = A_Mant_i;
@@ -140,16 +171,19 @@ module Rounder #(
             Mant_sticky = Sticky_one; // When the exponent move left (negative), sticky bit would come from Mant_sticky
             
         end
+//dbg_w5
         else if(Allzero_i)begin
             Sign_result_o = Sign_i;
 
         end
+//dbg_w6
         else if(Exp_i[PARM_EXP + 1])begin 
-            
+//dbg_w6_1            
             if(~Exp_max_rs_i[PARM_EXP + 1])begin // exponent would <0 after right shift (too negative)
                 Overflow_o = 1;
                 Sign_result_o = Sign_i;
             end
+//dbg_w6_2 
             else begin // denormalized number
                 Underflow_o = 1;
                 Mant_result_norm = {1'b0, Rs_Mant_i[3*PARM_MANT + 6 : 2*PARM_MANT + 6]};
@@ -159,13 +193,15 @@ module Rounder #(
             end
 
         end
+//dbg_w7
         else if((Exp_norm_i[PARM_EXP : 0] == 256) & (~Mant_norm_i[3*PARM_MANT + 4]) & (Mant_norm_i[3*PARM_MANT + 3 : 2*PARM_MANT+3] != 0))begin //NaN, Exp_norm_i = 256
             Mant_result_norm = {1'b0, PARM_MANT_NAN}; //PARM_MANT_NAN is 23 bit
             Exp_result_norm = 8'b1111_1111;
 
         end
+//dbg_w8
         else if(Exp_norm_i[PARM_EXP - 1 : 0] == 8'b1111_1111)begin
-            
+//dbg_w8_1
             if(Mant_norm_i[3*PARM_MANT + 4])begin // NaN
                 Overflow_o = 1;
                 Mant_result_norm = {1'b0, PARM_MANT_NAN};
@@ -173,11 +209,13 @@ module Rounder #(
                 Sign_result_o = Sign_i;
     
             end
+//dbg_w8_1_2
             else if(Mant_norm_i[3*PARM_MANT + 4 : 2*PARM_MANT + 4] == 0)begin //Infinity
                 Overflow_o = 1;
                 Exp_result_norm = 8'b1111_1111;
                 Sign_result_o = Sign_i;
             end
+//dbg_w8_1_3
             else begin // Normal numbers
                 Mant_result_norm  = Mant_norm_i [3*PARM_MANT + 3 : 2*PARM_MANT + 3];
                 Exp_result_norm = 8'b1111_1110; //254
@@ -187,12 +225,14 @@ module Rounder #(
             end
 
         end
+//dbg_w9
         else if(Exp_norm_i[PARM_EXP])begin //Infinity
             Overflow_o = 1;
             Exp_result_norm = 8'b1111_1111;
             Sign_result_o = Sign_i;
 
         end
+//dbg_w10
         else if(Exp_norm_i == 10'd0)begin // 0 denormalized
             Underflow_o = 1;
             Mant_result_norm = {1'b0, Mant_norm_i[3*PARM_MANT + 4 : 2*PARM_MANT + 5]};
@@ -201,8 +241,9 @@ module Rounder #(
             Mant_sticky = Sticky_one;
             
         end
+//dbg_w11
         else if(Exp_norm_i == 10'd1)begin // 0
-
+//dbg_w11_1
             if(Mant_norm_i[3*PARM_MANT + 4])begin //Normal Number
                 Mant_result_norm = Mant_norm_i[3*PARM_MANT + 4 : 2*PARM_MANT + 4];
                 Exp_result_norm = 1;
@@ -210,6 +251,7 @@ module Rounder #(
                 Sign_result_o = Sign_i;
                 Mant_sticky = Sticky_one;
             end
+//dbg_w11_2
             else begin //Denormalized Number
                 Underflow_o = 1;
                 Mant_result_norm = Mant_norm_i[3*PARM_MANT + 4: 2*PARM_MANT + 4];
@@ -219,6 +261,7 @@ module Rounder #(
             end
 
         end
+//dbg_w12
         else if(~Mant_norm_i[3*PARM_MANT + 4])begin // number with 0X.XX
             Mant_result_norm = Mant_norm_i[3*PARM_MANT + 3 : 2*PARM_MANT + 3];
             Exp_result_norm = Exp_norm_mone_i[PARM_MANT - 1 : 0];
@@ -226,6 +269,7 @@ module Rounder #(
             Sign_result_o = Sign_i;
             Mant_sticky = Sticky_one;
         end
+//dbg_w13
         else begin // number with 1X.XX
             Mant_result_norm = Mant_norm_i[3*PARM_MANT + 4 : 2*PARM_MANT + 4];
             Exp_result_norm = Exp_norm_i[PARM_MANT - 1 : 0];
