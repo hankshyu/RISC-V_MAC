@@ -606,7 +606,7 @@ module MAC32_top_tb;
 
         @(posedge clk)//Sticky bit = 1
         printblank();
-        print("If about to overflow....");
+        print("About to overflow....");
         my_rm = PARM_RM_RTZ;
         a = 32'h72000000; //2.53530120046e+30 (Mant empty, exp = 2^101)
         b = 32'h7f7fffff; //3.40282346639e+38 (+MAX, exp = 2^127)
@@ -643,222 +643,274 @@ module MAC32_top_tb;
         c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
 
         
-
         @(posedge clk)
-        printblank();
+        testtype("Rounding Modes");
+        testlabel("a) Rounding Mode: RNE - Round to Nearest, ties to Even");
+        my_rm = PARM_RM_RNE;
         a = 32'h00000000; //+0
-        b = 32'h4c5c0000; //57671680
-        c = 32'h4f660000; //3858759680
-        @(posedge clk) //NX Flag = 0
-        a = 32'h80000000; //-0
-        c = 32'hcf660000; //-3858759680
-        b = 32'h4c5c0000; //57671680
-    
+        b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
+        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
         @(posedge clk)
         a = 32'h00000000; //+0
-        b = 32'h7ce15ed9; //9.36152425747e+36
-        c = 32'h00005cd9; //3.33074631985e-41(denormalized)
+        b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
+        c = 32'hf1c00000; //-1.90147590034e+30(1.1 x 2^100)
         @(posedge clk)
-        a = 32'h80000000; //-0
-        b = 32'hbf800000; //-1
-        c = 32'h00005cd9; //3.33074631985e-41(denormalized)
-
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'hfe580000; //-7.17783117724e+37
-        c = 32'h805a0817; //-8.26809674334e-39 (denormalized number)
-        @(posedge clk)
-        a = 32'hc288ae14; //-68.339996337890625
-        b = 32'h00000000; //+0
-        c = 32'h421a851f; //38.630001068115234375
-        @(posedge clk)
-        a = 32'hc288ae14; //-68.339996337890625
-        b = 32'h80000000; //-0
-        c = 32'h421a851f; //38.630001068115234375
-        @(posedge clk) // This leads to incorrect result...
-        a = 32'h004889a0; //6.66152627087e-39 (denormalized)
-        b = 32'h7cdab59f; //9.08483542861e+36
-        c = 32'h00000000; //-0
-        @(posedge clk)
-        a = 32'h0000_0000; //0
-        b = 32'h05b00000;  //1.65509604596E-35
-        c = 32'h81b00000; //-6.46521892952e-38
-        @(posedge clk)
-        a = 32'h6fc191e0; //1.19813917899e+29
-        b = 32'h7c5094ec;  //4.33207296417e+36
-        c = 32'h7ede1465; // 1.47597254762e+38
-        @(posedge clk)
-        a = 32'h00538000;  //7.66826392919e-39
-        b = 32'h3f800000; //1
-        c = 32'h80178000; //-2.15813415971e-39
-        @(posedge clk) //Start Testing Rounding mode... 1011
-        my_rm = 0;
-        ob_rm = 0;
-        a = 32'h37b00000;  //2.09808349609e-05
-        b = 32'h3f800000; //1
-        c = 32'h43ffffff; //511.999969482
-        @(posedge clk) 
-        my_rm = 1;
-        ob_rm = 1;
-        a = 32'h37b00000;  //2.09808349609e-05
-        b = 32'h3f800000; //1
-        c = 32'h43ffffff; //511.999969482
-        @(posedge clk) 
-        my_rm = 2;
-        ob_rm = 2;
-        a = 32'h37b00000;  //2.09808349609e-05
-        b = 32'h3f800000; //1
-        c = 32'h43ffffff; //511.999969482
-        @(posedge clk) 
-        my_rm = 3;
-        ob_rm = 3;
-        a = 32'h37b00000;  //2.09808349609e-05
-        b = 32'h3f800000; //1
-        c = 32'h43ffffff; //511.999969482
-
-
-        @(posedge clk) //Start Testing Rounding mode (negative)1011
-        my_rm = 0;
-        ob_rm = 0;
-        a = 32'hb7b00000;  //-2.09808349609e-05
-        b = 32'hbf800000; //-1
-        c = 32'h43ffffff; //511.999969482
-        @(posedge clk) 
-        my_rm = 1;
-        ob_rm = 1;
-        a = 32'hb7b00000;  //-2.09808349609e-05
-        b = 32'hbf800000;  //-1
-        c = 32'h43ffffff; //511.999969482
-        @(posedge clk) 
-        my_rm = 2;
-        ob_rm = 2;
-        a = 32'hb7b00000;  //-2.09808349609e-05
-        b = 32'hbf800000; //-1
-        c = 32'h43ffffff; //511.999969482
-        @(posedge clk) 
-        my_rm = 3;
-        ob_rm = 3;
-        a = 32'hb7b00000;  //-2.09808349609e-05
-        b = 32'hbf800000; //-1
-        c = 32'h43ffffff; //511.999969482
-
-        @(posedge clk) //Start Testing Rounding mode... 1_1000
-        my_rm = 0;
-        ob_rm = 0;
-        a = 32'h37800000;  //1.52587890625e-05
-        b = 32'h3f800000; //1
-        c = 32'h43ffffff; //511.999969482
-        @(posedge clk) 
-        my_rm = 1;
-        ob_rm = 1;
-        a = 32'h37800000;  //1.52587890625e-05
-        b = 32'h3f800000; //1
-        c = 32'h43ffffff; //511.999969482
-        @(posedge clk) 
-        my_rm = 2;
-        ob_rm = 2;
-        a = 32'h37800000;  //1.52587890625e-05
-        b = 32'h3f800000; //1
-        c = 32'h43ffffff; //511.999969482
-        
-        @(posedge clk) 
-        my_rm = 3;
-        ob_rm = 3;
-        a = 32'h37800000;  //1.52587890625e-05
-        b = 32'h3f800000; //1
-        c = 32'h43ffffff; //511.999969482
-
-        @(posedge clk) //Start Testing Rounding mode... (negative)1_1000
-        my_rm = 0;
-        ob_rm = 0;
-        a = 32'hb7800000;  //1.52587890625e-05
-        b = 32'hbf800000; //1
-        c = 32'h43ffffff; //511.999969482
-        @(posedge clk) 
-        my_rm = 1;
-        ob_rm = 1;
-        a = 32'hb7800000;  //1.52587890625e-05
-        b = 32'hbf800000; //1
-        c = 32'h43ffffff; //511.999969482
-        @(posedge clk) 
-        my_rm = 2;
-        ob_rm = 2;
-        a = 32'hb7800000;  //1.52587890625e-05
-        b = 32'hbf800000; //1
-        c = 32'h43ffffff; //511.999969482
-        
-        @(posedge clk) 
-        my_rm = 3;
-        ob_rm = 3;
-        a = 32'hb7800000;  //1.52587890625e-05
-        b = 32'hbf800000; //1
-        c = 32'h43ffffff; //511.999969482
-
-        @(posedge clk) //Start Testing Rounding mode...0_1000
-        my_rm = 0;
-        ob_rm = 0;
-        a = 32'h37800000;  //1.52587890625e-05
-        b = 32'h3f800000; //1
-        c = 32'h43fffff0; //511.999969482
-        @(posedge clk) 
-        my_rm = 1;
-        ob_rm = 1;
-        a = 32'h37800000;  //1.52587890625e-05
-        b = 32'h3f800000; //1
-        c = 32'h43fffff0; //511.999969482
-        @(posedge clk) 
-        my_rm = 2;
-        ob_rm = 2;
-        a = 32'h37800000;  //1.52587890625e-05
-        b = 32'h3f800000; //1
-        c = 32'h43fffff0; //511.999969482
-        
-        @(posedge clk) 
-        my_rm = 3;
-        ob_rm = 3;
-        a = 32'h37800000;  //1.52587890625e-05
-        b = 32'h3f800000; //1
-        c = 32'h43fffff0; //511.999969482
-
-        @(posedge clk) //Start Testing Rounding mode... (negative)0_1000
-        my_rm = 0;
-        ob_rm = 0;
-        a = 32'hb7800000;  //1.52587890625e-05
-        b = 32'hbf800000; //1
-        c = 32'h43fffff0; //511.999969482
-        @(posedge clk) 
-        my_rm = 1;
-        ob_rm = 1;
-        a = 32'hb7800000;  //1.52587890625e-05
-        b = 32'hbf800000; //1
-        c = 32'h43fffff0; //511.999969482
-        @(posedge clk) 
-        my_rm = 2;
-        ob_rm = 2;
-        a = 32'hb7800000;  //1.52587890625e-05
-        b = 32'hbf800000; //1
-        c = 32'h43fffff0; //511.999969482
-        @(posedge clk)
+        testlabel("b) Rounding Mode: RTZ - Round towards Zero");
         my_rm = PARM_RM_RTZ;
-        a = 32'h48800000; //262144.0 (Mant empty, exp - 2^18)
-        b = 32'h55ffffff; //3.51843699917e+13 (Mant full, exp = 2^44)
-        c = 32'h3f800000; //1
+        a = 32'h00000000; //+0
+        b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
+        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
         @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
+        c = 32'hf1c00000; //-1.90147590034e+30(1.1 x 2^100)
+        @(posedge clk)
+        testlabel("c) Rounding Mode: RDN - Round Down    (towards -INFINITY)");
+        my_rm = PARM_RM_RDN;
+        a = 32'h00000000; //+0
+        b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
+        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
+        c = 32'hf1c00000; //-1.90147590034e+30(1.1 x 2^100)
+        @(posedge clk)
+        testlabel("d) Rounding Mode: RUP - Round UP      (towards +INFINITY)");
         my_rm = PARM_RM_RUP;
-        a = 32'h48800000; //262144.0 (Mant empty, exp - 2^18)
-        b = 32'h55ffffff; //3.51843699917e+13 (Mant full, exp = 2^44)
-        c = 32'h3f800000; //1
+        a = 32'h00000000; //+0
+        b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
+        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
+        c = 32'hf1c00000; //-1.90147590034e+30(1.1 x 2^100)
+        @(posedge clk)
+        testlabel("e) Rounding Mode: RMM - Round to Nearest, ties Max Magnitude");
+        my_rm = PARM_RM_RMM;
+        a = 32'h00000000; //+0
+        b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
+        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
+        c = 32'hf1c00000; //-1.90147590034e+30(1.1 x 2^100)
         
-        @(posedge clk) 
-        my_rm = 3;
-        ob_rm = 3;
-        a = 32'hb7800000;  //1.52587890625e-05
-        b = 32'hbf800000; //1
-        c = 32'h43fffff0; //511.999969482
+        
+        
+        // @(posedge clk)
+        // printblank();
+        // a = 32'h00000000; //+0
+        // b = 32'h4c5c0000; //57671680
+        // c = 32'h4f660000; //3858759680
+
+        // @(posedge clk) //NX Flag = 0
+        // a = 32'h80000000; //-0
+        // c = 32'hcf660000; //-3858759680
+        // b = 32'h4c5c0000; //57671680
+    
+        // @(posedge clk)
+        // a = 32'h00000000; //+0
+        // b = 32'h7ce15ed9; //9.36152425747e+36
+        // c = 32'h00005cd9; //3.33074631985e-41(denormalized)
+        // @(posedge clk)
+        // a = 32'h80000000; //-0
+        // b = 32'hbf800000; //-1
+        // c = 32'h00005cd9; //3.33074631985e-41(denormalized)
+
+        // @(posedge clk)
+        // a = 32'h00000000; //+0
+        // b = 32'hfe580000; //-7.17783117724e+37
+        // c = 32'h805a0817; //-8.26809674334e-39 (denormalized number)
+        // @(posedge clk)
+        // a = 32'hc288ae14; //-68.339996337890625
+        // b = 32'h00000000; //+0
+        // c = 32'h421a851f; //38.630001068115234375
+        // @(posedge clk)
+        // a = 32'hc288ae14; //-68.339996337890625
+        // b = 32'h80000000; //-0
+        // c = 32'h421a851f; //38.630001068115234375
+        // @(posedge clk) // This leads to incorrect result...
+        // a = 32'h004889a0; //6.66152627087e-39 (denormalized)
+        // b = 32'h7cdab59f; //9.08483542861e+36
+        // c = 32'h00000000; //-0
+        // @(posedge clk)
+        // a = 32'h0000_0000; //0
+        // b = 32'h05b00000;  //1.65509604596E-35
+        // c = 32'h81b00000; //-6.46521892952e-38
+        // @(posedge clk)
+        // a = 32'h6fc191e0; //1.19813917899e+29
+        // b = 32'h7c5094ec;  //4.33207296417e+36
+        // c = 32'h7ede1465; // 1.47597254762e+38
+        // @(posedge clk)
+        // a = 32'h00538000;  //7.66826392919e-39
+        // b = 32'h3f800000; //1
+        // c = 32'h80178000; //-2.15813415971e-39
+        // @(posedge clk) //Start Testing Rounding mode... 1011
+        // my_rm = 0;
+        // ob_rm = 0;
+        // a = 32'h37b00000;  //2.09808349609e-05
+        // b = 32'h3f800000; //1
+        // c = 32'h43ffffff; //511.999969482
+        // @(posedge clk) 
+        // my_rm = 1;
+        // ob_rm = 1;
+        // a = 32'h37b00000;  //2.09808349609e-05
+        // b = 32'h3f800000; //1
+        // c = 32'h43ffffff; //511.999969482
+        // @(posedge clk) 
+        // my_rm = 2;
+        // ob_rm = 2;
+        // a = 32'h37b00000;  //2.09808349609e-05
+        // b = 32'h3f800000; //1
+        // c = 32'h43ffffff; //511.999969482
+        // @(posedge clk) 
+        // my_rm = 3;
+        // ob_rm = 3;
+        // a = 32'h37b00000;  //2.09808349609e-05
+        // b = 32'h3f800000; //1
+        // c = 32'h43ffffff; //511.999969482
 
 
-        @(posedge clk) //test for overflow
-        //ans = a + b*c
+        // @(posedge clk) //Start Testing Rounding mode (negative)1011
+        // my_rm = 0;
+        // ob_rm = 0;
+        // a = 32'hb7b00000;  //-2.09808349609e-05
+        // b = 32'hbf800000; //-1
+        // c = 32'h43ffffff; //511.999969482
+        // @(posedge clk) 
+        // my_rm = 1;
+        // ob_rm = 1;
+        // a = 32'hb7b00000;  //-2.09808349609e-05
+        // b = 32'hbf800000;  //-1
+        // c = 32'h43ffffff; //511.999969482
+        // @(posedge clk) 
+        // my_rm = 2;
+        // ob_rm = 2;
+        // a = 32'hb7b00000;  //-2.09808349609e-05
+        // b = 32'hbf800000; //-1
+        // c = 32'h43ffffff; //511.999969482
+        // @(posedge clk) 
+        // my_rm = 3;
+        // ob_rm = 3;
+        // a = 32'hb7b00000;  //-2.09808349609e-05
+        // b = 32'hbf800000; //-1
+        // c = 32'h43ffffff; //511.999969482
+
+        // @(posedge clk) //Start Testing Rounding mode... 1_1000
+        // my_rm = 0;
+        // ob_rm = 0;
+        // a = 32'h37800000;  //1.52587890625e-05
+        // b = 32'h3f800000; //1
+        // c = 32'h43ffffff; //511.999969482
+        // @(posedge clk) 
+        // my_rm = 1;
+        // ob_rm = 1;
+        // a = 32'h37800000;  //1.52587890625e-05
+        // b = 32'h3f800000; //1
+        // c = 32'h43ffffff; //511.999969482
+        // @(posedge clk) 
+        // my_rm = 2;
+        // ob_rm = 2;
+        // a = 32'h37800000;  //1.52587890625e-05
+        // b = 32'h3f800000; //1
+        // c = 32'h43ffffff; //511.999969482
+        
+        // @(posedge clk) 
+        // my_rm = 3;
+        // ob_rm = 3;
+        // a = 32'h37800000;  //1.52587890625e-05
+        // b = 32'h3f800000; //1
+        // c = 32'h43ffffff; //511.999969482
+
+        // @(posedge clk) //Start Testing Rounding mode... (negative)1_1000
+        // my_rm = 0;
+        // ob_rm = 0;
+        // a = 32'hb7800000;  //1.52587890625e-05
+        // b = 32'hbf800000; //1
+        // c = 32'h43ffffff; //511.999969482
+        // @(posedge clk) 
+        // my_rm = 1;
+        // ob_rm = 1;
+        // a = 32'hb7800000;  //1.52587890625e-05
+        // b = 32'hbf800000; //1
+        // c = 32'h43ffffff; //511.999969482
+        // @(posedge clk) 
+        // my_rm = 2;
+        // ob_rm = 2;
+        // a = 32'hb7800000;  //1.52587890625e-05
+        // b = 32'hbf800000; //1
+        // c = 32'h43ffffff; //511.999969482
+        
+        // @(posedge clk) 
+        // my_rm = 3;
+        // ob_rm = 3;
+        // a = 32'hb7800000;  //1.52587890625e-05
+        // b = 32'hbf800000; //1
+        // c = 32'h43ffffff; //511.999969482
+
+        // @(posedge clk) //Start Testing Rounding mode...0_1000
+        // my_rm = 0;
+        // ob_rm = 0;
+        // a = 32'h37800000;  //1.52587890625e-05
+        // b = 32'h3f800000; //1
+        // c = 32'h43fffff0; //511.999969482
+        // @(posedge clk) 
+        // my_rm = 1;
+        // ob_rm = 1;
+        // a = 32'h37800000;  //1.52587890625e-05
+        // b = 32'h3f800000; //1
+        // c = 32'h43fffff0; //511.999969482
+        // @(posedge clk) 
+        // my_rm = 2;
+        // ob_rm = 2;
+        // a = 32'h37800000;  //1.52587890625e-05
+        // b = 32'h3f800000; //1
+        // c = 32'h43fffff0; //511.999969482
+        
+        // @(posedge clk) 
+        // my_rm = 3;
+        // ob_rm = 3;
+        // a = 32'h37800000;  //1.52587890625e-05
+        // b = 32'h3f800000; //1
+        // c = 32'h43fffff0; //511.999969482
+
+        // @(posedge clk) //Start Testing Rounding mode... (negative)0_1000
+        // my_rm = 0;
+        // ob_rm = 0;
+        // a = 32'hb7800000;  //1.52587890625e-05
+        // b = 32'hbf800000; //1
+        // c = 32'h43fffff0; //511.999969482
+        // @(posedge clk) 
+        // my_rm = 1;
+        // ob_rm = 1;
+        // a = 32'hb7800000;  //1.52587890625e-05
+        // b = 32'hbf800000; //1
+        // c = 32'h43fffff0; //511.999969482
+        // @(posedge clk) 
+        // my_rm = 2;
+        // ob_rm = 2;
+        // a = 32'hb7800000;  //1.52587890625e-05
+        // b = 32'hbf800000; //1
+        // c = 32'h43fffff0; //511.999969482
+        // @(posedge clk)
+        // my_rm = PARM_RM_RTZ;
+        // a = 32'h48800000; //262144.0 (Mant empty, exp - 2^18)
+        // b = 32'h55ffffff; //3.51843699917e+13 (Mant full, exp = 2^44)
+        // c = 32'h3f800000; //1
+        // @(posedge clk)
+        // my_rm = PARM_RM_RUP;
+        // a = 32'h48800000; //262144.0 (Mant empty, exp - 2^18)
+        // b = 32'h55ffffff; //3.51843699917e+13 (Mant full, exp = 2^44)
+        // c = 32'h3f800000; //1
+        
+        // @(posedge clk) 
+        // my_rm = 3;
+        // ob_rm = 3;
+        // a = 32'hb7800000;  //1.52587890625e-05
+        // b = 32'hbf800000; //1
+        // c = 32'h43fffff0; //511.999969482
+
+
         @(posedge clk)
         $finish;
 
