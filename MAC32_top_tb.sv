@@ -569,6 +569,22 @@ module MAC32_top_tb;
         a = 32'h80000000; //-0
         b = 32'h64b57000; //2.6775449023e+22
         c = 32'h6cb73000; //1.77168078865e+27
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h4cffffff; //268435440.0(Mant full * 2 ^ 26)
+        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h4d7fffff; //268435440.0(Mant full * 2 ^ 27) // If the exponent = 127's overflow won't be caught
+        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h4dffffff; //268435440.0(Mant full * 2 ^ 28)
+        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
+        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
 
         
         @(posedge clk)
@@ -585,6 +601,8 @@ module MAC32_top_tb;
         a = 32'h7445ecd1; //6.27249565725e+31
         b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
         c = 32'h3f800000; //1
+
+
 
         @(posedge clk)//Sticky bit = 1
         print("If about to overflow....");
