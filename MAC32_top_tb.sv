@@ -664,10 +664,12 @@ module MAC32_top_tb;
             b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
             c = 32'hf1c00000; //-1.90147590034e+30(1.1 x 2^100)
             @(posedge clk)
-            printblank();
+            ;
+
             
         end
-        
+
+        testtype("Other crazy tests...");
         a = 32'h00000000; //+0
         b = 32'h00000000; //+0
         c = 32'h00000000; //+0
