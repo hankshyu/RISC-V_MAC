@@ -116,7 +116,10 @@ module MAC32_top_tb;
             if(my_OF) $write("  OF(Overflw)");
             if(my_UF) $write("  UF(Underfw)");
             if(my_NX) $write("  NX(Inexact)");
-            $display(";");
+            
+            if(my_NV|my_OF|my_UF|my_NX) printblank();
+            else $display("  ;");
+
         end
         
     endtask 
