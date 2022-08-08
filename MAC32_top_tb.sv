@@ -521,9 +521,45 @@ module MAC32_top_tb;
         b = 32'h8007ff00; //-7.34325236857e-40
         c = 32'hff7ff000; //-3.40199290171e+38(mantissa left is all 1)
 
-        
-        @(posedge clk) //NX Flag = 0
+        //Overflow (IEEE 754)
+        // The overflow exception shall be signaled if and only if the destination format’s largest finite number is
+        // exceeded in magnitude by what would have been the rounded floating-point result (see 4) were the exponent
+        // range unbounded. The default result shall be determined by the rounding-direction attribute and the sign of
+        // the intermediate result as follows:
+        // a) roundTiesToEven and roundTiesToAway carry all overflows to ∞ with the sign of the intermediate
+        // result.
+        // b) roundTowardZero carries all overflows to the format’s largest finite number with the sign of the
+        // intermediate result.
+        // c) roundTowardNegative carries positive overflows to the format’s largest finite number, and carries
+        // negative overflows to −∞.
+        // d) roundTowardPositive carries negative overflows to the format’s most negative finite number, and
+        // carries positive overflows to +∞.
+        // In addition, under default exception handling for overflow, the overflow flag shall be raised and the inexact
+        // exception shall be signaled.
+
+
+
+
+
+
+        @(posedge clk) 
         testtype("Overflows, It's too much... to much to hold ");
+        a = 32'h00000000; //+0
+        b = 32'h7445ecd1; //6.27249565725e+31
+        c = 32'h7cf526d7; //1.01832039677e+37
+        @(posedge clk)
+        a = 32'h80000000; //-0
+        b = 32'h7445ecd1; //6.27249565725e+31
+        c = 32'hfcf526d7; //-1.01832039677e+37
+        @(posedge clk) // Should be exact but ovf
+        a = 32'h80000000; //-0
+        b = 32'h64b57000; //2.6775449023e+22
+        c = 32'h6cb73000; //1.77168078865e+27
+
+
+
+        @(posedge clk)
+        printblank();
         a = 32'h00000000; //+0
         b = 32'h4c5c0000; //57671680
         c = 32'h4f660000; //3858759680
@@ -545,8 +581,6 @@ module MAC32_top_tb;
         a = 32'h00000000; //+0
         b = 32'hfe580000; //-7.17783117724e+37
         c = 32'h805a0817; //-8.26809674334e-39 (denormalized number)
-
-
         @(posedge clk)
         a = 32'hc288ae14; //-68.339996337890625
         b = 32'h00000000; //+0
@@ -559,13 +593,7 @@ module MAC32_top_tb;
         a = 32'h004889a0; //6.66152627087e-39 (denormalized)
         b = 32'h7cdab59f; //9.08483542861e+36
         c = 32'h00000000; //-0
-
-
-
-        
         @(posedge clk)
-
-
         a = 32'h0000_0000; //0
         b = 32'h05b00000;  //1.65509604596E-35
         c = 32'h81b00000; //-6.46521892952e-38
@@ -573,12 +601,10 @@ module MAC32_top_tb;
         a = 32'h6fc191e0; //1.19813917899e+29
         b = 32'h7c5094ec;  //4.33207296417e+36
         c = 32'h7ede1465; // 1.47597254762e+38
-
         @(posedge clk)
         a = 32'h00538000;  //7.66826392919e-39
         b = 32'h3f800000; //1
         c = 32'h80178000; //-2.15813415971e-39
-        
         @(posedge clk) //Start Testing Rounding mode... 1011
         my_rm = 0;
         ob_rm = 0;
@@ -597,7 +623,6 @@ module MAC32_top_tb;
         a = 32'h37b00000;  //2.09808349609e-05
         b = 32'h3f800000; //1
         c = 32'h43ffffff; //511.999969482
-        
         @(posedge clk) 
         my_rm = 3;
         ob_rm = 3;
@@ -605,7 +630,7 @@ module MAC32_top_tb;
         b = 32'h3f800000; //1
         c = 32'h43ffffff; //511.999969482
 
-        
+
         @(posedge clk) //Start Testing Rounding mode (negative)1011
         my_rm = 0;
         ob_rm = 0;
