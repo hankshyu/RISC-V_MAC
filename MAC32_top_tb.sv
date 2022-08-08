@@ -152,7 +152,7 @@ module MAC32_top_tb;
         # 1;
         showresult();
     end
-
+    integer idx;
     initial begin
 
         @(posedge clk)
@@ -556,7 +556,7 @@ module MAC32_top_tb;
 
 
         @(posedge clk) 
-        testtype("Overflows, It's too much... to much to hold ");
+        testtype("Overflows, It's too much... to much to hold (Not done yet, still errrrrorrrr)");
         testlabel("Overflow happens solely at Multiplication");
         a = 32'h00000000; //+0
         b = 32'h7445ecd1; //6.27249565725e+31
@@ -643,58 +643,38 @@ module MAC32_top_tb;
         c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
 
         
+
         @(posedge clk)
-        testtype("Rounding Modes");
-        testlabel("a) Rounding Mode: RNE - Round to Nearest, ties to Even");
-        my_rm = PARM_RM_RNE;
-        a = 32'h00000000; //+0
-        b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
-        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
-        c = 32'hf1c00000; //-1.90147590034e+30(1.1 x 2^100)
-        @(posedge clk)
-        testlabel("b) Rounding Mode: RTZ - Round towards Zero");
-        my_rm = PARM_RM_RTZ;
-        a = 32'h00000000; //+0
-        b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
-        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
-        c = 32'hf1c00000; //-1.90147590034e+30(1.1 x 2^100)
-        @(posedge clk)
-        testlabel("c) Rounding Mode: RDN - Round Down    (towards -INFINITY)");
-        my_rm = PARM_RM_RDN;
-        a = 32'h00000000; //+0
-        b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
-        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
-        c = 32'hf1c00000; //-1.90147590034e+30(1.1 x 2^100)
-        @(posedge clk)
-        testlabel("d) Rounding Mode: RUP - Round UP      (towards +INFINITY)");
-        my_rm = PARM_RM_RUP;
-        a = 32'h00000000; //+0
-        b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
-        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
-        c = 32'hf1c00000; //-1.90147590034e+30(1.1 x 2^100)
-        @(posedge clk)
-        testlabel("e) Rounding Mode: RMM - Round to Nearest, ties Max Magnitude");
-        my_rm = PARM_RM_RMM;
-        a = 32'h00000000; //+0
-        b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
-        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
-        c = 32'hf1c00000; //-1.90147590034e+30(1.1 x 2^100)
+        testtype("Rounding Modes ");
+        for (idx = 0; idx < 5; idx++) begin
+            my_rm  = idx;
+
+            if(idx == 0) testlabel("a) Rounding Mode: RNE - Round to Nearest, ties to Even");
+            else if(idx == 1) testlabel("b) Rounding Mode: RTZ - Round towards Zero");
+            else if(idx == 2) testlabel("c) Rounding Mode: RDN - Round Down    (towards -INFINITY)");
+            else if(idx == 3) testlabel("d) Rounding Mode: RUP - Round UP      (towards +INFINITY)");
+            else if(idx == 4) testlabel("e) Rounding Mode: RMM - Round to Nearest, ties Max Magnitude");
+
+            a = 32'h00000000; //+0
+            b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
+            c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
+
+            @(posedge clk)
+            a = 32'h00000000; //+0
+            b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
+            c = 32'hf1c00000; //-1.90147590034e+30(1.1 x 2^100)
+            @(posedge clk)
+            printblank();
+            
+        end
         
+        a = 32'h00000000; //+0
+        b = 32'h00000000; //+0
+        c = 32'h00000000; //+0
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h4c5c0000; //57671680
+        c = 32'h4f660000; //3858759680
         
         
         // @(posedge clk)
