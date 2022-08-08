@@ -87,7 +87,13 @@ module MAC32_top_tb;
     // .Flag_NX_SO(ob_NX),
     // .Flag_IV_SO(ob_IV)
     // );
+    task automatic printblank();
+        $display("");
+    endtask //automatic
 
+    task automatic print(input string str);
+        $display("%s",str);
+    endtask //automatic
     task showresult;
         begin
             $write("%03d %8h(%13e) + %8h(%13e) x %8h(%13e) = %8h(%13e)\t",label,a,$bitstoshortreal(a),b,$bitstoshortreal(b),c,$bitstoshortreal(c),my_result,$bitstoshortreal(my_result));
@@ -110,9 +116,11 @@ module MAC32_top_tb;
     endtask //automatic
 
     task automatic testlabel(input string lb);
-        $display("");
+        printblank();
         $display("%s",lb);
     endtask //automatic
+
+
 
     always @(posedge clk) begin
         # 1;
@@ -125,9 +133,9 @@ module MAC32_top_tb;
         label = 1;
         //ob_rm = 2'b00;
         my_rm = 3'b001; // use RTZ
-        $display("RISC-V Multiply-accumulate Testbench");
+        print("RISC-V Multiply-accumulate Testbench");
         testtype("Invalid Operation Test");
-        $display("a) computational operation on a NaN");
+        print("a) computational operation on a NaN");
         a = 32'h7fc00000; //NaN
         b = 32'hac822ea3; //-3.69999994185e-12
         c = 32'hcc03dec4; //-34568976.0
@@ -194,7 +202,6 @@ module MAC32_top_tb;
 
         //Infinites
         @(posedge clk) //result seems incorrect....
-        $display("");
         testtype("Dancing with Infinities (Operations on infinite operands are usually exact and therefore signal no exceptions)");
         testlabel("a) + Infinity");
         a = 32'h00000000; //0
@@ -352,6 +359,42 @@ module MAC32_top_tb;
         b = 32'h25b136b7; //3.07416817451e-16
         c = 32'h9aec1ea5; //-9.76568211917e-23
 
+        @(posedge clk);
+        printblank();
+        a = 32'h00000000; //+0
+        b = 32'h0007ffc0; //7.3450460306e-40 (denormalized 13 x 1s)
+        c = 32'h7f7ff000; //3.40199290171e+38 (mantissa left is all 1)
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h8007ffc0; //-7.34325236857e-40 (denormalized 13 x 1s)
+        c = 32'h7f7ff000; //3.40199290171e+38 (mantissa left is all 1)
+
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h0007ffc0; //7.3450460306e-40 (denormalized 13 x 1s)
+        c = 32'hff7ff000; //-3.40199290171e+38 (mantissa left is all 1)
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h8007ffc0; //-7.34325236857e-40 (denormalized 13 x 1s)
+        c = 32'hff7ff000; //-3.40199290171e+38 (mantissa left is all 1)
+        @(posedge clk);
+        a = 32'h80000000; //+0
+        b = 32'h0007ffc0; //7.3450460306e-40 (denormalized 13 x 1s)
+        c = 32'h7f7ff000; //3.40199290171e+38 (mantissa left is all 1)
+        @(posedge clk)
+        a = 32'h80000000; //+0
+        b = 32'h8007ffc0; //-7.34325236857e-40 (denormalized 13 x 1s)
+        c = 32'h7f7ff000; //3.40199290171e+38 (mantissa left is all 1)
+
+        @(posedge clk)
+        a = 32'h80000000; //+0
+        b = 32'h0007ffc0; //7.3450460306e-40 (denormalized 13 x 1s)
+        c = 32'hff7ff000; //-3.40199290171e+38 (mantissa left is all 1)
+        @(posedge clk)
+        a = 32'h80000000; //+0
+        b = 32'h8007ffc0; //-7.34325236857e-40 (denormalized 13 x 1s)
+        c = 32'hff7ff000; //-3.40199290171e+38 (mantissa left is all 1)
+
 
         @(posedge clk) //NX Flag = 0
         testlabel("d) Zero + Something & Result is Exact");
@@ -364,7 +407,7 @@ module MAC32_top_tb;
         c = 32'h06ec0000; //8.87733333741e-35
         
         @(posedge clk)
-        $display("");
+        printblank();
         a = 32'h00000000; //+0
         b = 32'h58fff000; //2.25125005787e+15
         c = 32'h4efff000; //2146959360.0
@@ -397,10 +440,8 @@ module MAC32_top_tb;
         b = 32'hd8fff000; //-2.25125005787e+15
         c = 32'hcefff000; //-2146959360.0
         
-        
-        
         @(posedge clk)
-        $display("");
+        printblank();
         a = 32'h00000000; //+0
         b = 32'h7efff000; //1.70099645086e+38(mantissa left is all 1)
         c = 32'h02fff000; //3.76066356767e-37(mantissa left is all 1)
@@ -433,9 +474,43 @@ module MAC32_top_tb;
         b = 32'hfefff000; //-1.70099645086e+38(mantissa left is all 1)
         c = 32'h82fff000; //-3.76066356767e-37(mantissa left is all 1)  
 
+        @(posedge clk);
+        printblank();
+        a = 32'h00000000; //+0
+        b = 32'h0007ff00; //7.34325236857e-40
+        c = 32'h7f7ff000; //3.40199290171e+38(mantissa left is all 1)
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h8007ff00; //-7.34325236857e-40
+        c = 32'h7f7ff000; //3.40199290171e+38(mantissa left is all 1)
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h0007ff00; //7.34325236857e-40
+        c = 32'hff7ff000; //-3.40199290171e+38(mantissa left is all 1)
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h8007ff00; //-7.34325236857e-40
+        c = 32'hff7ff000; //-3.40199290171e+38(mantissa left is all 1)
+        @(posedge clk);
+        a = 32'h80000000; //+0
+        b = 32'h0007ff00; //7.34325236857e-40
+        c = 32'h7f7ff000; //3.40199290171e+38(mantissa left is all 1)
+        @(posedge clk)
+        a = 32'h80000000; //+0
+        b = 32'h8007ff00; //-7.34325236857e-40
+        c = 32'h7f7ff000; //3.40199290171e+38(mantissa left is all 1)
+        @(posedge clk)
+        a = 32'h80000000; //+0
+        b = 32'h0007ff00; //7.34325236857e-40
+        c = 32'hff7ff000; //-3.40199290171e+38(mantissa left is all 1)
+        @(posedge clk)
+        a = 32'h80000000; //+0
+        b = 32'h8007ff00; //-7.34325236857e-40
+        c = 32'hff7ff000; //-3.40199290171e+38(mantissa left is all 1)
+
         
         @(posedge clk) //NX Flag = 0
-        $display("");
+        printblank();
         a = 32'h00000000; //+0
         b = 32'h4c5c0000; //57671680
         c = 32'h4f660000; //3858759680
@@ -443,7 +518,7 @@ module MAC32_top_tb;
         a = 32'h80000000; //-0
         c = 32'hcf660000; //-3858759680
         b = 32'h4c5c0000; //57671680
-        
+    
         @(posedge clk)
         a = 32'h00000000; //+0
         b = 32'h7ce15ed9; //9.36152425747e+36
@@ -476,7 +551,8 @@ module MAC32_top_tb;
 
         
         @(posedge clk)
-        $display("");
+        testtype("Overflows, It's too much... to much to hold ");
+
         a = 32'h0000_0000; //0
         b = 32'h05b00000;  //1.65509604596E-35
         c = 32'h81b00000; //-6.46521892952e-38
