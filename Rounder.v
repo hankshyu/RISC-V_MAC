@@ -227,7 +227,7 @@ module Rounder #(
 
         end
 //dbg_w9
-        else if(Exp_norm_i[PARM_EXP])begin //Infinity
+        else if(Exp_norm_i[PARM_EXP])begin //Overflow Occurs, the exponent at preNorm(multiplication is over 127)
             Overflow_o = 1;
             Exp_result_norm = 8'b1111_1111;
             Sign_result_o = Sign_i;
@@ -305,7 +305,25 @@ module Rounder #(
     wire [PARM_MANT + 1 : 0] Mant_upper_rounded = Mant_result_norm + Mant_roundup;
     wire Mant_renormalize = Mant_upper_rounded[PARM_MANT + 1];
 
+
+    //Overflow (IEEE 754-2008)
+    // The overflow exception shall be signaled if and only if the destination format’s largest finite number is
+    // exceeded in magnitude by what would have been the rounded floating-point result (see 4) were the exponent
+    // range unbounded. The default result shall be determined by the rounding-direction attribute and the sign of
+    // the intermediate result as follows:
+    // a) roundTiesToEven and roundTiesToAway carry all overflows to ∞ with the sign of the intermediate
+    // result.
+    // b) roundTowardZero carries all overflows to the format’s largest finite number with the sign of the
+    // intermediate result.
+    // c) roundTowardNegative carries positive overflows to the format’s largest finite number, and carries
+    // negative overflows to −∞.
+    // d) roundTowardPositive carries negative overflows to the format’s most negative finite number, and
+    // carries positive overflows to +∞.
+    // In addition, under default exception handling for overflow, the overflow flag shall be raised and the inexact
+    // exception shall be signaled.
+    
     //output logic
+    
     assign Mant_result_o = (Mant_renormalize)? Mant_upper_rounded[PARM_MANT : 1] : Mant_upper_rounded[PARM_MANT - 1 : 0];
     assign Exp_result_o = Exp_result_norm + Mant_renormalize;
 
