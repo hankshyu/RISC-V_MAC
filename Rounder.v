@@ -17,6 +17,7 @@
 // Revision 0.01 - File Created
 // Revision 0.02 - File Renamed
 // Revision 1.00 - Invalid_o shall raise whilst Overflow/Underflow
+// Revision 1.01 - Add PARM_MATN_RMM support
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
@@ -298,8 +299,7 @@ module Rounder #(
             PARM_RM_RUP:
                 Mant_roundup = Inexact_o & (~Sign_i);
             PARM_RM_RMM:
-                //TODO
-                Mant_roundup = 1'bz;
+                Mant_roundup = Mant_lower[1];
             default:
                 Mant_roundup = 0;
         endcase
