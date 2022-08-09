@@ -75,7 +75,10 @@ module Rounder #(
     output  Invalid_o,
     output reg Overflow_o,
     output reg Underflow_o,
-    output  Inexact_o );
+    output  Inexact_o,
+    output [3:0]dbg_rgs
+
+    );
 
     //Sticky bit
     reg [2*PARM_MANT + 1 : 0] Mant_sticky_changed;
@@ -370,5 +373,8 @@ module Rounder #(
         else 
             Exp_result_o = Exp_result_norm + Mant_renormalize;
     end
+
+    //debug
+    assign dbg_rgs = {Mant_result_norm[0],Mant_lower,Mant_sticky};
 
 endmodule

@@ -77,7 +77,8 @@ module MAC32_top #(
     //output DZ_o,  //would not occur in Multiplication or Addition
     output OF_o,
     output UF_o,
-    output NX_o );
+    output NX_o,
+    output [3:0] dbg_tail_o);
 
 
     parameter PARM_EXP          = 8;
@@ -440,7 +441,8 @@ module MAC32_top #(
     .Invalid_o(NV_o),
     .Overflow_o(OF_o),
     .Underflow_o(UF_o),
-    .Inexact_o(NX_o)
+    .Inexact_o(NX_o),
+    .dbg_rgs(dbg_tail_o)
     );
 
 endmodule

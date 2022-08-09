@@ -35,6 +35,7 @@ module MAC32_top_tb;
 
     wire [31:0] my_result;
     wire my_OF, my_UF, my_NX, my_NV;
+    wire [3:0] dbg_tail;
 
     reg [1 : 0] ob_rm;
     reg [2 : 0] my_rm;
@@ -76,7 +77,8 @@ module MAC32_top_tb;
     .OF_o(my_OF),
     .UF_o(my_UF),
     .NX_o(my_NX),
-    .NV_o(my_NV)
+    .NV_o(my_NV),
+    .dbg_tail_o(dbg_tail)
     );
 
     // fmac uut_ob
