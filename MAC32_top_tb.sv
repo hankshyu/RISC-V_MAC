@@ -152,11 +152,11 @@ module MAC32_top_tb;
         $display("%s",lb);
     endtask //automatic
 
-    string rounding_str0 = "a) Rounding Mode: RNE - Round to Nearest, ties to Even";
-    string rounding_str1 = "b) Rounding Mode: RTZ - Round towards Zero";
-    string rounding_str2 = "c) Rounding Mode: RDN - Round Down    (towards -INFINITY)";
-    string rounding_str3 = "d) Rounding Mode: RUP - Round UP      (towards +INFINITY)";
-    string rounding_str4 = "e) Rounding Mode: RMM - Round to Nearest, ties Max Magnitude";
+    string rounding_str0 = "> Rounding Mode: RNE - Round to Nearest, ties to Even";
+    string rounding_str1 = "> Rounding Mode: RTZ - Round towards Zero";
+    string rounding_str2 = "> Rounding Mode: RDN - Round Down    (towards -INFINITY)";
+    string rounding_str3 = "> Rounding Mode: RUP - Round UP      (towards +INFINITY)";
+    string rounding_str4 = "> Rounding Mode: RMM - Round to Nearest, ties Max Magnitude";
 
     task automatic RoundingTest(input logic [31:0] a_in, input logic [31:0] b_in, input logic [31:0] c_in);
     integer k;
@@ -679,7 +679,7 @@ module MAC32_top_tb;
         print("=============================================================================================================================================");
         
         testlabel("a) Infinities ");
-        print("\n#1. + Infinity");
+        print("#1. + Infinity");
         RoundingTest(32'h00000000, 32'h4e7fffff, 32'h71c00000);
         //a = 32'h00000000; //+0
         //b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
@@ -714,21 +714,20 @@ module MAC32_top_tb;
         //b = 3dfc0000; 0.123046875 (2^ -4, 1.11111)
         //c = c2400000; -48.0 (2^5, 1.1)
 
-
         print("#5. + 0.010");
         RoundingTest(32'h1f800000, 32'h2c70000e, 32'h3f800000);
-        //a = 1f800000; // 5.42101150866e-20 (2^-64, 1.00..001)
+        //a = 1f800000; // 5.42101150866e-20 (2^-64, 1.00..000)
         //b = 2c70000e; // 3.41060816741e-12 (2^-39, 1.11100...001110)
         //c = 3f800000; // +1
         print("#6. - 0.010");
-        RoundingTest(32'h9f800001, 32'hac70000e, 32'h3f800000);
-        //a = 9f800001; // -5.42101150866e-20 (2^-64, 1.00..001)
+        RoundingTest(32'h9f800000, 32'hac70000e, 32'h3f800000);
+        //a = 9f800000; // -5.42101150866e-20 (2^-64, 1.00..000)
         //b = ac70000e; // -3.41060816741e-12(2^-39, 1.11100...001110)
         //c = 3f800000; // +1
         
         print("#7. + 0.011");
-        RoundingTest(32'h1f800000, 32'h2c70000e, 32'h3f800000);
-        //a = 1f800000; // 5.42101150866e-20 (2^-64, 1.00..001)
+        RoundingTest(32'h1f800001, 32'h2c70000e, 32'h3f800000);
+        //a = 1f800001; // 5.42101150866e-20 (2^-64, 1.00..001)
         //b = 2c70000e; // 3.41060816741e-12 (2^-39, 1.11100...001110)
         //c = 3f800000; // +1
         print("#8. - 0.011");
@@ -760,6 +759,28 @@ module MAC32_top_tb;
         //a = 32'h1ea9800c; //1.7946529957e-20
         //b = 32'hc8000001; //-131072.015625(2 ^ 17 1.___1)
         //c = 32'h44080000; //139264.0(2^9 1.0001)
+
+        print("#5. + 1.010");
+        RoundingTest(32'h1f800000, 32'h2c70000f, 32'h3f800000);
+        //a = 1f800000; // 5.42101150866e-20 (2^-64, 1.00..000)
+        //b = 2c70000f; // 3.41060816741e-12 (2^-39, 1.11100...001111)
+        //c = 3f800000; // +1
+        print("#6. - 1.010");
+        RoundingTest(32'h9f800000, 32'hac70000f, 32'h3f800000);
+        //a = 9f800000; // -5.42101150866e-20 (2^-64, 1.00..000)
+        //b = ac70000f; // -3.41060816741e-12(2^-39, 1.11100...001111)
+        //c = 3f800000; // +1
+        
+        print("#7. + 1.011");
+        RoundingTest(32'h1f800001, 32'h2c70000f, 32'h3f800000);
+        //a = 1f800001; // 5.42101150866e-20 (2^-64, 1.00..001)
+        //b = 2c70000f; // 3.41060816741e-12 (2^-39, 1.11100...001111)
+        //c = 3f800000; // +1
+        print("#8. - 1.011");
+        RoundingTest(32'h9f800001, 32'hac70000f, 32'h3f800000);
+        //a = 9f800001; // -5.42101150866e-20 (2^-64, 1.00..001)
+        //b = ac70000f; // -3.41060816741e-12(2^-39, 1.11100...001111)
+        //c = 3f800000; // +1
 
 
         testlabel("c) x.1xx");
