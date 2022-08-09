@@ -111,7 +111,7 @@ module MAC32_top_tb;
         print("");
     endtask //automatic
 
-
+    reg showrgs;
     task showresult;
         begin
             $write("%03d ",label);
@@ -121,6 +121,8 @@ module MAC32_top_tb;
             if(my_rm == 3'b011) $write("[RUP]");
             if(my_rm == 3'b100) $write("[RMM]");
             $write(" %8h(%13e) + %8h(%13e) x %8h(%13e) = %8h(%13e)\t",a,$bitstoshortreal(a),b,$bitstoshortreal(b),c,$bitstoshortreal(c),my_result,$bitstoshortreal(my_result));
+            if(showrgs) $write(" [%b.%b] ",dbg_tail[3],dbg_tail[2:0]);
+
             if(my_NV) $write("  NV(Invalid)");
             if(my_OF) $write("  OF(Overflw)");
             if(my_UF) $write("  UF(Underfw)");
@@ -180,7 +182,7 @@ module MAC32_top_tb;
     end
     integer idx;
     initial begin
-
+        showrgs = 0;
         @(posedge clk)
         label = 1;
         //ob_rm = 2'b00;
@@ -670,6 +672,7 @@ module MAC32_top_tb;
 
         
         @(posedge clk)
+        showrgs = 1;
         printblank();
         print("=============================================================================================================================================");
         $display("Rounding Test\n%s\n%s\n%s\n%s\n%s", rounding_str0, rounding_str1, rounding_str2, rounding_str3, rounding_str4);
@@ -744,6 +747,7 @@ module MAC32_top_tb;
 
         print("#1. - 1.100");
         RoundingTest(32'h3f000000, 32'hc1c00000, 32'h47800001);
+
         //a = 3f000000 //0.5(2 ^ -1 , 1.0)
         //b = c1c00000 //-16(2^4, 1.1)
         //c = 47800001 //131071.984375(2^16 1.00...001)
@@ -752,6 +756,7 @@ module MAC32_top_tb;
 
 
         testtype("Other crazy tests...");
+        showrgs = 0;
         a = 32'h00000000; //+0
         b = 32'h00000000; //+0
         c = 32'h00000000; //+0
