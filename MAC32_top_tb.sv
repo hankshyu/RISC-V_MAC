@@ -148,17 +148,18 @@ module MAC32_top_tb;
         $display("%s",lb);
     endtask //automatic
 
+    string rounding_str0 = "a) Rounding Mode: RNE - Round to Nearest, ties to Even";
+    string rounding_str1 = "b) Rounding Mode: RTZ - Round towards Zero";
+    string rounding_str2 = "c) Rounding Mode: RDN - Round Down    (towards -INFINITY)";
+    string rounding_str3 = "d) Rounding Mode: RUP - Round UP      (towards +INFINITY)";
+    string rounding_str4 = "e) Rounding Mode: RMM - Round to Nearest, ties Max Magnitude";
+
     task automatic RoundingTest(input logic [31:0] a_in, input logic [31:0] b_in, input logic [31:0] c_in);
     integer k;
         begin
             for (k = 0; k < 5; k++) begin
                 my_rm  = k;
 
-                // if(k == 0) testlabel("a) Rounding Mode: RNE - Round to Nearest, ties to Even");
-                // else if(k == 1) testlabel("b) Rounding Mode: RTZ - Round towards Zero");
-                // else if(k == 2) testlabel("c) Rounding Mode: RDN - Round Down    (towards -INFINITY)");
-                // else if(k == 3) testlabel("d) Rounding Mode: RUP - Round UP      (towards +INFINITY)");
-                // else if(k == 4) testlabel("e) Rounding Mode: RMM - Round to Nearest, ties Max Magnitude");
                 a = a_in;
                 b = b_in;
                 c = c_in;
@@ -666,67 +667,49 @@ module MAC32_top_tb;
         c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
 
         
-
-        // @(posedge clk)
-        // testtype("Rounding Modes ");
-        // for (idx = 0; idx < 5; idx++) begin
-        //     my_rm  = idx;
-
-        //     if(idx == 0) testlabel("a) Rounding Mode: RNE - Round to Nearest, ties to Even");
-        //     else if(idx == 1) testlabel("b) Rounding Mode: RTZ - Round towards Zero");
-        //     else if(idx == 2) testlabel("c) Rounding Mode: RDN - Round Down    (towards -INFINITY)");
-        //     else if(idx == 3) testlabel("d) Rounding Mode: RUP - Round UP      (towards +INFINITY)");
-        //     else if(idx == 4) testlabel("e) Rounding Mode: RMM - Round to Nearest, ties Max Magnitude");
-
-        //     a = 32'h00000000; //+0
-        //     b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
-        //     c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
-
-        //     @(posedge clk)
-        //     a = 32'h00000000; //+0
-        //     b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
-        //     c = 32'hf1c00000; //-1.90147590034e+30(1.1 x 2^100)
-        //     @(posedge clk)
-        //     print("\t + _ | _ _ _ = 0.000");
-        //     a = 32'h1ea9800c; //1.7946529957e-20
-        //     b = 32'h48000001; //131072.015625(2 ^ 17 1.___1)
-        //     c = 32'h44080000; //139264.0(2^9 1.0001)
-        //     @(posedge clk)
-        //     print("1.1> - _ | _ _ _ = 0.000");
-        //     a = 32'h1ea9800c; //1.7946529957e-20
-        //     b = 32'hc8000001; //-131072.015625(2 ^ 17 1.___1)
-        //     c = 32'h44080000; //139264.0(2^9 1.0001)
-
-        //     @(posedge clk)
-        //     print(" _ | _ _ _ = 0.001");
-        //     a = 32'h1ea9800c; //1.7946529957e-20
-        //     b = 32'hc8000001; //-131072.015625(2 ^ 17 1.___1)
-        //     c = 32'h44080000; //139264.0(2^9 1.0001)
-        //     @(posedge clk)
-        //     print(" _ | _ _ _ = 0.100");
-        //     @(posedge clk)
-        //     print(" _ | _ _ _ = 0.101");
-        //     @(posedge clk)
-        //     print(" _ | _ _ _ = 0.110");
-            
-        //     @(posedge clk)
-        //     ;
-
-            
-        // end
         @(posedge clk)
-        testtype("Rounding Test");
-        testlabel("first");
+        printblank();
+        print("=============================================================================================================================================");
+        $display("Rounding Test\n%s\n%s\n%s\n%s\n%s", rounding_str0, rounding_str1, rounding_str2, rounding_str3, rounding_str4);
+        print("=============================================================================================================================================");
+        
+        testlabel("a) Infinities ");
+        print("\n\t1. + Infinity");
         RoundingTest(32'h00000000, 32'h4e7fffff, 32'h71c00000);
         //     a = 32'h00000000; //+0
         //     b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
         //     c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
         
-        testlabel("second");
+        print("\t2. - Infinity");
         RoundingTest(32'h00000000, 32'h4e7fffff, 32'hf1c00000);
         //     a = 32'h00000000; //+0
         //     b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
         //     c = 32'hf1c00000; //-1.90147590034e+30(1.1 x 2^100)
+        testlabel("b) x.0xx");
+        print("\n\t + 1. 0.000");
+        RoundingTest(32'h1ea9800c, 32'h48000001, 32'h44080000);
+        //     a = 32'h1ea9800c; //1.7946529957e-20
+        //     b = 32'h48000001; //131072.015625(2 ^ 17 1.___1)
+        //     c = 32'h44080000; //139264.0(2^9 1.0001)
+
+        print("\t - 1. 0.000");
+        RoundingTest(32'h1ea9800c, 32'hc8000001, 32'h44080000);
+        //     a = 32'h1ea9800c; //1.7946529957e-20
+        //     b = 32'hc8000001; //-131072.015625(2 ^ 17 1.___1)
+        //     c = 32'h44080000; //139264.0(2^9 1.0001)
+
+
+        
+        testlabel("c) x.1xx");
+        RoundingTest(32'h00000000, 32'h4e7fffff, 32'hf1c00000);
+
+        testlabel("d) x.100");
+        RoundingTest(32'h00000000, 32'h4e7fffff, 32'hf1c00000);
+
+
+
+
+
 
         testtype("Other crazy tests...");
         a = 32'h00000000; //+0
