@@ -141,9 +141,32 @@ module MAC32_top_tb;
 
     endtask //automatic
 
+    
+
     task automatic testlabel(input string lb);
         printblank();
         $display("%s",lb);
+    endtask //automatic
+
+    task automatic RoundingTest(input logic [31:0] a_in, input logic [31:0] b_in, input logic [31:0] c_in);
+    integer k;
+        begin
+            for (k = 0; k < 5; k++) begin
+                my_rm  = k;
+
+                // if(k == 0) testlabel("a) Rounding Mode: RNE - Round to Nearest, ties to Even");
+                // else if(k == 1) testlabel("b) Rounding Mode: RTZ - Round towards Zero");
+                // else if(k == 2) testlabel("c) Rounding Mode: RDN - Round Down    (towards -INFINITY)");
+                // else if(k == 3) testlabel("d) Rounding Mode: RUP - Round UP      (towards +INFINITY)");
+                // else if(k == 4) testlabel("e) Rounding Mode: RMM - Round to Nearest, ties Max Magnitude");
+                a = a_in;
+                b = b_in;
+                c = c_in;
+                @(posedge clk)
+                ;
+            end
+        end
+        
     endtask //automatic
 
 
@@ -644,30 +667,65 @@ module MAC32_top_tb;
 
         
 
-        @(posedge clk)
-        testtype("Rounding Modes ");
-        for (idx = 0; idx < 5; idx++) begin
-            my_rm  = idx;
+        // @(posedge clk)
+        // testtype("Rounding Modes ");
+        // for (idx = 0; idx < 5; idx++) begin
+        //     my_rm  = idx;
 
-            if(idx == 0) testlabel("a) Rounding Mode: RNE - Round to Nearest, ties to Even");
-            else if(idx == 1) testlabel("b) Rounding Mode: RTZ - Round towards Zero");
-            else if(idx == 2) testlabel("c) Rounding Mode: RDN - Round Down    (towards -INFINITY)");
-            else if(idx == 3) testlabel("d) Rounding Mode: RUP - Round UP      (towards +INFINITY)");
-            else if(idx == 4) testlabel("e) Rounding Mode: RMM - Round to Nearest, ties Max Magnitude");
+        //     if(idx == 0) testlabel("a) Rounding Mode: RNE - Round to Nearest, ties to Even");
+        //     else if(idx == 1) testlabel("b) Rounding Mode: RTZ - Round towards Zero");
+        //     else if(idx == 2) testlabel("c) Rounding Mode: RDN - Round Down    (towards -INFINITY)");
+        //     else if(idx == 3) testlabel("d) Rounding Mode: RUP - Round UP      (towards +INFINITY)");
+        //     else if(idx == 4) testlabel("e) Rounding Mode: RMM - Round to Nearest, ties Max Magnitude");
 
-            a = 32'h00000000; //+0
-            b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
-            c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
+        //     a = 32'h00000000; //+0
+        //     b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
+        //     c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
 
-            @(posedge clk)
-            a = 32'h00000000; //+0
-            b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
-            c = 32'hf1c00000; //-1.90147590034e+30(1.1 x 2^100)
-            @(posedge clk)
-            ;
+        //     @(posedge clk)
+        //     a = 32'h00000000; //+0
+        //     b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
+        //     c = 32'hf1c00000; //-1.90147590034e+30(1.1 x 2^100)
+        //     @(posedge clk)
+        //     print("\t + _ | _ _ _ = 0.000");
+        //     a = 32'h1ea9800c; //1.7946529957e-20
+        //     b = 32'h48000001; //131072.015625(2 ^ 17 1.___1)
+        //     c = 32'h44080000; //139264.0(2^9 1.0001)
+        //     @(posedge clk)
+        //     print("1.1> - _ | _ _ _ = 0.000");
+        //     a = 32'h1ea9800c; //1.7946529957e-20
+        //     b = 32'hc8000001; //-131072.015625(2 ^ 17 1.___1)
+        //     c = 32'h44080000; //139264.0(2^9 1.0001)
+
+        //     @(posedge clk)
+        //     print(" _ | _ _ _ = 0.001");
+        //     a = 32'h1ea9800c; //1.7946529957e-20
+        //     b = 32'hc8000001; //-131072.015625(2 ^ 17 1.___1)
+        //     c = 32'h44080000; //139264.0(2^9 1.0001)
+        //     @(posedge clk)
+        //     print(" _ | _ _ _ = 0.100");
+        //     @(posedge clk)
+        //     print(" _ | _ _ _ = 0.101");
+        //     @(posedge clk)
+        //     print(" _ | _ _ _ = 0.110");
+            
+        //     @(posedge clk)
+        //     ;
 
             
-        end
+        // end
+        @(posedge clk)
+        testtype("rd test 2");
+        testlabel("first");
+        RoundingTest(32'h00000000, 32'h4e7fffff, 32'h71c00000);
+        //     a = 32'h00000000; //+0
+        //     b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
+        //     c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
+        testlabel("second");
+        RoundingTest(32'h00000000, 32'h4e7fffff, 32'hf1c00000);
+        //     a = 32'h00000000; //+0
+        //     b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
+        //     c = 32'hf1c00000; //-1.90147590034e+30(1.1 x 2^100)
 
         testtype("Other crazy tests...");
         a = 32'h00000000; //+0
