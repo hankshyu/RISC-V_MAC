@@ -286,6 +286,9 @@ module Rounder #(
 
     //Rounding
     // IEEE 754
+    // Unless stated otherwise, if the rounded result of an operation is inexact—that is, it differs from what would
+    // have been computed were both exponent range and precision unbounded—then the inexact exception shall
+    // be signaled. The rounded or overflowed result shall be delivered to the destination
     // 7.6 Inexact (emphaisis added): 
     // When all of these exceptions are handled by default, the inexact flag is always raised when either the overflow or underflow flag is raised.
     assign Inexact_o = (|Mant_lower) || Mant_sticky || Overflow_o ||Underflow_o;
@@ -312,7 +315,7 @@ module Rounder #(
     wire Mant_renormalize = Mant_upper_rounded[PARM_MANT + 1];
 
 
-    //Overflow (IEEE 754-2008)
+    // Overflow (IEEE 754-2008)
     // The overflow exception shall be signaled if and only if the destination format’s largest finite number is
     // exceeded in magnitude by what would have been the rounded floating-point result (see 4) were the exponent
     // range unbounded. The default result shall be determined by the rounding-direction attribute and the sign of
