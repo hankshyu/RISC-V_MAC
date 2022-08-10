@@ -107,6 +107,9 @@ module Rounder #(
     reg [PARM_EXP - 1 : 0] Exp_result_norm; // 8 bit
     reg [1 : 0] Mant_lower;
 
+
+    reg Mant_roundup;// Whether to round up or not
+    
     //wires soley for debug:
     wire dbg_w1 = Invalid_o;
     wire dbg_w2 = A_Inf_i | B_Inf_i | C_Inf_i;
@@ -199,43 +202,60 @@ module Rounder #(
         end
 //dbg_w7
         else if((Exp_norm_i[PARM_EXP : 0] == 256) & (~Mant_norm_i[3*PARM_MANT + 4]) & (Mant_norm_i[3*PARM_MANT + 3 : 2*PARM_MANT+3] != 0))begin 
-            //NaN, Exp_norm_i = 256
-            Mant_result_norm = {1'b0, PARM_MANT_NAN}; //PARM_MANT_NAN is 23 bit
-            Exp_result_norm = 8'b1111_1111;
-
+            // NaN, Exp_norm_i = 256
+            // Mant_result_norm = {1'b0, PARM_MANT_NAN}; //PARM_MANT_NAN is 23 bit
+            // Exp_result_norm = 8'b1111_1111;
+            
+            // This is an Overflow case
+            Overflow_o = 1;
+            Sign_result_o = Sign_i;
         end
 //dbg_w8
         else if(Exp_norm_i[PARM_EXP - 1 : 0] == 8'b1111_1111)begin
 //dbg_w8_1
-            if(Mant_norm_i[3*PARM_MANT + 4])begin // NaN
+            if(Mant_norm_i[3*PARM_MANT + 4])begin // Overflow
                 Overflow_o = 1;
-                Mant_result_norm = {1'b0, PARM_MANT_NAN};
-                Exp_result_norm = 8'b1111_1111;
                 Sign_result_o = Sign_i;
-    
             end
 //dbg_w8_1_2
-            else if(Mant_norm_i[3*PARM_MANT + 4 : 2*PARM_MANT + 4] == 0)begin //Infinity
+            else if(Mant_norm_i[3*PARM_MANT + 4 : 2*PARM_MANT + 4] == 0)begin // Overflow
                 Overflow_o = 1;
-                Exp_result_norm = 8'b1111_1111;
                 Sign_result_o = Sign_i;
             end
 //dbg_w8_1_3
             else begin // Normal numbers
-                Mant_result_norm  = Mant_norm_i [3*PARM_MANT + 3 : 2*PARM_MANT + 3];
                 Exp_result_norm = 8'b1111_1110; //254
-                Mant_lower = Mant_norm_i[2*PARM_MANT + 2 : 2*PARM_MANT + 1];
                 Sign_result_o = Sign_i;
+
+                Mant_result_norm  = Mant_norm_i [3*PARM_MANT + 2 : 2*PARM_MANT + 3];//originally out of bound
+                Mant_lower = Mant_norm_i[2*PARM_MANT + 2 : 2*PARM_MANT + 1];
                 Mant_sticky = Sticky_one;
+                
+                //see if it's overflow, if mant is full and about to round up
+                if(Mant_result_norm[PARM_MANT - 1 : 0] == {(PARM_MANT){1'b1}})begin
+                    case (Rounding_mode_i)
+                        PARM_RM_RNE:
+                            Overflow_o = Mant_lower[1] & (Mant_lower[0] | Mant_sticky | Mant_result_norm[0]);
+                        PARM_RM_RTZ:
+                            Overflow_o = 0;
+                        PARM_RM_RDN:
+                            Overflow_o = ((|Mant_lower) || Mant_sticky) & Sign_i;
+                        PARM_RM_RUP:
+                            Overflow_o = ((|Mant_lower) || Mant_sticky) & (~Sign_i);
+                        PARM_RM_RMM:
+                            Overflow_o = Mant_lower[1];
+                        default:
+                            Overflow_o = 0;
+                    endcase
+                end
+
             end
 
         end
 //dbg_w9
         else if(Exp_norm_i[PARM_EXP])begin //Overflow Occurs, the exponent at preNorm(multiplication is over 127)
             Overflow_o = 1;
-            Exp_result_norm = 8'b1111_1111;
             Sign_result_o = Sign_i;
-
         end
 //dbg_w10
         else if(Exp_norm_i == 10'd0)begin // 0 denormalized
@@ -267,7 +287,7 @@ module Rounder #(
 
         end
 //dbg_w12
-        else if(~Mant_norm_i[3*PARM_MANT + 4])begin // number with 0X.XX
+        else if(~Mant_norm_i[3*PARM_MANT + 4])begin // number with 0X.XX, normal numbers
             Mant_result_norm = Mant_norm_i[3*PARM_MANT + 3 : 2*PARM_MANT + 3];
             Exp_result_norm = Exp_norm_mone_i[PARM_MANT - 1 : 0];
             Mant_lower = Mant_norm_i[2*PARM_MANT + 2 : 2*PARM_MANT + 1];
@@ -275,7 +295,7 @@ module Rounder #(
             Mant_sticky = Sticky_one;
         end
 //dbg_w13
-        else begin // number with 1X.XX
+        else begin // number with 1X.XX, normal nubmers
             Mant_result_norm = Mant_norm_i[3*PARM_MANT + 4 : 2*PARM_MANT + 4];
             Exp_result_norm = Exp_norm_i[PARM_MANT - 1 : 0];
             Mant_lower = Mant_norm_i[2*PARM_MANT + 3 : 2*PARM_MANT + 2];
@@ -293,7 +313,7 @@ module Rounder #(
     // When all of these exceptions are handled by default, the inexact flag is always raised when either the overflow or underflow flag is raised.
     assign Inexact_o = (|Mant_lower) || Mant_sticky || Overflow_o ||Underflow_o;
 
-    reg Mant_roundup;// Whether to round up or not
+
     always @(*) begin
         case (Rounding_mode_i)
             PARM_RM_RNE:
