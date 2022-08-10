@@ -212,13 +212,8 @@ module Rounder #(
         end
 //dbg_w8
         else if(Exp_norm_i[PARM_EXP - 1 : 0] == 8'b1111_1111)begin
-//dbg_w8_1
-            if(Mant_norm_i[3*PARM_MANT + 4])begin // Overflow
-                Overflow_o = 1;
-                Sign_result_o = Sign_i;
-            end
-//dbg_w8_1_2
-            else if(Mant_norm_i[3*PARM_MANT + 4 : 2*PARM_MANT + 4] == 0)begin // Overflow
+//dbg_w8_1 & dbg_w8_1_2
+            if(Mant_norm_i[3*PARM_MANT + 4] || (Mant_norm_i[3*PARM_MANT + 4 : 2*PARM_MANT + 4] == 0))begin // Overflow
                 Overflow_o = 1;
                 Sign_result_o = Sign_i;
             end
