@@ -814,9 +814,8 @@ module MAC32_top_tb;
         //b = 69f8000f; // 3.74767349957e+25 (2^84, 1.111100..001111)
         //c = bf800000; // -1
 
-        //todo
         testtype("Overflows, It's too much... to much to hold (Not done yet, still errrrrorrrr)");
-        testlabel("Overflow happens solely at Multiplication");
+        testlabel("a) Overflow happens at Multiplication step");
         showrgs = 0;
         my_rm = PARM_RM_RTZ;
         a = 32'h00000000; //+0
@@ -886,8 +885,8 @@ module MAC32_top_tb;
 
         
         @(posedge clk)
-        testlabel("Overflow happens solely at Addition");
-        print("Overflow is absorbed due to Rounding");
+        testlabel("b) Overflow happens at Addition step");
+        print("a) Overflow is absorbed due to Rounding");
         a = 32'h3f800000; //1
         b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
         c = 32'h3f800000; //1
@@ -895,13 +894,32 @@ module MAC32_top_tb;
         a = 32'hbf800000; //-1
         b = 32'hff7fffff; //-3.40282346639e+38 (-MAX)
         c = 32'h3f800000; //1
-        
+
+
         @(posedge clk)
         my_rm = PARM_RM_RUP;
+        print("This is phony Overflow");
         a = 32'h00000000; //+0
         b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
         c = 32'h3f800000; //1
         @(posedge clk)
+        a = 32'h80000000; //-0
+        b = 32'hff7fffff; //-3.40282346639e+38 (-MAX)
+        c = 32'h3f800000; //1
+
+        @(posedge clk)
+        a = 32'h7d600000; //9.30459597049e+36 (2 ^ 123 1.11)
+        b = 32'h3f800000; //1
+        c = 32'h7f71ffff; //8.04182886744e+37 (2 ^ 127 1.11100011..11)
+        @(posedge clk)
+        a = 32'hfd600000; //-9.30459597049e+36 (2 ^ 123 1.11)
+        b = 32'hbf800000; //-1
+        c = 32'h7f71ffff; //8.04182886744e+37 (2 ^ 127 1.11100011..11)
+        
+
+
+        @(posedge clk)
+        print("Overflow happens due to RUP Rounding");
         a = 32'h3f800000; //1
         b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
         c = 32'h3f800000; //1
@@ -910,17 +928,23 @@ module MAC32_top_tb;
         a = 32'hbf800000; //-1
         b = 32'hff7fffff; //-3.40282346639e+38 (-MAX)
         c = 32'h3f800000; //1
-        @(posedge clk)
-        a = 32'h80000000; //-0
-        b = 32'hff7fffff; //-3.40282346639e+38 (-MAX)
-        c = 32'h3f800000; //1
-        
 
+
+        @(posedge clk)
+        print("Overflow happens due to pure addition");
+        my_rm = PARM_RM_RTZ;
+        a = 32'h7d700000; //9.30459597049e+36 (2 ^ 123 1.111)
+        b = 32'h3f800000; //1
+        c = 32'h7f71ffff; //8.04182886744e+37 (2 ^ 127 1.11100011..11)
+        @(posedge clk)
+        a = 32'hfd700000; //-9.30459597049e+36 (2 ^ 123 1.111)
+        b = 32'hbf800000; //-1
+        c = 32'h7f71ffff; //8.04182886744e+37 (2 ^ 127 1.11100011..11)
 
 
 
         @(posedge clk)//Sticky bit = 1
-        printblank();
+        testlabel("Overflow happens due to Multiplication and Addition");
         print("About to overflow....");
         my_rm = PARM_RM_RTZ;
         a = 32'h72000000; //2.53530120046e+30 (Mant empty, exp = 2^101)
