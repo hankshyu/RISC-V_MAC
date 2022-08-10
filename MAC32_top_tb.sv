@@ -848,6 +848,7 @@ module MAC32_top_tb;
         b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
         c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
         
+        
         @(posedge clk)
         printblank();
         a = 32'h80000000; // -0
