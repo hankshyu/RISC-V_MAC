@@ -592,13 +592,13 @@ module MAC32_top_tb;
         $display("Rounding Test\n%s\n%s\n%s\n%s\n%s", rounding_str0, rounding_str1, rounding_str2, rounding_str3, rounding_str4);
         print("=============================================================================================================================================");
         
-        testlabel("a) Infinities ");
-        print("#1. + Infinity");
+        testlabel("a) Overflows ");
+        print("#1. + Overflow");
         RoundingTest(32'h00000000, 32'h4e7fffff, 32'h71c00000);
         //a = 32'h00000000; //+0
         //b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
         //c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
-        print("#2. - Infinity");
+        print("#2. - Overflow");
         RoundingTest(32'h00000000, 32'h4e7fffff, 32'hf1c00000);
         //a = 32'h00000000; //+0
         //b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
@@ -817,24 +817,27 @@ module MAC32_top_tb;
         //todo
         testtype("Overflows, It's too much... to much to hold (Not done yet, still errrrrorrrr)");
         testlabel("Overflow happens solely at Multiplication");
+        showrgs = 0;
+        my_rm = PARM_RM_RTZ;
         a = 32'h00000000; //+0
-        b = 32'h7445ecd1; //6.27249565725e+31
-        c = 32'h7cf526d7; //1.01832039677e+37
+        b = 32'h7445ecd1; //6.27249565725e+31 (Exp : 2^105)
+        c = 32'h7cf526d7; //1.01832039677e+37 (Exp : 2^122)
         @(posedge clk)
         a = 32'h80000000; //-0
-        b = 32'h7445ecd1; //6.27249565725e+31
-        c = 32'hfcf526d7; //-1.01832039677e+37
+        b = 32'h7445ecd1; //6.27249565725e+31 (Exp : 2^105)
+        c = 32'hfcf526d7; //-1.01832039677e+37(Exp : 2^122)
         @(posedge clk) 
         a = 32'h80000000; //-0
-        b = 32'h64b57000; //2.6775449023e+22
-        c = 32'h6cb73000; //1.77168078865e+27
+        b = 32'h64b57000; //2.6775449023e+22 (Exp : 2^74)
+        c = 32'h6cb73000; //1.77168078865e+27(Exp : 2^90) 
         @(posedge clk)
+        printblank();
         a = 32'h00000000; //+0
-        b = 32'h4cffffff; //268435440.0(Mant full * 2 ^ 26)
+        b = 32'h4cffffff; //268435440.0(Mant full * 2^26)
         c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
         @(posedge clk)
         a = 32'h00000000; //+0
-        b = 32'h4d7fffff; //268435440.0(Mant full * 2 ^ 27) // If the exponent = 127's overflow won't be caught
+        b = 32'h4d7fffff; //268435440.0(Mant full * 2^27) // If the exponent = 128's overflow(postnorm) won't be caught
         c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
         @(posedge clk)
         a = 32'h00000000; //+0
@@ -844,6 +847,24 @@ module MAC32_top_tb;
         a = 32'h00000000; //+0
         b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
         c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
+        
+        @(posedge clk)
+        printblank();
+        a = 32'h80000000; // -0
+        b = 32'h6c800001; // 1.23794018686e+27 (2^90 1.00..001)
+        c = 32'h51800000; // 68719476736 (2^36 1.0)
+        @(posedge clk)
+        a = 32'h80000000; // -0
+        b = 32'h6c800001; // 1.23794018686e+27 (2^90 1.00..001)
+        c = 32'h52000000; // 1.37438953472e+11 (2^37 1.0)
+        @(posedge clk)
+        a = 32'h80000000; // -0
+        b = 32'h6c800001; // 1.23794018686e+27 (2^90 1.00..001)
+        c = 32'h52800000; // 1.37438953472e+11 (2^38 1.0)
+        @(posedge clk)
+        a = 32'h80000000; // -0
+        b = 32'h6c800001; // 1.23794018686e+27 (2^90 1.00..001)
+        c = 32'h53000000; // 1.37438953472e+11 (2^39 1.0)
 
         
         @(posedge clk)
