@@ -583,92 +583,6 @@ module MAC32_top_tb;
 
 
 
-        @(posedge clk) 
-        testtype("Overflows, It's too much... to much to hold (Not done yet, still errrrrorrrr)");
-        testlabel("Overflow happens solely at Multiplication");
-        a = 32'h00000000; //+0
-        b = 32'h7445ecd1; //6.27249565725e+31
-        c = 32'h7cf526d7; //1.01832039677e+37
-        @(posedge clk)
-        a = 32'h80000000; //-0
-        b = 32'h7445ecd1; //6.27249565725e+31
-        c = 32'hfcf526d7; //-1.01832039677e+37
-        @(posedge clk) 
-        a = 32'h80000000; //-0
-        b = 32'h64b57000; //2.6775449023e+22
-        c = 32'h6cb73000; //1.77168078865e+27
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'h4cffffff; //268435440.0(Mant full * 2 ^ 26)
-        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'h4d7fffff; //268435440.0(Mant full * 2 ^ 27) // If the exponent = 127's overflow won't be caught
-        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'h4dffffff; //268435440.0(Mant full * 2 ^ 28)
-        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
-        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
-
-        
-        @(posedge clk)
-        testlabel("Overflow happens solely at Addition");
-
-        a = 32'h3f800000; //1
-        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
-        c = 32'h3f800000; //1
-        @(posedge clk)
-        a = 32'hbf800000; //-1
-        b = 32'hff7fffff; //-3.40282346639e+38 (-MAX)
-        c = 32'h3f800000; //1
-        @(posedge clk)
-        a = 32'h7445ecd1; //6.27249565725e+31
-        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
-        c = 32'h3f800000; //1
-
-
-
-        @(posedge clk)//Sticky bit = 1
-        printblank();
-        print("About to overflow....");
-        my_rm = PARM_RM_RTZ;
-        a = 32'h72000000; //2.53530120046e+30 (Mant empty, exp = 2^101)
-        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX, exp = 2^127)
-        c = 32'h3f800000; //1
-        @(posedge clk)
-        my_rm = PARM_RM_RUP;
-        a = 32'h72000000; //2.53530120046e+30 (Mant empty, exp = 2^101)
-        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
-        c = 32'h3f800000; //1
-        @(posedge clk)//Guard bit = 1
-        my_rm = PARM_RM_RTZ;
-        a = 32'h72800000; //2.53530120046e+30 (Mant empty, exp = 2^102)
-        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
-        c = 32'h3f800000; //1
-        @(posedge clk)//Round bit = 1
-        a = 32'h73000000; //2.53530120046e+30 (Mant empty, exp = 2^103)
-        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
-        c = 32'h3f800000; //1
-        @(posedge clk)//Should be Overflow....
-        a = 32'h73800000; //2.53530120046e+30 (Mant empty, exp = 2^104)
-        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
-        c = 32'h3f800000; //1
-        @(posedge clk)//Should be Overflow....
-        a = 32'h74000000; //2.53530120046e+30 (Mant empty, exp = 2^105)
-        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
-        c = 32'h3f800000; //1
-        @(posedge clk)//Should be Overflow....
-        a = 32'h74800000; //2.53530120046e+30 (Mant empty, exp = 2^106)
-        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
-        c = 32'h3f800000; //1
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'h4d7fffff; //268435440.0(Mant full * 2 ^ 27) // If the exponent = 127's overflow won't be caught
-        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
 
         
         @(posedge clk)
@@ -853,31 +767,139 @@ module MAC32_top_tb;
         //c = da000000; // -9.00719925474e+15; // (2^53)
 
 
-
-
-
         testlabel("d.1) 0.100");
+        print("#1. + 0.100");
         RoundingTest(32'h00000000, 32'h45800003, 32'h43400000);
         //a = 00000000; // 0
         //b = 45800003; // 4096.00146484 (2^12, 1.0...0011)
         //c = 43400000; // 192.0 (2^7 1.1)
+        print("#2. - 0.100");
+        RoundingTest(32'h00000000, 32'h45800003, 32'hc3400000);
+        //a = 00000000; // 0
+        //b = 45800003; // 4096.00146484 (2^12, 1.0...0011)
+        //c = c3400000; // -192.0 (2^7 1.1)
+
+        print("#3. + 0.100");
+        RoundingTest(32'h5e400000, 32'h69f8000f, 32'h3f800000);
+        //a = 5e400000; //1.15292150461e+18 (2^61, 1.1)
+        //b = 69f8000f; // 3.74767349957e+25 (2^84, 1.111100..001111)
+        //c = 3f800000; // +1
+        print("#4. - 0.100");
+        RoundingTest(32'hde400000, 32'he9f8000f, 32'h3f800000);
+        //a = de400000; //-1.15292150461e+18 (2^61, 1.1)
+        //b = e9f8000f; // -3.74767349957e+25 (2^84, 1.111100..001111)
+        //c = 3f800000; // +1
 
 
         testlabel("d.2) 1.100");
-
         print("#1. + 1.100");
+        RoundingTest(32'h3d800000, 32'h45800003, 32'h43400000);
+        //a = 3d800000; // 0.625(2^-4)
+        //b = 45800003; // 4096.00146484 (2^12, 1.0...0011)
+        //c = 43400000; // 192.0 (2^7 1.1)
+        print("#2. - 1.100");
+        RoundingTest(32'hbd800000, 32'hc5800003, 32'h43400000);
+        //a = bd800000; // -0.625(2^-4)
+        //b = c5800003; // -4096.00146484 (2^12, 1.0...0011)
+        //c = 43400000; // 192.0 (2^7 1.1)
+        
+        print("#3. + 1.100");
         RoundingTest(32'h5d800000, 32'h69f8000f, 32'h3f800000);
         //a = 5d800000; //1.15292150461e+18 (2^60, 1.0)
         //b = 69f8000f; // 3.74767349957e+25 (2^84, 1.111100..001111)
         //c = 3f800000; // +1
-        print("#2. - 1.100");
+        print("#4. - 1.100");
         RoundingTest(32'hdd800000, 32'h69f8000f, 32'hbf800000);
         //a = dd800000; // -1.15292150461e+18 (2^60, 1.0)
         //b = 69f8000f; // 3.74767349957e+25 (2^84, 1.111100..001111)
         //c = bf800000; // -1
 
 
+        testtype("Overflows, It's too much... to much to hold (Not done yet, still errrrrorrrr)");
+        testlabel("Overflow happens solely at Multiplication");
+        a = 32'h00000000; //+0
+        b = 32'h7445ecd1; //6.27249565725e+31
+        c = 32'h7cf526d7; //1.01832039677e+37
+        @(posedge clk)
+        a = 32'h80000000; //-0
+        b = 32'h7445ecd1; //6.27249565725e+31
+        c = 32'hfcf526d7; //-1.01832039677e+37
+        @(posedge clk) 
+        a = 32'h80000000; //-0
+        b = 32'h64b57000; //2.6775449023e+22
+        c = 32'h6cb73000; //1.77168078865e+27
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h4cffffff; //268435440.0(Mant full * 2 ^ 26)
+        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h4d7fffff; //268435440.0(Mant full * 2 ^ 27) // If the exponent = 127's overflow won't be caught
+        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h4dffffff; //268435440.0(Mant full * 2 ^ 28)
+        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h4e7fffff; //268435440.0(Mant full * 2 ^ 29)
+        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
 
+        
+        @(posedge clk)
+        testlabel("Overflow happens solely at Addition");
+
+        a = 32'h3f800000; //1
+        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
+        c = 32'h3f800000; //1
+        @(posedge clk)
+        a = 32'hbf800000; //-1
+        b = 32'hff7fffff; //-3.40282346639e+38 (-MAX)
+        c = 32'h3f800000; //1
+        @(posedge clk)
+        a = 32'h7445ecd1; //6.27249565725e+31
+        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
+        c = 32'h3f800000; //1
+
+
+
+        @(posedge clk)//Sticky bit = 1
+        printblank();
+        print("About to overflow....");
+        my_rm = PARM_RM_RTZ;
+        a = 32'h72000000; //2.53530120046e+30 (Mant empty, exp = 2^101)
+        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX, exp = 2^127)
+        c = 32'h3f800000; //1
+        @(posedge clk)
+        my_rm = PARM_RM_RUP;
+        a = 32'h72000000; //2.53530120046e+30 (Mant empty, exp = 2^101)
+        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
+        c = 32'h3f800000; //1
+        @(posedge clk)//Guard bit = 1
+        my_rm = PARM_RM_RTZ;
+        a = 32'h72800000; //2.53530120046e+30 (Mant empty, exp = 2^102)
+        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
+        c = 32'h3f800000; //1
+        @(posedge clk)//Round bit = 1
+        a = 32'h73000000; //2.53530120046e+30 (Mant empty, exp = 2^103)
+        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
+        c = 32'h3f800000; //1
+        @(posedge clk)//Should be Overflow....
+        a = 32'h73800000; //2.53530120046e+30 (Mant empty, exp = 2^104)
+        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
+        c = 32'h3f800000; //1
+        @(posedge clk)//Should be Overflow....
+        a = 32'h74000000; //2.53530120046e+30 (Mant empty, exp = 2^105)
+        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
+        c = 32'h3f800000; //1
+        @(posedge clk)//Should be Overflow....
+        a = 32'h74800000; //2.53530120046e+30 (Mant empty, exp = 2^106)
+        b = 32'h7f7fffff; //3.40282346639e+38 (+MAX)
+        c = 32'h3f800000; //1
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h4d7fffff; //268435440.0(Mant full * 2 ^ 27) // If the exponent = 127's overflow won't be caught
+        c = 32'h71c00000; //1.90147590034e+30(1.1 x 2^100)
 
         testtype("Other crazy tests...");
         showrgs = 0;
