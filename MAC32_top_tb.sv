@@ -999,8 +999,12 @@ module MAC32_top_tb;
         b = 32'h4a800001; //4194304.5(2 ^ 22 1.0000...001)
         c = 32'hf3800001; //-2.02824120215e+31 ( 2^ 104 1.00...01)   
 
-        
 
+        @(posedge clk)
+        testlabel("Dont Underflow the thing that I will do");
+
+
+        
 
         @(posedge clk)
         testtype("Other crazy tests...");
