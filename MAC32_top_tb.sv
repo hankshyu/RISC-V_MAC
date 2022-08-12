@@ -999,9 +999,30 @@ module MAC32_top_tb;
         b = 32'h4a800001; //4194304.5(2 ^ 22 1.0000...001)
         c = 32'hf3800001; //-2.02824120215e+31 ( 2^ 104 1.00...01)   
 
+        @(posedge clk)
+        testlabel("Denormalized Numbers");
+        print("Denormalized Numbers happens in Multiplication");
+        a = 32'h00000000; //+0
+        b = 32'h00800000; //1.17549435082e-38(MIN)(2 ^ -126 1.0)
+        c = 32'h3e800000; //0.25 (2^ -2)
+        @(posedge clk)
+        a = 32'h80000000; //-0
+        b = 32'h01d00000; //7.64071328034e-38 (2^ -124, 1.101)
+        c = 32'h3d100000; //0.03515625 (2^-5 1.001)
 
         @(posedge clk)
-        testlabel("Dont Underflow the thing that I will do");
+        print("Denormalized happens at Addition");
+        a = 32'h00290003; // DN (0.010100100..00011)
+        b = 32'h00560002; // DN (0.101011000..00010)
+        c = 32'h3f800000; //+1
+        @(posedge clk)
+        a = 32'h00290003; // DN (0.010100100..00011)
+        b = 32'h00560002; // DN (0.101011000..00010)
+        c = 32'h3f800000; //+1
+
+
+
+        
 
 
         
