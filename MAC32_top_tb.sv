@@ -96,25 +96,26 @@ module MAC32_top_tb;
     // .Flag_NX_SO(ob_NX),
     // .Flag_IV_SO(ob_IV)
     // );
-    task automatic EndTest();
+
+    task print(input string str);
+        $display("%s",str);
+    endtask
+
+    task printnoln(input string str);
+        $write("%s",str);
+    endtask
+
+    task printblank();
+        print("");
+    endtask
+
+    task EndTest();
+        printblank();
         print("RISC-V Multiply-accumulate Testbench ends sucessfully!!");
         $finish;
-    endtask //automatic
+    endtask
 
     
-    task automatic print(input string str);
-        $display("%s",str);
-    endtask //automatic
-
-    task automatic printnoln(input string str);
-        $write("%s",str);
-    endtask //automatic
-
-
-    task automatic printblank();
-        print("");
-    endtask //automatic
-
     reg showrgs;
     task showresult;
         begin
