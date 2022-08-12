@@ -18,6 +18,8 @@
 // Revision 0.02 - File Renamed
 // Revision 1.00 - Invalid_o shall raise whilst Overflow/Underflow
 // Revision 1.01 - Add PARM_MATN_RMM support
+// Revision 2.00 - remove Zero special case, since the mv_halt is updated and zero case is under cover.
+
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
@@ -164,11 +166,12 @@ module Rounder #(
 
         end
 //dbg_w3
-        else if(B_Zero_i | C_Zero_i)begin // for situation of sth + sth*0 / sth + 0*sth
-            Mant_result_norm = A_Mant_i;
-            Exp_result_norm = A_Exp_raw_i;
-            Sign_result_o = A_Sign_i;
-        end
+        //Due to the update of Mv_halt signal, zero is now not a special case..
+        // else if(B_Zero_i | C_Zero_i)begin // for situation of sth + sth*0 / sth + 0*sth
+        //     Mant_result_norm = A_Mant_i;
+        //     Exp_result_norm = A_Exp_raw_i;
+        //     Sign_result_o = A_Sign_i;
+        // end
 //dbg_w4
         else if(Exp_mv_sign_i)begin // Only A counts 
             Underflow_o = A_DeN_i;
