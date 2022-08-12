@@ -1099,6 +1099,12 @@ module MAC32_top_tb;
 
         @(posedge clk)
         testlabel("b) Denormalized Numbers happens in Multiplication");
+        print("Normal x Normal = denormal");
+        a = 32'h00000000; //+0
+        b = 32'h0dffe000; // 1.57695143846e-30 ( 2^-100 1.1111111111)
+        c = 32'h31ffe000; // 7.44694261812e-09 ( 2^-28  1.1111111111)
+        @(posedge clk)
+        print("older ones");
         a = 32'h00000000; //+0
         b = 32'h00800000; //1.17549435082e-38(MIN)(2 ^ -126 1.0)
         c = 32'h3e800000; //0.25 (2^ -2)
@@ -1106,14 +1112,6 @@ module MAC32_top_tb;
         a = 32'h80000000; //-0
         b = 32'h01d00000; //7.64071328034e-38 (2^ -124, 1.101)
         c = 32'h3d100000; //0.03515625 (2^-5 1.001)
-
-
-
-        
-
-
-        
-
         @(posedge clk)
 
         EndTest();
