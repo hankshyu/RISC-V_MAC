@@ -96,6 +96,10 @@ module MAC32_top_tb;
     // .Flag_NX_SO(ob_NX),
     // .Flag_IV_SO(ob_IV)
     // );
+    task automatic EndTest();
+        print("RISC-V Multiply-accumulate Testbench ends sucessfully!!");
+        $finish;
+    endtask //automatic
 
     
     task automatic print(input string str);
@@ -1001,7 +1005,7 @@ module MAC32_top_tb;
 
         @(posedge clk)
         testlabel("Denormalized Numbers");
-        print("Denormalized Numbers happens in Multiplication");
+        print("a) Denormalized Numbers happens in Multiplication");
         a = 32'h00000000; //+0
         b = 32'h00800000; //1.17549435082e-38(MIN)(2 ^ -126 1.0)
         c = 32'h3e800000; //0.25 (2^ -2)
@@ -1011,14 +1015,14 @@ module MAC32_top_tb;
         c = 32'h3d100000; //0.03515625 (2^-5 1.001)
 
         @(posedge clk)
-        print("Denormalized happens at Addition");
+        print("b) Denormalized happens at Addition");
         a = 32'h00290003; // DN (0.010100100..00011)
         b = 32'h00560002; // DN (0.101011000..00010)
         c = 32'h3f800000; //+1
         @(posedge clk)
-        a = 32'h00290003; // DN (0.010100100..00011)
-        b = 32'h00560002; // DN (0.101011000..00010)
-        c = 32'h3f800000; //+1
+        a = 32'h0008e000; // DN (0.0001000111)
+        b = 32'h00058000; // DN (0.0000101100)
+        c = 32'hbf800000; //-1
 
 
 
@@ -1028,18 +1032,19 @@ module MAC32_top_tb;
         
 
         @(posedge clk)
-        testtype("Other crazy tests...");
-        showrgs = 0;
-        a = 32'h00000000; //+0
-        b = 32'h00000000; //+0
-        c = 32'h00000000; //+0
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'h4c5c0000; //57671680
-        c = 32'h4f660000; //3858759680
+
+        EndTest();
+        // testtype("Other crazy tests...");
+        // showrgs = 0;
+        // a = 32'h00000000; //+0
+        // b = 32'h00000000; //+0
+        // c = 32'h00000000; //+0
+        // @(posedge clk)
+        // a = 32'h00000000; //+0
+        // b = 32'h4c5c0000; //57671680
+        // c = 32'h4f660000; //3858759680
         
-        @(posedge clk)
-        $finish;
+        // @(posedge clk)
 
     end
 
