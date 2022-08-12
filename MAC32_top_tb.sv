@@ -1008,7 +1008,7 @@ module MAC32_top_tb;
 
         @(posedge clk)
         testtype("Denormalized Numbers, also under control");
-        testlabel("a) Addition in between dernormalized numbers");
+        testlabel("a) Pure Addition of dernormalized numbers");
         a = 32'h00290003; // DN (0.010100100..00011)
         b = 32'h00560002; // DN (0.101011000..00010)
         c = 32'h3f800000; //+1
