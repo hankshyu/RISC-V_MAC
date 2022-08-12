@@ -1071,10 +1071,31 @@ module MAC32_top_tb;
 
         @(posedge clk)
         testlabel("b) Additions with Denormalized and Normalized Numbers");
-        
+        a = 32'h00b40000; //(2 ^ -126 1.01101)
+        b = 32'h00480000; // DN(0.1001)
+        c = 32'h3f800000; //+1
+        @(posedge clk)
+        a = 32'h80b40000; //(-2 ^ -126 1.01101)
+        b = 32'h80480000; // DN(-0.1001)
+        c = 32'h3f800000; //+1
 
+        @(posedge clk)
+        a = 32'h00b40000; //(2 ^ -126 1.01101)
+        b = 32'h00380000; //DN (0.0111)
+        c = 32'hbf800000; //-1
+        @(posedge clk)
+        a = 32'h80b40000; //(-2 ^ -126 1.01101)
+        b = 32'h80380000; //DN (-0.0111)
+        c = 32'hbf800000; //-1
 
-
+        @(posedge clk)
+        a = 32'h00800000; //1.17549435082e-38(MIN)(2 ^ -126 1.0)
+        b = 32'h00000001; //DN ( 0.00..01)
+        c = 32'hbf800000; //-1
+        @(posedge clk)
+        a = 32'h80800000; //-1.17549435082e-38(MIN)(2 ^ -126 1.0)
+        b = 32'h80000001; //DN (-0.00..01)
+        c = 32'hbf800000; //-1
 
         @(posedge clk)
         testlabel("b) Denormalized Numbers happens in Multiplication");
