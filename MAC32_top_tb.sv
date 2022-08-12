@@ -1070,7 +1070,7 @@ module MAC32_top_tb;
         c = 32'hbf800000; //-1
 
         @(posedge clk)
-        testlabel("b) Additions with Denormalized and Normalized Numbers");
+        testlabel("b) Additions between Denormalized and Normalized Numbers");
         a = 32'h00b40000; //(2 ^ -126 1.01101)
         b = 32'h00480000; // DN(0.1001)
         c = 32'h3f800000; //+1
@@ -1098,17 +1098,35 @@ module MAC32_top_tb;
         c = 32'hbf800000; //-1
 
         @(posedge clk)
-        testlabel("b) Denormalized Numbers happens in Multiplication");
+        testlabel("c) Denormalized Numbers happens in Multiplication");
         print("Normal x Normal = denormal");
         a = 32'h00000000; //+0
         b = 32'h0dffe000; // 1.57695143846e-30 ( 2^-100 1.1111111111)
         c = 32'h31ffe000; // 7.44694261812e-09 ( 2^-28  1.1111111111)
         @(posedge clk)
-        print("older ones");
-        a = 32'h00000000; //+0
-        b = 32'h00800000; //1.17549435082e-38(MIN)(2 ^ -126 1.0)
-        c = 32'h3e800000; //0.25 (2^ -2)
+        a = 32'h80000000; //-0
+        b = 32'h8dffe000; // -1.57695143846e-30 ( -2^-100 1.1111111111)
+        c = 32'h31ffe000; // 7.44694261812e-09 ( 2^-28  1.1111111111)
+        
         @(posedge clk)
+        a = 32'h80000000; //-0
+        b = 32'h8dfff000; //(2^ -100 1.11111111111)
+        c = 32'hb1fff000; //(2 ^ -28 1.11111111111)
+        @(posedge clk)
+        a = 32'h00000000; //0
+        b = 32'h0dfff000; //(2^ -100 1.11111111111)
+        c = 32'hb1fff000; //(2 ^ -28 1.11111111111)
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h00998003; //1.40967528641e-38 (2^-126 1.0011001100..0011)
+        c = 32'h3a800000; //0.0009765625 (2^-10 1.0)
+        @(posedge clk)
+        a = 32'h00000000; //+0
+        b = 32'h00998003; //1.40967528641e-38 (2^-126 1.0011001100..0011)
+        c = 32'hba800000; //-0.0009765625 (-2^-10 1.0)
+
+        @(posedge clk)
+        print("Normal x Denormal = denormal");
         a = 32'h80000000; //-0
         b = 32'h01d00000; //7.64071328034e-38 (2^ -124, 1.101)
         c = 32'h3d100000; //0.03515625 (2^-5 1.001)
