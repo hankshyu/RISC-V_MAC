@@ -1004,19 +1004,11 @@ module MAC32_top_tb;
         b = 32'h4a800001; //4194304.5(2 ^ 22 1.0000...001)
         c = 32'hf3800001; //-2.02824120215e+31 ( 2^ 104 1.00...01)   
 
-        @(posedge clk)
-        testlabel("Denormalized Numbers");
-        print("a) Denormalized Numbers happens in Multiplication");
-        a = 32'h00000000; //+0
-        b = 32'h00800000; //1.17549435082e-38(MIN)(2 ^ -126 1.0)
-        c = 32'h3e800000; //0.25 (2^ -2)
-        @(posedge clk)
-        a = 32'h80000000; //-0
-        b = 32'h01d00000; //7.64071328034e-38 (2^ -124, 1.101)
-        c = 32'h3d100000; //0.03515625 (2^-5 1.001)
+
 
         @(posedge clk)
-        print("b) Denormalized happens at Addition");
+        testtype("Denormalized Numbers, also under control");
+        testlabel("a) Addition in between dernormalized numbers");
         a = 32'h00290003; // DN (0.010100100..00011)
         b = 32'h00560002; // DN (0.101011000..00010)
         c = 32'h3f800000; //+1
@@ -1031,29 +1023,68 @@ module MAC32_top_tb;
         c = 32'hbf800000; //-1
         @(posedge clk)
         a = 32'h8008e000; // DN (-0.0001000111)
-        b = 32'h80058000; // DN (-0.0000101100)
-        c = 32'hbf800000; //-1
+        b = 32'hbf800000; //-1
+        c = 32'h80058000; // DN (-0.0000101100)
 
         @(posedge clk)
-        a = 32'h00150002; //DN ( 0.001010100..001)
-        b = 32'h006a0002; //DN ( 0.1101010....000)
+        a = 32'h00150002; //DN ( 0.001010100..010)
+        b = 32'h006a0002; //DN ( 0.1101010....010)
         c = 32'h3f800000; //+1
+        @(posedge clk)
+        a = 32'h80150002; //DN (-0.001010100..010)
+        b = 32'h806a0002; //DN (-0.1101010....010)
+        c = 32'h3f800000; //+1
+        
         @(posedge clk)
         print("This would become normalized number");
         a = 32'h007fffff; //DN ( 0.111...111)
         b = 32'h00000001; //DN ( 0.000...001)
         c = 32'h3f800000; //+1
         @(posedge clk)
-        print("This would become normalized number(With sticky)");
+        a = 32'h807fffff; //DN (-0.111...111)
+        b = 32'h00000001; //DN ( 0.000...001)
+        c = 32'hbf800000; //-1
+
+        @(posedge clk)
         a = 32'h007fffff; //DN ( 0.111...111)
-        b = 32'h000000010; //DN ( 0.000...001)
+        b = 32'h00000002; //DN ( 0.000...010)
+        c = 32'h3f800000; //+1
+        @(posedge clk)
+        a = 32'h807fffff; //DN (-0.111...111)
+        b = 32'h80000002; //DN (-0.000...010)
         c = 32'h3f800000; //+1
 
         @(posedge clk)
-        print("This is zero ...");
-        a = 32'h80150002; //DN ( -0.001010100..001)
-        b = 32'h80150002; //DN ( -0.001010100..001)
+        a = 32'h007fffff; //DN ( 0.111...111)
+        b = 32'h807fffff; //DN (-0.111...111)
         c = 32'hbf800000; //-1
+        @(posedge clk)
+        a = 32'h807fffff; //DN (-0.111...111)
+        b = 32'h007fffff; //DN ( 0.111...111)
+        c = 32'hbf800000; //-1
+
+        @(posedge clk)
+        print("This is exactly zero ...");
+        a = 32'h80150002; //DN (-0.001010100..001)
+        b = 32'h80150002; //DN (-0.001010100..001)
+        c = 32'hbf800000; //-1
+
+        @(posedge clk)
+        testlabel("b) Additions with Denormalized and Normalized Numbers");
+        
+
+
+
+
+        @(posedge clk)
+        testlabel("b) Denormalized Numbers happens in Multiplication");
+        a = 32'h00000000; //+0
+        b = 32'h00800000; //1.17549435082e-38(MIN)(2 ^ -126 1.0)
+        c = 32'h3e800000; //0.25 (2^ -2)
+        @(posedge clk)
+        a = 32'h80000000; //-0
+        b = 32'h01d00000; //7.64071328034e-38 (2^ -124, 1.101)
+        c = 32'h3d100000; //0.03515625 (2^-5 1.001)
 
 
 
