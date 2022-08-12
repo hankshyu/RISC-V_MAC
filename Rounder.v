@@ -273,7 +273,7 @@ module Rounder #(
             end
 //dbg_w11_2
             else begin //Denormalized Number
-                Underflow_o = 1;
+                // Denormalized does not mean exactly an underflow...
                 Mant_result_norm = Mant_norm_i[3*PARM_MANT + 4: 2*PARM_MANT + 4];
                 Mant_lower = Mant_norm_i[2*PARM_MANT + 3 : 2*PARM_MANT + 2];
                 Sign_result_o = Sign_i;
