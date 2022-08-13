@@ -17,6 +17,7 @@
 // 08/09/2022 - Invalid_o shall raise whilst Overflow/Underflow
 // 08/10/2022 - Debug wires added to observe the chosen MUX path
 // 08/12/2022 - Remove A = 0 as special case, due to the update of mv_halt in MAC32_top.v
+// 08/13/2022 - Fix multidriven Net, Mant_result_o
 //////////////////////////////////////////////////////////////////////////////////
 // Additional Comments:
 // 
@@ -74,7 +75,7 @@ module Rounder #(
     output reg [PARM_MANT - 1 : 0] Mant_result_o,
     output  Invalid_o,
     output reg Overflow_o,
-    output reg Underflow_o,
+    output Underflow_o,
     output  Inexact_o,
     output [3:0]dbg_rgs
 
@@ -142,7 +143,6 @@ module Rounder #(
     always @(*) begin
         //assign value to avoid latches
         Overflow_o = 1'b0;
-        Underflow_o = 1'b0;
         Mant_result_norm = 0;
         Exp_result_norm = 0;
         Mant_lower = 2'b00;
@@ -172,7 +172,6 @@ module Rounder #(
         // end
 //dbg_w4
         else if(Exp_mv_sign_i)begin // Only A counts 
-            Underflow_o = A_DeN_i;
             Mant_result_norm = A_Mant_i;
             Exp_result_norm = A_Exp_raw_i;
             Sign_result_o = A_Sign_i;
@@ -193,7 +192,6 @@ module Rounder #(
             end
 //dbg_w6_2 
             else begin // denormalized number
-                Underflow_o = 1;
                 Mant_result_norm = {1'b0, Rs_Mant_i[3*PARM_MANT + 6 : 2*PARM_MANT + 6]};
                 Mant_lower = Rs_Mant_i[2*PARM_MANT + 5 : 2*PARM_MANT + 4];
                 Sign_result_o = Sign_i;
@@ -255,7 +253,6 @@ module Rounder #(
         end
 //dbg_w10
         else if(Exp_norm_i == 10'd0)begin // 0 denormalized
-            Underflow_o = 1;
             Mant_result_norm = {1'b0, Mant_norm_i[3*PARM_MANT + 4 : 2*PARM_MANT + 5]};
             Mant_lower = Mant_norm_i[2*PARM_MANT + 4 : 2*PARM_MANT + 3];
             Sign_result_o = Sign_i;
@@ -307,6 +304,7 @@ module Rounder #(
     // be signaled. The rounded or overflowed result shall be delivered to the destination
     // 7.6 Inexact (emphaisis added): 
     // When all of these exceptions are handled by default, the inexact flag is always raised when either the overflow or underflow flag is raised.
+    assign Underflow_o = 0;
     assign Inexact_o = (|Mant_lower) || Mant_sticky || Overflow_o ||Underflow_o;
 
 
@@ -386,7 +384,7 @@ module Rounder #(
                 PARM_RM_RMM:
                     Exp_result_o = {PARM_EXP{1'b1}}; // to Inf
                 default:
-                    Mant_roundup = 0;
+                    Exp_result_o = 0; //Revision 8/13/2022 - Fix multidrive net, Exp_result_o
             endcase
         end
         else 
