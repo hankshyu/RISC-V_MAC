@@ -5,7 +5,17 @@
 // Module Name:     MAC32_top
 // Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
 // RTL Language:    Verilog-2005
-// Dependencies: 
+//
+// Dependencies:    SpecialCaseDetector.v
+//                  R4Booth.v
+//                  WallaceTree.v
+//                  PreNormalizer.v
+//                  Compressor32.v
+//                  EACAdder.v
+//                  MSBIncrementer.v
+//                  LeadingOneDetector_Top.v
+//                  Normalizer.v
+//                  Rounder.v
 //////////////////////////////////////////////////////////////////////////////////
 // Description: 
 // 
