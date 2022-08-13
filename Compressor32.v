@@ -11,8 +11,8 @@
 // Description:     This is a 3:2 compressor, a.k.a carry save adder.
 //////////////////////////////////////////////////////////////////////////////////
 // Revision:
-
 //////////////////////////////////////////////////////////////////////////////////
+
 
 module Compressor32 #(
     parameter XLEN = 49
@@ -23,6 +23,7 @@ module Compressor32 #(
     output [XLEN - 1 : 0] Sum_o,
     output [XLEN - 1 : 0] Carry_o
 );
+    
     generate
         genvar j;
         for(j = 0; j < XLEN; j = j+1)begin
@@ -37,5 +38,4 @@ module Compressor32 #(
         end
     endgenerate
 
-    
 endmodule
