@@ -1,22 +1,20 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 07/21/2022 03:34:32 PM
-// Design Name: 
-// Module Name: MAC32_top
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
+// Engineer:        Tzu-Han Hsu
+// Create Date:     07/21/2022 03:34:32 PM
+// Module Name:     MAC32_top
+// Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
+// RTL Language:    Verilog-2005
+// Dependencies: 
+//////////////////////////////////////////////////////////////////////////////////
 // Description: 
 // 
-// Dependencies: 
-// 
+//////////////////////////////////////////////////////////////////////////////////
 // Revision:
-// Revision 0.01 - File Created
+// 07/21/2022 - File Created
+// 08/12/2022 - Update mv_halt signal, now zero is viewed as the smalest denormalized number.
+//////////////////////////////////////////////////////////////////////////////////
 // Additional Comments:
-// 
 
 //Floating-point control and status register:
 //  |31     8|7                     5|4                            0|
@@ -45,7 +43,6 @@
 //      UF          |   Underflow
 //      NX          |   Inexact
 
-//////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
 
 module MAC32_top #(
@@ -207,10 +204,13 @@ module MAC32_top #(
     //mv = 27 - d = expB + expC - expA + 100
     
     wire [PARM_EXP + 1 : 0] Exp_mv = 27 - A_Exp + B_Exp + C_Exp - PARM_BIAS; // d = expA - (expB + expC - 127), mv = 27 - d 
-    wire [PARM_EXP + 1 : 0] Exp_mv_neg = -27 + A_Exp - B_Exp - C_Exp + PARM_BIAS; //Minus_sft_amt_DO
+    wire [PARM_EXP + 1 : 0] Exp_mv_neg = -27 + A_Exp - B_Exp - C_Exp + PARM_BIAS;
 
     assign Exp_mv_sign = Exp_mv[PARM_EXP + 1]; // the sign bit of the mv parameter, Sign_amt_DO
-    assign Mv_halt = ((~Exp_mv_sign) & (Exp_mv[PARM_EXP : 0] > 73))|| A_Zero; //right shift(+) is out of range, which is 74 or more, Sft_stop_SO 
+    
+    //Revision 2.00 - Update mv_halt signal, now zero is viewed as the smalest denormalized number.
+    //right shift(+) is out of range, which is 74 or more
+    assign Mv_halt = ((~Exp_mv_sign) & (Exp_mv[PARM_EXP : 0] > 73))|| A_Zero; 
 
     //signals for prenormalizer:
     wire SignFlip_ADD_PRN;
@@ -270,10 +270,7 @@ module MAC32_top #(
         .Carry_o(CSA_carry)
     );
 
-    //correction based sign extenson is also in grand-adder.
-    //input signals
-
-    
+    //correction based sign extenson is also in grand-adder.    
     //output signals
     reg [73 : 0] PosSum;
     wire Minus_sticky_bit;

@@ -1,25 +1,22 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 07/30/2022 10:47:12 AM
-// Design Name: 
-// Module Name: Rounder
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
+// Engineer:        Tzu-Han Hsu
+// Create Date:     07/30/2022 10:47:12 AM
+// Module Name:     Rounder
+// Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
+// RTL Language:    Verilog-2005
+// Dependencies: 
+//////////////////////////////////////////////////////////////////////////////////
 // Description: 
 // 
-// Dependencies: 
-// 
+//////////////////////////////////////////////////////////////////////////////////
 // Revision:
-// Revision 0.01 - File Created
-// Revision 0.02 - File Renamed
-// Revision 1.00 - Invalid_o shall raise whilst Overflow/Underflow
-// Revision 1.01 - Add PARM_MATN_RMM support
-// Revision 2.00 - remove Zero special case, since the mv_halt is updated and zero case is under cover.
-
+// 07/30/2022 - File Created
+// 08/01/2022 - Rename File 
+// 08/08/2022 - Add PARM_MATN_RMM support
+// 08/09/2022 - Invalid_o shall raise whilst Overflow/Underflow
+// 08/12/2022 - Remove A_Zero as special case, since the mv_halt is updated and such case is under cover.
+//////////////////////////////////////////////////////////////////////////////////
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
