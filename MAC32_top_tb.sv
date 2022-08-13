@@ -1216,7 +1216,6 @@ module MAC32_top_tb;
 
         @(posedge clk)
         testtype("Underflow, Too Little, too late");
-        @(posedge clk)
         a = 32'h804f4a44; // -7.28164568289e-39(DN)
         b = 32'h0da57f81; // 1.01996055552e-30 (2^-100)
         c = 32'h31f54c95; // 7.13914483086e-09 (2^-28)
