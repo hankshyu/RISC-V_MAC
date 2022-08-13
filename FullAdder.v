@@ -1,22 +1,18 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 07/22/2022 10:13:32 AM
-// Design Name: 
-// Module Name: FullAdder
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
+// Engineer:        Tzu-Han Hsu
+// Create Date:     07/22/2022 10:13:32 AM
+// Module Name:     FullAdder
+// Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
+// RTL Language:    Verilog-2005
+//
+// Dependencies:    None
+//////////////////////////////////////////////////////////////////////////////////
+// Description:     A full Adder module, with 3 input and 2 output
+//////////////////////////////////////////////////////////////////////////////////
 // Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
+// 07/25/2022 - Output ports naming inconsistent with definition, bug fixed
+
 //////////////////////////////////////////////////////////////////////////////////
 
 
