@@ -1,25 +1,5 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Design Name: 
-// Module Name: Compressor42
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: This 4:2 compressor is made up of 2 3:2 compressor, could be map to more advanced compressor design
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
-`timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
 // Engineer:        Tzu-Han Hsu
 // Create Date:     07/25/2022 10:34:02 AM
 // Module Name:     Compressor42
@@ -70,9 +50,5 @@ module Compressor42 #(
     );
 
     assign hidden_carry_msb = top_carry[XLEN - 1];
-
-
-
-
 
 endmodule
