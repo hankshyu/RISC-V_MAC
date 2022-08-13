@@ -16,7 +16,7 @@
 // 08/08/2022 - Add PARM_MATN_RMM support
 // 08/09/2022 - Invalid_o shall raise whilst Overflow/Underflow
 // 08/10/2022 - Debug wires added to observe the chosen MUX path
-// 08/12/2022 - Remove A_Zero as special case, due to the update of mv_halt
+// 08/12/2022 - Remove A = 0 as special case, due to the update of mv_halt in MAC32_top.v
 //////////////////////////////////////////////////////////////////////////////////
 // Additional Comments:
 // 
