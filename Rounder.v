@@ -19,6 +19,7 @@
 // 08/12/2022 - Remove A = 0 as special case, due to the update of mv_halt in MAC32_top.v
 // 08/13/2022 - Fix multidriven Net, Mant_result_o
 // 08/13/2022 - Underflow signal fixed, denorm number wouldn't fire Underflow Signal
+
 //////////////////////////////////////////////////////////////////////////////////
 // Additional Comments: 
 // IEEE Std 754-2008    Chap7. Default exception handling
