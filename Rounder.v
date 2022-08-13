@@ -18,9 +18,55 @@
 // 08/10/2022 - Debug wires added to observe the chosen MUX path
 // 08/12/2022 - Remove A = 0 as special case, due to the update of mv_halt in MAC32_top.v
 // 08/13/2022 - Fix multidriven Net, Mant_result_o
+// 08/13/2022 - Underflow signal fixed, denorm number wouldn't fire Underflow Signal
 //////////////////////////////////////////////////////////////////////////////////
-// Additional Comments:
-// 
+// Additional Comments: 
+// IEEE Std 754-2008    Chap7. Default exception handling
+//
+//--------------------------------------------------------------------------------
+// 7.2 Invalid Operation
+// The invalid operation exception is signaled if and only if there is no usefully definable result. 
+// In these cases the operands are invalid for the operation to be performed. 
+// For operations producing results in floating-point format, the default result of an operation that signals the
+// invalid operation exception shall be a quiet NaN that should provide some diagnostic information (see 6.2).
+// These operations are:
+// a) any general-computational or signaling-computational operation on a signaling NaN (see 6.2),
+// except for some conversions (see 5.12)
+// b) multiplication: multiplication(0, ∞) or multiplication(∞, 0)
+// c) fusedMultiplyAdd: fusedMultiplyAdd(0, ∞, c) or fusedMultiplyAdd(∞, 0, c) unless c is a quiet
+// NaN; if c is a quiet NaN then it is implementation defined whether the invalid operation exception
+// is signaled
+// d) addition or subtraction or fusedMultiplyAdd: magnitude subtraction of infinities, such as:
+// addition(+∞, −∞)
+// e) division: division(0, 0) or division(∞, ∞)
+// f) remainder: remainder(x, y), when y is zero or x is infinite and neither is NaN
+// g) squareRoot if the operand is less than zero
+// h) quantize when the result does not fit in the destination format or when one operand is finite and the
+// other is infinite
+//--------------------------------------------------------------------------------
+// 7.4 Overflow (IEEE 754-2008)
+// The overflow exception shall be signaled if and only if the destination format’s largest finite number is
+// exceeded in magnitude by what would have been the rounded floating-point result (see 4) were the exponent
+// range unbounded. The default result shall be determined by the rounding-direction attribute and the sign of
+// the intermediate result as follows:
+// a) roundTiesToEven and roundTiesToAway carry all overflows to ∞ with the sign of the intermediate
+// result.
+// b) roundTowardZero carries all overflows to the format’s largest finite number with the sign of the
+// intermediate result.
+// c) roundTowardNegative carries positive overflows to the format’s largest finite number, and carries
+// negative overflows to −∞.
+// d) roundTowardPositive carries negative overflows to the format’s most negative finite number, and
+// carries positive overflows to +∞.
+// In addition, under default exception handling for overflow, the overflow flag shall be raised and the inexact
+// exception shall be signaled.
+//--------------------------------------------------------------------------------
+// 7.6 Inexact 
+// Unless stated otherwise, if the rounded result of an operation is inexact—that is, it differs from what would
+// have been computed were both exponent range and precision unbounded—then the inexact exception shall
+// be signaled. The rounded or overflowed result shall be delivered to the destination
+// (emphaisis added) 
+// When all of these exceptions are handled by default, the inexact flag 
+// is always raised when either the overflow or underflow flag is raised.
 //////////////////////////////////////////////////////////////////////////////////
 
 module Rounder #(
@@ -242,9 +288,7 @@ module Rounder #(
                             Overflow_o = 0;
                     endcase
                 end
-
             end
-
         end
 //dbg_w9
         else if(Exp_norm_i[PARM_EXP])begin //Overflow Occurs, the exponent at preNorm(multiplication is over 127)
@@ -257,7 +301,6 @@ module Rounder #(
             Mant_lower = Mant_norm_i[2*PARM_MANT + 4 : 2*PARM_MANT + 3];
             Sign_result_o = Sign_i;
             Mant_sticky = Sticky_one;
-            
         end
 //dbg_w11
         else if(Exp_norm_i == 10'd1)begin // 0
@@ -297,16 +340,8 @@ module Rounder #(
         end
     end
 
-    //Rounding
-    // IEEE 754
-    // Unless stated otherwise, if the rounded result of an operation is inexact—that is, it differs from what would
-    // have been computed were both exponent range and precision unbounded—then the inexact exception shall
-    // be signaled. The rounded or overflowed result shall be delivered to the destination
-    // 7.6 Inexact (emphaisis added): 
-    // When all of these exceptions are handled by default, the inexact flag is always raised when either the overflow or underflow flag is raised.
-    assign Underflow_o = 0;
-    assign Inexact_o = (|Mant_lower) || Mant_sticky || Overflow_o ||Underflow_o;
-
+    //Represent Guard, Round and Sticky bit
+    wire GRSbits = (|Mant_lower) || Mant_sticky; 
 
     always @(*) begin
         case (Rounding_mode_i)
@@ -315,9 +350,9 @@ module Rounder #(
             PARM_RM_RTZ:
                 Mant_roundup = 0;
             PARM_RM_RDN:
-                Mant_roundup = Inexact_o & Sign_i;
+                Mant_roundup = GRSbits & Sign_i;
             PARM_RM_RUP:
-                Mant_roundup = Inexact_o & (~Sign_i);
+                Mant_roundup = GRSbits & (~Sign_i);
             PARM_RM_RMM:
                 Mant_roundup = Mant_lower[1];
             default:
@@ -328,23 +363,6 @@ module Rounder #(
     wire [PARM_MANT + 1 : 0] Mant_upper_rounded = Mant_result_norm + Mant_roundup;
     wire Mant_renormalize = Mant_upper_rounded[PARM_MANT + 1];
 
-
-    // Overflow (IEEE 754-2008)
-    // The overflow exception shall be signaled if and only if the destination format’s largest finite number is
-    // exceeded in magnitude by what would have been the rounded floating-point result (see 4) were the exponent
-    // range unbounded. The default result shall be determined by the rounding-direction attribute and the sign of
-    // the intermediate result as follows:
-    // a) roundTiesToEven and roundTiesToAway carry all overflows to ∞ with the sign of the intermediate
-    // result.
-    // b) roundTowardZero carries all overflows to the format’s largest finite number with the sign of the
-    // intermediate result.
-    // c) roundTowardNegative carries positive overflows to the format’s largest finite number, and carries
-    // negative overflows to −∞.
-    // d) roundTowardPositive carries negative overflows to the format’s most negative finite number, and
-    // carries positive overflows to +∞.
-    // In addition, under default exception handling for overflow, the overflow flag shall be raised and the inexact
-    // exception shall be signaled.
-    
     //output logic
 
     always @(*) begin
@@ -390,6 +408,9 @@ module Rounder #(
         else 
             Exp_result_o = Exp_result_norm + Mant_renormalize;
     end
+
+    assign Underflow_o = ({Exp_result_o,Mant_result_o} == 0) & GRSbits;
+    assign Inexact_o = GRSbits || Overflow_o ||Underflow_o;
 
     //debug
     assign dbg_rgs = {Mant_result_norm[0],Mant_lower,Mant_sticky};
