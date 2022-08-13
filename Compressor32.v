@@ -1,22 +1,17 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 07/25/2022 10:34:02 AM
-// Design Name: 
-// Module Name: Compressor32
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
+// Engineer:        Tzu-Han Hsu
+// Create Date:     07/25/2022 10:34:02 AM
+// Module Name:     Compressor32
+// Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
+// RTL Language:    Verilog-2005
+//
+// Dependencies:    None
+//////////////////////////////////////////////////////////////////////////////////
 // Description: This is a 3:2 compressor, a.k.a carry save adder.
-// 
-// Dependencies: 
-// 
+//////////////////////////////////////////////////////////////////////////////////
 // Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
+
 //////////////////////////////////////////////////////////////////////////////////
 
 module Compressor32 #(
