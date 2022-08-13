@@ -3,7 +3,6 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 07/25/2022 10:34:02 AM
 // Design Name: 
 // Module Name: Compressor42
 // Project Name: 
@@ -17,6 +16,26 @@
 // Revision 0.01 - File Created
 // Additional Comments:
 // 
+//////////////////////////////////////////////////////////////////////////////////
+
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Engineer:        Tzu-Han Hsu
+// Create Date:     07/25/2022 10:34:02 AM
+// Module Name:     Compressor42
+// Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
+// RTL Language:    Verilog-2005
+//
+// Dependencies:    Compressor32.v
+//////////////////////////////////////////////////////////////////////////////////
+// Description:     A Compressor module which takes 4 input and outputs 2, one possible implementation
+//                  is with 2 3-2 Compressors ,which is used as a behavioral description to map to more 
+//                  efficient module designs
+
+//////////////////////////////////////////////////////////////////////////////////
+// Revision:
+// 07/25/2022 - Compressor32 down32 module should take top_carry shift one bit to the left as input
+
 //////////////////////////////////////////////////////////////////////////////////
 
 
