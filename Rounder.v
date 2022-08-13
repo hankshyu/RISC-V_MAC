@@ -15,7 +15,8 @@
 // 08/01/2022 - Rename File 
 // 08/08/2022 - Add PARM_MATN_RMM support
 // 08/09/2022 - Invalid_o shall raise whilst Overflow/Underflow
-// 08/12/2022 - Remove A_Zero as special case, since the mv_halt is updated and such case is under cover.
+// 08/10/2022 - Debug wires added to observe the chosen MUX path
+// 08/12/2022 - Remove A_Zero as special case, due to the update of mv_halt
 //////////////////////////////////////////////////////////////////////////////////
 // Additional Comments:
 // 
