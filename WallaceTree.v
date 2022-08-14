@@ -11,7 +11,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 // Description:     Sums 13 partial products using carry save adder(CSA) into carry and sum
-//                  We use: 
+//                  with: 
 //                          9x 3-2 Compressor
 //                          1x 4-2 Compressor
 //
