@@ -20,6 +20,7 @@
 // 08/12/2022 - Remove A = 0 as special case, due to the update of mv_halt in MAC32_top.v
 // 08/13/2022 - Fix multidriven Net, Mant_result_o
 // 08/13/2022 - Underflow signal fixed, denorm number wouldn't fire Underflow Signal
+// 08/14/2022 - Debug wires removed
 
 //////////////////////////////////////////////////////////////////////////////////
 // Additional Comments: 
@@ -127,10 +128,7 @@ module Rounder #(
     output  Invalid_o,
     output reg Overflow_o,
     output Underflow_o,
-    output  Inexact_o,
-    output [3:0]dbg_rgs
-
-    );
+    output  Inexact_o);
 
     //Sticky bit
     reg [2*PARM_MANT + 1 : 0] Mant_sticky_changed;
@@ -415,8 +413,5 @@ module Rounder #(
 
     assign Underflow_o = ({Exp_result_o,Mant_result_o} == 0) & GRSbits;
     assign Inexact_o = GRSbits || Overflow_o ||Underflow_o;
-
-    //debug
-    assign dbg_rgs = {Mant_result_norm[0],Mant_lower,Mant_sticky};
 
 endmodule

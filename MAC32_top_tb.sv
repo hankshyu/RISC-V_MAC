@@ -35,7 +35,6 @@ module MAC32_top_tb;
 
     wire [31:0] my_result;
     wire my_OF, my_UF, my_NX, my_NV;
-    wire [3:0] dbg_tail;
 
     reg [2 : 0] my_rm;//rounding mode
 
@@ -63,8 +62,7 @@ module MAC32_top_tb;
     .OF_o(my_OF),
     .UF_o(my_UF),
     .NX_o(my_NX),
-    .NV_o(my_NV),
-    .dbg_tail_o(dbg_tail)
+    .NV_o(my_NV)
     );
 
 
@@ -120,7 +118,6 @@ module MAC32_top_tb;
     endtask
 
 
-    reg showrgs; //show 
     task showresult;
         begin
             $write("%03d ",label);
@@ -130,7 +127,6 @@ module MAC32_top_tb;
             if(my_rm == 3'b011) $write("[RUP]");
             if(my_rm == 3'b100) $write("[RMM]");
             $write(" %8h(%13e) + %8h(%13e) x %8h(%13e) = %8h(%13e)\t",a,$bitstoshortreal(a),b,$bitstoshortreal(b),c,$bitstoshortreal(c),my_result,$bitstoshortreal(my_result));
-            if(showrgs) $write(" [%b.%b] ",dbg_tail[3],dbg_tail[2:0]);
 
             if(my_NV) $write("  NV(Invalid)");
             if(my_OF) $write("  OF(Overflw)");
@@ -205,14 +201,12 @@ module MAC32_top_tb;
         
     endtask
 
-
     always @(posedge clk) begin
         # 1;
         showresult();
     end
-    integer idx;
+
     initial begin
-        showrgs = 0;
         @(posedge clk)
         label = 1;
         my_rm = PARM_RM_RTZ; // use RTZ
@@ -478,12 +472,9 @@ module MAC32_top_tb;
 
 
         @(posedge clk)
-        showrgs = 1;
         testtype("Rounding Test");
         printRoundingInfo();
 
-
-        
         testlabel("a) Overflows ");
         print("#1. + Overflow");
         RoundingTest(32'h00000000, 32'h4e7fffff, 32'h71c00000);
@@ -722,7 +713,6 @@ module MAC32_top_tb;
 
         testtype("Overflows, It's too much... to much to hold");
         testlabel("a) Overflow happens at Multiplication step");
-        showrgs = 0;
         my_rm = PARM_RM_RTZ;
         a = 32'h00000000; //+0
         b = 32'h7445ecd1; //6.27249565725e+31 (Exp : 2^105)
