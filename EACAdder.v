@@ -6,7 +6,7 @@
 // Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
 // RTL Language:    Verilog-2005
 //
-// Dependencies:    Compressor32.v
+// Dependencies:    None
 //
 //////////////////////////////////////////////////////////////////////////////////
 // Description:     A Compressor module which takes 4 input and outputs 2, one possible implementation
