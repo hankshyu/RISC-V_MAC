@@ -37,11 +37,7 @@ module MAC32_top_tb;
     wire my_OF, my_UF, my_NX, my_NV;
     wire [3:0] dbg_tail;
 
-    reg [1 : 0] ob_rm;
-    reg [2 : 0] my_rm;
-
-    wire [31:0] ob_result;
-    wire ob_OF, ob_UF, ob_NX, ob_IV;
+    reg [2 : 0] my_rm;//rounding mode
 
 
     shortreal sa, sb, sc, sans;
@@ -49,16 +45,6 @@ module MAC32_top_tb;
     
     always @(*) sans = sa + (sb * sc);
     assign sans_wire = $shortrealtobits(sans);
-    
-
-    // always @(*)begin
-    //     if(label <= 13)begin
-            
-    //         a = $shortrealtobits(sa);
-    //         b = $shortrealtobits(sb);
-    //         c = $shortrealtobits(sc);
-    //     end
-    // end
     
     initial clk = 0;
     always # 5 clk = ~clk;
@@ -81,42 +67,48 @@ module MAC32_top_tb;
     .dbg_tail_o(dbg_tail)
     );
 
-    // fmac uut_ob
-    // (
-    // //Inputs
-    // .Operand_a_DI(a),
-    // .Operand_b_DI(b),
-    // .Operand_c_DI(c),
-    // .RM_SI(ob_rm),    //Rounding Mode
-
-    // .Result_DO(ob_result),
-
-    // .Exp_OF_SO(ob_OF),
-    // .Exp_UF_SO(ob_UF),
-    // .Flag_NX_SO(ob_NX),
-    // .Flag_IV_SO(ob_IV)
-    // );
 
     task print(input string str);
         $display("%s",str);
     endtask
 
-    task printnoln(input string str);
-        $write("%s",str);
-    endtask
-
     task printblank();
         print("");
     endtask
+    
+    task testtype(input string tt);
+        begin
+            printblank();
+            print("=============================================================================================================================================");
+            $display("******* %s",tt);
+            print("=============================================================================================================================================");
+        end
+
+    endtask
+
+    task testlabel(input string lb);
+        printblank();
+        $display("%s",lb);
+    endtask 
+
+    task StartText();
+        
+        printblank();
+        printblank();
+        printblank();
+        print("RISC-V Multiply-accumulate Testbench");
+
+    endtask
 
     task EndTest();
+
         printblank();
         print("RISC-V Multiply-accumulate Testbench ends sucessfully!!");
         $finish;
     endtask
 
-    
-    reg showrgs;
+
+    reg showrgs; //show 
     task showresult;
         begin
             $write("%03d ",label);
@@ -140,22 +132,7 @@ module MAC32_top_tb;
         
     endtask 
 
-    task automatic testtype(input string tt);
-        begin
-            printblank();
-            print("=============================================================================================================================================");
-            $display("******* %s",tt);
-            print("=============================================================================================================================================");
-        end
 
-    endtask //automatic
-
-    
-
-    task automatic testlabel(input string lb);
-        printblank();
-        $display("%s",lb);
-    endtask //automatic
 
     string rounding_str0 = "> Rounding Mode: RNE - Round to Nearest, ties to Even";
     string rounding_str1 = "> Rounding Mode: RTZ - Round towards Zero";
@@ -163,7 +140,7 @@ module MAC32_top_tb;
     string rounding_str3 = "> Rounding Mode: RUP - Round UP      (towards +INFINITY)";
     string rounding_str4 = "> Rounding Mode: RMM - Round to Nearest, ties Max Magnitude";
 
-    task automatic RoundingTest(input logic [31:0] a_in, input logic [31:0] b_in, input logic [31:0] c_in);
+    task RoundingTest(input logic [31:0] a_in, input logic [31:0] b_in, input logic [31:0] c_in);
     integer k;
         begin
             for (k = 0; k < 5; k++) begin
@@ -177,7 +154,7 @@ module MAC32_top_tb;
             end
         end
         
-    endtask //automatic
+    endtask
 
 
 
@@ -190,12 +167,8 @@ module MAC32_top_tb;
         showrgs = 0;
         @(posedge clk)
         label = 1;
-        //ob_rm = 2'b00;
-        my_rm = 3'b001; // use RTZ
-        printblank();
-        printblank();
-        printblank();
-        print("RISC-V Multiply-accumulate Testbench");
+        my_rm = PARM_RM_RTZ; // use RTZ
+
         testtype("Invalid Operation Test");
         print("a) computational operation on a NaN");
         a = 32'h7fc00000; //NaN
@@ -1260,7 +1233,6 @@ module MAC32_top_tb;
         a = 32'h27399e00; //2.57595594161e-15 ( 2^-49)
         b = 32'hbb6d0000; //-0.00361633300781    ( 2^-9 1.1101101)
         c = 32'h2b488000; //7.123190926e-13     (2^-41 1.10010001)
-
 
         @(posedge clk)
         EndTest();
