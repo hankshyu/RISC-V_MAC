@@ -215,12 +215,11 @@ module Rounder #(
 
         end
 //dbg_w3
-        //Due to the update of Mv_halt signal, zero is now not a special case..
-        // else if(B_Zero_i | C_Zero_i)begin // for situation of sth + sth*0 / sth + 0*sth
-        //     Mant_result_norm = A_Mant_i;
-        //     Exp_result_norm = A_Exp_raw_i;
-        //     Sign_result_o = A_Sign_i;
-        // end
+        else if(B_Zero_i | C_Zero_i)begin // for situation of sth + sth*0 / sth + 0*sth
+            Mant_result_norm = A_Mant_i;
+            Exp_result_norm = A_Exp_raw_i;
+            Sign_result_o = A_Sign_i;
+        end
 //dbg_w4
         else if(Exp_mv_sign_i)begin // Only A counts 
             Mant_result_norm = A_Mant_i;
