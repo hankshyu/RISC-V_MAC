@@ -22,7 +22,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 // Revision:
 // 08/12/2022 - Update mv_halt signal, now zero is viewed as the smalest denormalized number.
-// 08/14/2022 - Stable Build(1.0), non - pipelined version
+// 08/14/2022 - Stable non-pipelined build (v1.0)
 //////////////////////////////////////////////////////////////////////////////////
 // Additional Comments:
 //Floating-point control and status register:
