@@ -1,22 +1,22 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 08/01/2022 03:36:51 PM
-// Design Name: 
-// Module Name: Normalizer
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
+// Engineer:        Tzu-Han Hsu
+// Create Date:     08/01/2022 03:36:51 PM
+// Module Name:     Normalizer
+// Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
+// RTL Language:    Verilog-2005
+//
+// Dependencies:    None
+//
+//////////////////////////////////////////////////////////////////////////////////
+// Description:     Normalizes the Fraction, and correct the exponent by
+//                  the input from Leading One Detector
+//
+//////////////////////////////////////////////////////////////////////////////////
 // Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
+// 08/01/2022 - Output logic mistaken port name, fixed
+// 08/04/2022 - Remove redundant parameters
+//
 //////////////////////////////////////////////////////////////////////////////////
 
 
