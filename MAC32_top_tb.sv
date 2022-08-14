@@ -154,27 +154,35 @@ module MAC32_top_tb;
     
     task FullSignTest(input logic [31:0] a_in, input logic [31:0] b_in, input logic [31:0] c_in);
         
+        // (+, +, +)
         a = a_in;
         b = b_in;
         c = c_in;
         @(posedge clk)
+        // (+, -, +)
         b = sign_inv(b_in);
         @(posedge clk)
+        // (+, +, 1)
         b = b_in;
         c = sign_inv(c_in);
         @(posedge clk)
+        // (+, -, -)
         b = sign_inv(b_in);
         c = sign_inv(c_in);
         @(posedge clk)
+        // (-, +, +)
         a = sign_inv(a_in);
         b = b_in;
         c = c_in;
         @(posedge clk)
+        // (-, -, +)
         b = sign_inv(b_in);
         @(posedge clk)
+        // (-, +, -)
         b = b_in;
         c = sign_inv(c_in);
         @(posedge clk)
+        // (-, -, -)
         b = sign_inv(b_in);
         c = sign_inv(c_in);
 
