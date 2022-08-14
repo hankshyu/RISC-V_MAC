@@ -4,7 +4,7 @@
 // Create Date:     07/22/2022 10:13:32 AM
 // Module Name:     FullAdder
 // Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
-// RTL Language:    Verilog-2005
+// HDL(Version):    Verilog-2005
 //
 // Dependencies:    None
 //

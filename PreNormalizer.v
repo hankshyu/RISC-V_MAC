@@ -4,7 +4,7 @@
 // Create Date:     07/25/2022 10:50:12 PM
 // Module Name:     PreNormalizer
 // Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
-// RTL Language:    Verilog-2005
+// HDL(Version):    Verilog-2005
 //
 // Dependencies:    None
 

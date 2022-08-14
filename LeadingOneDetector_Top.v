@@ -4,7 +4,7 @@
 // Create Date:     07/29/2022 11:01:00 PM
 // Module Name:     LeadingOneDetector_Top
 // Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
-// RTL Language:    Verilog-2005
+// HDL(Version):    Verilog-2005
 //
 // Dependencies:    ZeroDetector_Base.v
 //                  ZeroDetector_Group.v

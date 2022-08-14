@@ -4,7 +4,7 @@
 // Create Date:     07/22/2022 10:59:09 AM
 // Module Name:     R4Booth
 // Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
-// RTL Language:    Verilog-2005
+// HDL(Version):    Verilog-2005
 //
 // Dependencies:    None
 //

@@ -4,7 +4,7 @@
 // Create Date:     07/29/2022 10:53:38 AM
 // Module Name:     MSBIncrementer
 // Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
-// RTL Language:    Verilog-2005
+// HDL(Version):    Verilog-2005
 //
 // Dependencies:    None
 //

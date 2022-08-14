@@ -4,7 +4,7 @@
 // Create Date:     07/29/2022 10:40:06 AM
 // Module Name:     EACAdder
 // Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
-// RTL Language:    Verilog-2005
+// HDL(Version):    Verilog-2005
 //
 // Dependencies:    None
 //
