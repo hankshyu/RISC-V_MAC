@@ -91,6 +91,17 @@ module MAC32_top_tb;
         $display("%s",lb);
     endtask 
 
+
+    task printRoundingInfo();
+
+        print("> Rounding Mode: RNE - Round to Nearest, ties to Even");
+        print("> Rounding Mode: RTZ - Round towards Zero");
+        print("> Rounding Mode: RDN - Round Down    (towards -INFINITY)");
+        print("> Rounding Mode: RUP - Round UP      (towards +INFINITY)");
+        print("> Rounding Mode: RMM - Round to Nearest, ties Max Magnitude");
+
+    endtask
+
     task StartText();
         
         printblank();
@@ -105,6 +116,7 @@ module MAC32_top_tb;
         printblank();
         print("RISC-V Multiply-accumulate Testbench ends sucessfully!!");
         $finish;
+
     endtask
 
 
@@ -134,11 +146,7 @@ module MAC32_top_tb;
 
 
 
-    string rounding_str0 = "> Rounding Mode: RNE - Round to Nearest, ties to Even";
-    string rounding_str1 = "> Rounding Mode: RTZ - Round towards Zero";
-    string rounding_str2 = "> Rounding Mode: RDN - Round Down    (towards -INFINITY)";
-    string rounding_str3 = "> Rounding Mode: RUP - Round UP      (towards +INFINITY)";
-    string rounding_str4 = "> Rounding Mode: RMM - Round to Nearest, ties Max Magnitude";
+
 
     task RoundingTest(input logic [31:0] a_in, input logic [31:0] b_in, input logic [31:0] c_in);
     integer k;
@@ -559,16 +567,10 @@ module MAC32_top_tb;
         // In addition, under default exception handling for overflow, the overflow flag shall be raised and the inexact
         // exception shall be signaled.
 
-
-
-
-        
         @(posedge clk)
         showrgs = 1;
-        printblank();
-        print("=============================================================================================================================================");
-        $display("Rounding Test\n%s\n%s\n%s\n%s\n%s", rounding_str0, rounding_str1, rounding_str2, rounding_str3, rounding_str4);
-        print("=============================================================================================================================================");
+        testtype("Rounding Test");
+        printRoundingInfo();
         
         testlabel("a) Overflows ");
         print("#1. + Overflow");
