@@ -1,22 +1,25 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 07/25/2022 10:50:12 PM
-// Design Name: 
-// Module Name: PreNormalizer
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
+// Engineer:        Tzu-Han Hsu
+// Create Date:     07/25/2022 10:50:12 PM
+// Module Name:     PreNormalizer
+// Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
+// RTL Language:    Verilog-2005
+//
+// Dependencies:    None
+
+//
+//////////////////////////////////////////////////////////////////////////////////
+// Description:     It shifts the augend to the correct position, works in parallel
+//                  with the multiplier
+//
+//////////////////////////////////////////////////////////////////////////////////
 // Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
+// 07/25/2022 - Ports renaming into appropriate suffix
+// 07/26/2022 - Add debug signals to probe the shifting
+// 07/26/2022 - Debug wires removed
+// 07/27/2022 - Input wire "sign_change_i" renamed to "sign_flip_i"
+//
 //////////////////////////////////////////////////////////////////////////////////
 
 
@@ -66,6 +69,7 @@ module PreNormalizer #(
 
     wire [PARM_MANT : 0] A_Mant_2compelemnt = (~A_Mant_i) + 1; //2's complement of mantA
     wire [PARM_MANT : 0] Drop_bits_2complement = (~Drop_bits) + 1; //2's complemet of Drop_bits
+    
     //output logic for Mant_sticky_sht_out_o
     always @(*) begin
         if(Sub_Sign_i & (~Sign_flip_i))
