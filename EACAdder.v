@@ -9,9 +9,8 @@
 // Dependencies:    None
 //
 //////////////////////////////////////////////////////////////////////////////////
-// Description:     A Compressor module which takes 4 input and outputs 2, one possible implementation
-//                  is with 2 3-2 Compressors ,which is used as a behavioral description to map to more 
-//                  efficient module designs
+// Description:    An adder outputs a positive magnitude result and preferably
+//                 only need to conditionally complement one operand
 //
 //////////////////////////////////////////////////////////////////////////////////
 // Revision:
