@@ -5,7 +5,8 @@
 // Module Name:     Rounder
 // Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
 // RTL Language:    Verilog-2005
-// Dependencies: 
+// Dependencies:    None
+//
 //////////////////////////////////////////////////////////////////////////////////
 // Description: 
 // 
