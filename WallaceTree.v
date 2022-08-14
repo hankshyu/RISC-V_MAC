@@ -1,22 +1,27 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 07/22/2022 03:15:31 PM
-// Design Name: 
-// Module Name: WallaceTree
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
+// Engineer:        Tzu-Han Hsu
+// Create Date:     07/22/2022 03:15:31 PM
+// Module Name:     WallaceTree
+// Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
+// HDL(Version):    Verilog-2005
+//
+// Dependencies:    Compressor32.v
+//                  Compressor42.v
+//
+//////////////////////////////////////////////////////////////////////////////////
+// Description:     Sums 13 partial products using carry save adder(CSA) into carry and sum
+//                  We use: 
+//                          9x 3-2 Compressor
+//                          1x 4-2 Compressor
+//
+//////////////////////////////////////////////////////////////////////////////////
 // Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
+// 07/22/2022 - Basic wiring finished, I/O signals updated for appropriate prefix
+// 07/25/2022 - Use generate statements to simplify code
+// 07/25/2022 - Multidriven net fixed
+// 06/25/2022 - Interleaving Wires rearranged
+//
 //////////////////////////////////////////////////////////////////////////////////
 
 
