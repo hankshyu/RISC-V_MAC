@@ -1,22 +1,21 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 07/29/2022 11:01:00 PM
-// Design Name: 
-// Module Name: LeadingOneDetector_Top
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
+// Engineer:        Tzu-Han Hsu
+// Create Date:     07/29/2022 11:01:00 PM
+// Module Name:     LeadingOneDetector_Top
+// Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
+// RTL Language:    Verilog-2005
+//
+// Dependencies:    ZeroDetector_Base.v
+//                  ZeroDetector_Group.v
+//
+//////////////////////////////////////////////////////////////////////////////////
+// Description:     It detect the shifting amount needed for a leading one
+//
+//////////////////////////////////////////////////////////////////////////////////
 // Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
+// 07/29/2022 - Mux simplification, combine one else if clause into else clause
+//
 //////////////////////////////////////////////////////////////////////////////////
 
 
@@ -193,7 +192,6 @@ module LeadingOneDetector_Top #(
             end
         end
     end
-
 
 
 endmodule
