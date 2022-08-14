@@ -21,6 +21,7 @@
 // 07/21/2022 - Denormalized Nubmer detection added
 // 08/04/2022 - I/O ports renamingm, appropriate suffix added
 // 08/04/2022 - parameters arranged, comments added for readability
+// 08/14/2022 - Wire rename, avoid non-parameter upper cased wire
 //
 //////////////////////////////////////////////////////////////////////////////////
 
