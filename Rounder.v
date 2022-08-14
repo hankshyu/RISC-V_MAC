@@ -27,42 +27,45 @@
 //
 //--------------------------------------------------------------------------------
 // 7.2 Invalid Operation
+//
 // The invalid operation exception is signaled if and only if there is no usefully definable result. 
 // In these cases the operands are invalid for the operation to be performed. 
 // For operations producing results in floating-point format, the default result of an operation that signals the
 // invalid operation exception shall be a quiet NaN that should provide some diagnostic information (see 6.2).
 // These operations are:
-// a) any general-computational or signaling-computational operation on a signaling NaN (see 6.2),
-// except for some conversions (see 5.12)
-// b) multiplication: multiplication(0, ∞) or multiplication(∞, 0)
-// c) fusedMultiplyAdd: fusedMultiplyAdd(0, ∞, c) or fusedMultiplyAdd(∞, 0, c) unless c is a quiet
-// NaN; if c is a quiet NaN then it is implementation defined whether the invalid operation exception
-// is signaled
-// d) addition or subtraction or fusedMultiplyAdd: magnitude subtraction of infinities, such as:
-// addition(+∞, −∞)
-// e) division: division(0, 0) or division(∞, ∞)
-// f) remainder: remainder(x, y), when y is zero or x is infinite and neither is NaN
-// g) squareRoot if the operand is less than zero
-// h) quantize when the result does not fit in the destination format or when one operand is finite and the
-// other is infinite
+// a)   any general-computational or signaling-computational operation on a signaling NaN (see 6.2),
+//      except for some conversions (see 5.12)
+// b)   multiplication: multiplication(0, ∞) or multiplication(∞, 0)
+// c)   fusedMultiplyAdd: fusedMultiplyAdd(0, ∞, c) or fusedMultiplyAdd(∞, 0, c) unless c is a quiet
+//      NaN; if c is a quiet NaN then it is implementation defined whether the invalid operation exception
+//      is signaled
+// d)   addition or subtraction or fusedMultiplyAdd: magnitude subtraction of infinities, such as:
+//      addition(+∞, −∞)
+// e)   division: division(0, 0) or division(∞, ∞)
+// f)   remainder: remainder(x, y), when y is zero or x is infinite and neither is NaN
+// g)   squareRoot if the operand is less than zero
+// h)   quantize when the result does not fit in the destination format or when one operand is finite and the
+//      other is infinite
 //--------------------------------------------------------------------------------
 // 7.4 Overflow (IEEE 754-2008)
+//
 // The overflow exception shall be signaled if and only if the destination format’s largest finite number is
 // exceeded in magnitude by what would have been the rounded floating-point result (see 4) were the exponent
 // range unbounded. The default result shall be determined by the rounding-direction attribute and the sign of
 // the intermediate result as follows:
-// a) roundTiesToEven and roundTiesToAway carry all overflows to ∞ with the sign of the intermediate
-// result.
-// b) roundTowardZero carries all overflows to the format’s largest finite number with the sign of the
-// intermediate result.
-// c) roundTowardNegative carries positive overflows to the format’s largest finite number, and carries
-// negative overflows to −∞.
-// d) roundTowardPositive carries negative overflows to the format’s most negative finite number, and
-// carries positive overflows to +∞.
+// a)   roundTiesToEven and roundTiesToAway carry all overflows to ∞ with the sign of the intermediate
+//      result.
+// b)   roundTowardZero carries all overflows to the format’s largest finite number with the sign of the
+//      intermediate result.
+// c)   roundTowardNegative carries positive overflows to the format’s largest finite number, and carries
+//      negative overflows to −∞.
+// d)   roundTowardPositive carries negative overflows to the format’s most negative finite number, and
+//      carries positive overflows to +∞.
 // In addition, under default exception handling for overflow, the overflow flag shall be raised and the inexact
 // exception shall be signaled.
 //--------------------------------------------------------------------------------
 // 7.6 Inexact 
+//
 // Unless stated otherwise, if the rounded result of an operation is inexact—that is, it differs from what would
 // have been computed were both exponent range and precision unbounded—then the inexact exception shall
 // be signaled. The rounded or overflowed result shall be delivered to the destination
