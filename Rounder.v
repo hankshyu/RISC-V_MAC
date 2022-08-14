@@ -161,32 +161,32 @@ module Rounder #(
 
     
     //wires soley for debug:
-    wire dbg_w1 = Invalid_o;
-    wire dbg_w2 = A_Inf_i | B_Inf_i | C_Inf_i;
-    wire dbg_w3 = B_Zero_i | C_Zero_i;
-    wire dbg_w4 = Exp_mv_sign_i;
-    wire dbg_w5 = Allzero_i;
+    // wire dbg_w1 = Invalid_o;
+    // wire dbg_w2 = A_Inf_i | B_Inf_i | C_Inf_i;
+    // wire dbg_w3 = B_Zero_i | C_Zero_i;
+    // wire dbg_w4 = Exp_mv_sign_i;
+    // wire dbg_w5 = Allzero_i;
 
-    wire dbg_w6 = Exp_i[PARM_EXP + 1];
-    wire dbg_w6_1 = ~Exp_max_rs_i[PARM_EXP + 1];
-    wire dbg_w6_2 = (dbg_w6 & ~dbg_w6_1);
+    // wire dbg_w6 = Exp_i[PARM_EXP + 1];
+    // wire dbg_w6_1 = ~Exp_max_rs_i[PARM_EXP + 1];
+    // wire dbg_w6_2 = (dbg_w6 & ~dbg_w6_1);
     
-    wire dbg_w7 = ((Exp_norm_i[PARM_EXP : 0] == 256) & (~Mant_norm_i[3*PARM_MANT + 4]) & (Mant_norm_i[3*PARM_MANT + 3 : 2*PARM_MANT+3] != 0));
+    // wire dbg_w7 = ((Exp_norm_i[PARM_EXP : 0] == 256) & (~Mant_norm_i[3*PARM_MANT + 4]) & (Mant_norm_i[3*PARM_MANT + 3 : 2*PARM_MANT+3] != 0));
     
-    wire dbg_w8 = (Exp_norm_i[PARM_EXP - 1 : 0] == 8'b1111_1111);
-    wire dbg_w8_1 = Mant_norm_i[3*PARM_MANT + 4];
-    wire dbg_w8_2 = (Mant_norm_i[3*PARM_MANT + 4 : 2*PARM_MANT + 4] == 0);
-    wire dbg_w8_3 = (dbg_w8 & ~dbg_w8_1 & ~dbg_w8_2);
+    // wire dbg_w8 = (Exp_norm_i[PARM_EXP - 1 : 0] == 8'b1111_1111);
+    // wire dbg_w8_1 = Mant_norm_i[3*PARM_MANT + 4];
+    // wire dbg_w8_2 = (Mant_norm_i[3*PARM_MANT + 4 : 2*PARM_MANT + 4] == 0);
+    // wire dbg_w8_3 = (dbg_w8 & ~dbg_w8_1 & ~dbg_w8_2);
 
-    wire dbg_w9 = Exp_norm_i[PARM_EXP];
-    wire dbg_w10 = Exp_norm_i == 10'd0;
+    // wire dbg_w9 = Exp_norm_i[PARM_EXP];
+    // wire dbg_w10 = Exp_norm_i == 10'd0;
     
-    wire dbg_w11 = Exp_norm_i == 10'd1;
-    wire dbg_w11_1 = Mant_norm_i[3*PARM_MANT + 4];
-    wire dbg_w11_2 = dbg_w11 & ~dbg_w11_1;
+    // wire dbg_w11 = Exp_norm_i == 10'd1;
+    // wire dbg_w11_1 = Mant_norm_i[3*PARM_MANT + 4];
+    // wire dbg_w11_2 = dbg_w11 & ~dbg_w11_1;
 
-    wire dbg_w12 = ~Mant_norm_i[3*PARM_MANT + 4];
-    wire dbg_w13 = ~(dbg_w1 | dbg_w2 | dbg_w3 | dbg_w4 | dbg_w5 | dbg_w6 | dbg_w7 | dbg_w8 | dbg_w9 | dbg_w10 | dbg_w11 | dbg_w12);
+    // wire dbg_w12 = ~Mant_norm_i[3*PARM_MANT + 4];
+    // wire dbg_w13 = ~(dbg_w1 | dbg_w2 | dbg_w3 | dbg_w4 | dbg_w5 | dbg_w6 | dbg_w7 | dbg_w8 | dbg_w9 | dbg_w10 | dbg_w11 | dbg_w12);
 
 
     always @(*) begin
