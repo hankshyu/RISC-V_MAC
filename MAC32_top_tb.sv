@@ -848,7 +848,7 @@ module MAC32_top_tb;
 
         @(posedge clk)
         testlabel("Overflow happens due to Multiplication and Addition");
-        print("Add to +MAX or -MAX");
+        print("Add to +MAX or -MAX (Overflow should not raise)");
         my_rm = PARM_RM_RTZ;
         a = 32'h7d8cbb78; //2.33831641014e+37
         b = 32'h6cf31480; //2.35092626143e+27(2 ^ 90)
