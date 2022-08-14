@@ -24,12 +24,11 @@
 // 08/12/2022 - Update mv_halt signal, now zero is viewed as the smalest denormalized number.
 //////////////////////////////////////////////////////////////////////////////////
 // Additional Comments:
-
 //Floating-point control and status register:
 //  |31     8|7                     5|4                            0|
 //  |reserved|  Rounding Mode (frm)  |  Accured Exceptions(fflags)  |
 //                                          NV  DZ  OF  UF  NX
-
+//
 //Rounding mode encoding:
 //  Rounding Mode|    Mnemonic    |   Meaning
 //---------------------------------------------------------------------------------------------
@@ -42,7 +41,7 @@
 //       110     |    ---         |   Invalid. Reserved for future use
 //       111     |    DYN         |   In instruction's rm field, selects dynamic rounding mode;
 //                                    In Rounding Mode register, Invalid
-
+//
 //Accrued exception flag encoding:
 //  Flag Mnemonic   |   Flag Meaning
 //----------------------------------------
