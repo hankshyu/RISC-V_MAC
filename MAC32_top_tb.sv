@@ -144,8 +144,41 @@ module MAC32_top_tb;
         
     endtask 
 
+    parameter [31:0]SIGN_INVERT_MASK = 32'h80000000;
+    function  [31:0] sign_inv;
+        input [31 : 0] num_o;
 
+        return num_o ^ SIGN_INVERT_MASK;
 
+    endfunction
+    
+    task FullSignTest(input logic [31:0] a_in, input logic [31:0] b_in, input logic [31:0] c_in);
+        
+        a = a_in;
+        b = b_in;
+        c = c_in;
+        @(posedge clk)
+        b = sign_inv(b_in);
+        @(posedge clk)
+        b = b_in;
+        c = sign_inv(c_in);
+        @(posedge clk)
+        b = sign_inv(b_in);
+        c = sign_inv(c_in);
+        @(posedge clk)
+        a = sign_inv(a_in);
+        b = b_in;
+        c = c_in;
+        @(posedge clk)
+        b = sign_inv(b_in);
+        @(posedge clk)
+        b = b_in;
+        c = sign_inv(c_in);
+        @(posedge clk)
+        b = sign_inv(b_in);
+        c = sign_inv(c_in);
+
+    endtask 
 
 
     task RoundingTest(input logic [31:0] a_in, input logic [31:0] b_in, input logic [31:0] c_in);
@@ -165,7 +198,6 @@ module MAC32_top_tb;
     endtask
 
 
-
     always @(posedge clk) begin
         # 1;
         showresult();
@@ -178,7 +210,7 @@ module MAC32_top_tb;
         my_rm = PARM_RM_RTZ; // use RTZ
 
         testtype("Invalid Operation Test");
-        print("a) computational operation on a NaN");
+        testlabel("a) computational operation on a NaN");
         a = 32'h7fc00000; //NaN
         b = 32'hac822ea3; //-3.69999994185e-12
         c = 32'hcc03dec4; //-34568976.0
@@ -192,15 +224,15 @@ module MAC32_top_tb;
         c = 32'h7fc00000; //NaN
         @(posedge clk)
         a = 32'h00000000; //0
-        b = 32'h7f800000; //+Inf
-        c = 32'h7fc00000; //NaN
+        b = 32'h7fc00000; //NaN
+        c = 32'h7f800000; //+Inf
         @(posedge clk)
         a = 32'hff800000; //-Inf
         b = 32'h7f800000; //+Inf
         c = 32'h7fc00000; //NaN
         
         @(posedge clk)
-        testlabel("b,c) multiplication 0 x Inf / Inf x 0, or fusedMultiplyAdd(0, Inf, c), if c is Nan, invalid exception(defined as NV)");
+        testlabel("b,c) multiplication 0 x Inf / Inf x 0, or fusedMultiplyAdd(0, Inf, c)");
         a = 32'hb508e6ef; //-5.1000000667e-07
         b = 32'h00000000; //0
         c = 32'h7f800000; //+Inf
@@ -241,6 +273,10 @@ module MAC32_top_tb;
         @(posedge clk)
         a = 32'hff800000; // - Inf
         b = 32'hfc5094ec; // -4.33207296417e+36
+        c = 32'hff800000; // - Inf
+        @(posedge clk)
+        a = 32'hff800000; // - Inf
+        b = 32'hff800000; // - Inf
         c = 32'hff800000; // - Inf
 
         //Infinites
@@ -310,21 +346,7 @@ module MAC32_top_tb;
         @(posedge clk)
         testtype("Coke Zero");
         testlabel("a) 0 + 0 x 0, lots of zeros");
-        a = 32'h00000000; //+0.0
-        b = 32'h00000000; //+0.0
-        c = 32'h00000000; //+0.0
-        @(posedge clk)
-        a = 32'h80000000; //-0
-        b = 32'h80000000; //-0
-        c = 32'h00000000; //+0
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'h80000000; //-0
-        c = 32'h80000000; //-0
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'h00000000; //+0
-        c = 32'h80000000; //-0
+        FullSignTest(32'h00000000, 32'h00000000, 32'h00000000);
         
         @(posedge clk)
         testlabel("b) sth + 0 = sth");
@@ -363,7 +385,12 @@ module MAC32_top_tb;
         b = 32'h00217669; //3.07304893356e-39 (denormalized)
         c = 32'h80000000; //-0
         a = 32'h80017669; //-1.34313056507e-40 (denormalized)
-        
+        @(posedge clk)
+        a = 32'h00217669; //3.07304893356e-39 (denormalized)
+        b = 32'h80000000; //-0
+        c = 32'h00000000; //+0
+
+
         @(posedge clk)
         testlabel("c) Zero + Something & Result is Inexact");
         a = 32'h00000000; //+0
