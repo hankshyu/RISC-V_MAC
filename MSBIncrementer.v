@@ -1,23 +1,22 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 07/29/2022 10:53:38 AM
-// Design Name: 
-// Module Name: MSBIncrementer
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
+// Engineer:        Tzu-Han Hsu
+// Create Date:     07/29/2022 10:53:38 AM
+// Module Name:     MSBIncrementer
+// Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
+// RTL Language:    Verilog-2005
+//
+// Dependencies:    None
+//
 //////////////////////////////////////////////////////////////////////////////////
+// Description:    Increments A_High if needed by the A_Low carry signal
+//
+//////////////////////////////////////////////////////////////////////////////////
+// Revision:
+//
+//////////////////////////////////////////////////////////////////////////////////
+
+
 
 
 module MSBIncrementer #(
