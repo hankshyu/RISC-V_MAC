@@ -158,7 +158,7 @@ module Rounder #(
     reg [1 : 0] Mant_lower;
 
 
-    reg Mant_roundup;// Whether to round up or not
+
     
     //wires soley for debug:
     wire dbg_w1 = Invalid_o;
@@ -342,8 +342,14 @@ module Rounder #(
         end
     end
 
-    //Represent Guard, Round and Sticky bit
+    //Represents Guard, Round and Sticky bit
+    // Guard Bit:   Mant_lower[1]
+    // Round Bit:   Mant_lower[0]
+    // Sticky Bit:  Mant_sticky
     wire GRSbits = (|Mant_lower) || Mant_sticky; 
+    
+    //Rounding determins wheter to add 1 to the mantissa, sending Mant_roundup signal;
+    reg Mant_roundup;
 
     always @(*) begin
         case (Rounding_mode_i)
