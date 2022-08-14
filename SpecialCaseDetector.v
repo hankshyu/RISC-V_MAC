@@ -1,22 +1,27 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 07/21/2022 07:41:57 PM
-// Design Name: 
-// Module Name: SpecialCaseDetector
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
+// Engineer:        Tzu-Han Hsu
+// Create Date:     07/21/2022 07:41:57 PM
+// Module Name:     SpecialCaseDetector
+// Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
+// RTL Language:    Verilog-2005
+//
+// Dependencies:    None
+//
+//////////////////////////////////////////////////////////////////////////////////
+// Description:     Detect whether the input data is:
+//                  1. Infinity            
+//                  2. Zero                 
+//                  3. NaN
+//                  4. Denormalized Number
+//
+//////////////////////////////////////////////////////////////////////////////////
 // Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
+// 07/21/2022 - Infinity, Zero and NaN detection done.
+// 07/21/2022 - Denormalized Nubmer detection added
+// 08/04/2022 - I/O ports renamingm, appropriate suffix added
+// 08/04/2022 - parameters arranged, comments added for readability
+//
 //////////////////////////////////////////////////////////////////////////////////
 
 
@@ -80,5 +85,4 @@ module SpecialCaseDetector #(
     assign B_DeN_o  = B_ExpZero & (~B_MantZero);
     assign C_DeN_o  = C_ExpZero & (~C_MantZero);
 
-    
 endmodule
