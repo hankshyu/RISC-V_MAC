@@ -205,9 +205,9 @@ module Rounder #(
         end
 //dbg_w2
         else if(A_Inf_i | B_Inf_i | C_Inf_i)begin // the result is Infinity     
-            //Operations on infinite operands are usually exact and therefore signal no exceptions
+            //Operations on infinite operands are exact and therefore signal no exceptions
             Exp_result_norm = 8'b1111_1111;
-            //If there's two infinities, they must be the same, if there's 3, it's the same with a
+            //If there's two infinities, they must be the same, if there's 3, it's the same with A_sign
             if(A_Inf_i) Sign_result_o = A_Sign_i;
             else Sign_result_o = B_Sign_i ^ C_Sign_i; 
 
@@ -249,9 +249,6 @@ module Rounder #(
         end
 //dbg_w7
         else if((Exp_norm_i[PARM_EXP : 0] == 256) & (~Mant_norm_i[3*PARM_MANT + 4]) & (Mant_norm_i[3*PARM_MANT + 3 : 2*PARM_MANT+3] != 0))begin 
-            // NaN, Exp_norm_i = 256
-            // Mant_result_norm = {1'b0, PARM_MANT_NAN}; //PARM_MANT_NAN is 23 bit
-            // Exp_result_norm = 8'b1111_1111;
             
             // This is an Overflow case
             Overflow_o = 1;
