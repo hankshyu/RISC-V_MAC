@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 07/29/2022 10:40:06 AM
+// Create Date: 
 // Design Name: 
-// Module Name: EACAdder
+// Module Name: 
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -13,10 +13,33 @@
 // 
 // Dependencies: 
 // 
-// Revision: 2022/08/06 Add A_Zero_i signal to detect A is -0, in order to avoid false end_round_carry
+// Revision: 
 // Revision 0.01 - File Created
 // Additional Comments:
 // 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Engineer:        Tzu-Han Hsu
+// Create Date:     07/29/2022 10:40:06 AM
+// Module Name:     EACAdder
+// Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
+// RTL Language:    Verilog-2005
+//
+// Dependencies:    Compressor32.v
+//
+//////////////////////////////////////////////////////////////////////////////////
+// Description:     A Compressor module which takes 4 input and outputs 2, one possible implementation
+//                  is with 2 3-2 Compressors ,which is used as a behavioral description to map to more 
+//                  efficient module designs
+//
+//////////////////////////////////////////////////////////////////////////////////
+// Revision:
+// 07/29/2022 - I/O port names renamed with correct suffix
+// 08/06/2022 - Add A_Zero_i signal to detect A is -0, in order to avoid false end round carry
+//
 //////////////////////////////////////////////////////////////////////////////////
 
 
