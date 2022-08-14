@@ -1,23 +1,28 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 07/22/2022 10:59:09 AM
-// Design Name: 
-// Module Name: R4Booth
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: Breaking down 24bit * 24 bit into 13 partial products, using Radix-4 Booth's Algorithm
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
+// Engineer:        Tzu-Han Hsu
+// Create Date:     07/22/2022 10:59:09 AM
+// Module Name:     R4Booth
+// Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
+// RTL Language:    Verilog-2005
+//
+// Dependencies:    None
+//
 //////////////////////////////////////////////////////////////////////////////////
+// Description:     Breaking down 24bit * 24 bit into 13 partial products, using 
+//                  Radix-4 Booth's Algorithm
+//
+//////////////////////////////////////////////////////////////////////////////////
+// Revision:
+// 07/22/2022 - Encode the input by Radix-4 Booth's Recording Table
+// 07/22/2022 - Utilize generate statements in the encoder
+// 07/24/2022 - Combine the module with Booth recording module
+// 07/25/2022 - Add decoder section to generate partial produt by the encoded message
+// 07/25/2022 - Decoder index bug fix
+// 07/25/2022 - Parameters updated, redundancy removed and comments added
+//
+//////////////////////////////////////////////////////////////////////////////////
+
 
 module R4Booth #(
     parameter PARM_MANT = 23
