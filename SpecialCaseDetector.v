@@ -68,7 +68,7 @@ module SpecialCaseDetector #(
     wire C_MantZero = (C_i[PARM_MANT - 1 : 0] == 0);
 
 
-
+    //output logic
     assign A_Zero_o = A_ExpZero & A_MantZero;
     assign B_Zero_o = B_ExpZero & B_MantZero;
     assign C_Zero_o = C_ExpZero & C_MantZero;
