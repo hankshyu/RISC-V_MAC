@@ -439,39 +439,10 @@ module MAC32_top_tb;
 
         @(posedge clk);
         printblank();
-        a = 32'h00000000; //+0
-        b = 32'h0007ffc0; //7.3450460306e-40 (denormalized 13 x 1s)
-        c = 32'h7f7ff000; //3.40199290171e+38 (mantissa left is all 1)
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'h8007ffc0; //-7.34325236857e-40 (denormalized 13 x 1s)
-        c = 32'h7f7ff000; //3.40199290171e+38 (mantissa left is all 1)
-
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'h0007ffc0; //7.3450460306e-40 (denormalized 13 x 1s)
-        c = 32'hff7ff000; //-3.40199290171e+38 (mantissa left is all 1)
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'h8007ffc0; //-7.34325236857e-40 (denormalized 13 x 1s)
-        c = 32'hff7ff000; //-3.40199290171e+38 (mantissa left is all 1)
-        @(posedge clk);
-        a = 32'h80000000; //+0
-        b = 32'h0007ffc0; //7.3450460306e-40 (denormalized 13 x 1s)
-        c = 32'h7f7ff000; //3.40199290171e+38 (mantissa left is all 1)
-        @(posedge clk)
-        a = 32'h80000000; //+0
-        b = 32'h8007ffc0; //-7.34325236857e-40 (denormalized 13 x 1s)
-        c = 32'h7f7ff000; //3.40199290171e+38 (mantissa left is all 1)
-
-        @(posedge clk)
-        a = 32'h80000000; //+0
-        b = 32'h0007ffc0; //7.3450460306e-40 (denormalized 13 x 1s)
-        c = 32'hff7ff000; //-3.40199290171e+38 (mantissa left is all 1)
-        @(posedge clk)
-        a = 32'h80000000; //+0
-        b = 32'h8007ffc0; //-7.34325236857e-40 (denormalized 13 x 1s)
-        c = 32'hff7ff000; //-3.40199290171e+38 (mantissa left is all 1)
+        // a = +0
+        // b = 7.3450460306e-40  (denormalized 13 x 1s)
+        // c = 3.40199290171e+38 (mantissa left is all 1)
+        FullSignTest(32'h00000000, 32'h0007ffc0, 32'h7f7ff000);
 
 
         @(posedge clk) //NX Flag = 0
@@ -486,121 +457,25 @@ module MAC32_top_tb;
         
         @(posedge clk)
         printblank();
-        a = 32'h00000000; //+0
-        b = 32'h58fff000; //2.25125005787e+15
-        c = 32'h4efff000; //2146959360.0
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'h58fff000; //2.25125005787e+15
-        c = 32'hcefff000; //-2146959360.0
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'hd8fff000; //-2.25125005787e+15
-        c = 32'h4efff000; //2146959360.0
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'hd8fff000; //-2.25125005787e+15
-        c = 32'hcefff000; //-2146959360.0
-        @(posedge clk)
-        a = 32'h80000000; //-0
-        b = 32'h58fff000; //2.25125005787e+15
-        c = 32'h4efff000; //2146959360.0
-        @(posedge clk)
-        a = 32'h80000000; //-0
-        b = 32'h58fff000; //2.25125005787e+15
-        c = 32'hcefff000; //-2146959360.0
-        @(posedge clk)
-        a = 32'h80000000; //-0
-        b = 32'hd8fff000; //-2.25125005787e+15
-        c = 32'h4efff000; //2146959360.0
-        @(posedge clk)
-        a = 32'h80000000; //-0
-        b = 32'hd8fff000; //-2.25125005787e+15
-        c = 32'hcefff000; //-2146959360.0
-        
+        FullSignTest(32'h00000000, 32'h58fff000, 32'h4efff000);
+        // a = +0
+        // b = +2.25125005787e+15
+        // c = +2146959360.0
+
         @(posedge clk)
         printblank();
-        a = 32'h00000000; //+0
-        b = 32'h7efff000; //1.70099645086e+38(mantissa left is all 1)
-        c = 32'h02fff000; //3.76066356767e-37(mantissa left is all 1)
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'hfefff000; //-1.70099645086e+38(mantissa left is all 1)
-        c = 32'h02fff000; //3.76066356767e-37(mantissa left is all 1)
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'h7efff000; //1.70099645086e+38(mantissa left is all 1)
-        c = 32'h82fff000; //-3.76066356767e-37(mantissa left is all 1)
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'hfefff000; //-1.70099645086e+38(mantissa left is all 1)
-        c = 32'h82fff000; //-3.76066356767e-37(mantissa left is all 1) 
-        @(posedge clk)         
-        a = 32'h80000000; //-0
-        b = 32'h7efff000; //1.70099645086e+38(mantissa left is all 1)
-        c = 32'h02fff000; //3.76066356767e-37(mantissa left is all 1)
-        @(posedge clk)
-        a = 32'h80000000; //-0
-        b = 32'hfefff000; //-1.70099645086e+38(mantissa left is all 1)
-        c = 32'h02fff000; //3.76066356767e-37(mantissa left is all 1)
-        @(posedge clk)
-        a = 32'h80000000; //-0
-        b = 32'h7efff000; //1.70099645086e+38(mantissa left is all 1)
-        c = 32'h82fff000; //-3.76066356767e-37(mantissa left is all 1)
-        @(posedge clk)
-        a = 32'h80000000; //-0
-        b = 32'hfefff000; //-1.70099645086e+38(mantissa left is all 1)
-        c = 32'h82fff000; //-3.76066356767e-37(mantissa left is all 1)  
+        FullSignTest(32'h00000000, 32'h7efff000, 32'h02fff000);
+        // a = +0
+        // b = +1.70099645086e+38(mantissa left is all 1)
+        // c = +3.76066356767e-37(mantissa left is all 1)
 
         @(posedge clk);
         printblank();
-        a = 32'h00000000; //+0
-        b = 32'h0007ff00; //7.34325236857e-40
-        c = 32'h7f7ff000; //3.40199290171e+38(mantissa left is all 1)
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'h8007ff00; //-7.34325236857e-40
-        c = 32'h7f7ff000; //3.40199290171e+38(mantissa left is all 1)
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'h0007ff00; //7.34325236857e-40
-        c = 32'hff7ff000; //-3.40199290171e+38(mantissa left is all 1)
-        @(posedge clk)
-        a = 32'h00000000; //+0
-        b = 32'h8007ff00; //-7.34325236857e-40
-        c = 32'hff7ff000; //-3.40199290171e+38(mantissa left is all 1)
-        @(posedge clk);
-        a = 32'h80000000; //+0
-        b = 32'h0007ff00; //7.34325236857e-40
-        c = 32'h7f7ff000; //3.40199290171e+38(mantissa left is all 1)
-        @(posedge clk)
-        a = 32'h80000000; //+0
-        b = 32'h8007ff00; //-7.34325236857e-40
-        c = 32'h7f7ff000; //3.40199290171e+38(mantissa left is all 1)
-        @(posedge clk)
-        a = 32'h80000000; //+0
-        b = 32'h0007ff00; //7.34325236857e-40
-        c = 32'hff7ff000; //-3.40199290171e+38(mantissa left is all 1)
-        @(posedge clk)
-        a = 32'h80000000; //+0
-        b = 32'h8007ff00; //-7.34325236857e-40
-        c = 32'hff7ff000; //-3.40199290171e+38(mantissa left is all 1)
+        FullSignTest(32'h00000000, 32'h0007ff00, 32'h7f7ff000);
+        // a = +0
+        // b = +7.34325236857e-40
+        // c = +3.40199290171e+38(mantissa left is all 1)
 
-        //Overflow (IEEE 754-2008)
-        // The overflow exception shall be signaled if and only if the destination format’s largest finite number is
-        // exceeded in magnitude by what would have been the rounded floating-point result (see 4) were the exponent
-        // range unbounded. The default result shall be determined by the rounding-direction attribute and the sign of
-        // the intermediate result as follows:
-        // a) roundTiesToEven and roundTiesToAway carry all overflows to ∞ with the sign of the intermediate
-        // result.
-        // b) roundTowardZero carries all overflows to the format’s largest finite number with the sign of the
-        // intermediate result.
-        // c) roundTowardNegative carries positive overflows to the format’s largest finite number, and carries
-        // negative overflows to −∞.
-        // d) roundTowardPositive carries negative overflows to the format’s most negative finite number, and
-        // carries positive overflows to +∞.
-        // In addition, under default exception handling for overflow, the overflow flag shall be raised and the inexact
-        // exception shall be signaled.
 
         @(posedge clk)
         showrgs = 1;
