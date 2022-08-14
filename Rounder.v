@@ -327,7 +327,7 @@ module Rounder #(
 //dbg_w12
         else if(~Mant_norm_i[3*PARM_MANT + 4])begin // number with 0X.XX, normal numbers
             Mant_result_norm = Mant_norm_i[3*PARM_MANT + 3 : 2*PARM_MANT + 3];
-            Exp_result_norm = Exp_norm_mone_i[PARM_MANT - 1 : 0];
+            Exp_result_norm = Exp_norm_mone_i[PARM_EXP - 1 : 0];
             Mant_lower = Mant_norm_i[2*PARM_MANT + 2 : 2*PARM_MANT + 1];
             Sign_result_o = Sign_i;
             Mant_sticky = Sticky_one;
@@ -335,7 +335,7 @@ module Rounder #(
 //dbg_w13
         else begin // number with 1X.XX, normal nubmers
             Mant_result_norm = Mant_norm_i[3*PARM_MANT + 4 : 2*PARM_MANT + 4];
-            Exp_result_norm = Exp_norm_i[PARM_MANT - 1 : 0];
+            Exp_result_norm = Exp_norm_i[PARM_EXP - 1 : 0];
             Mant_lower = Mant_norm_i[2*PARM_MANT + 3 : 2*PARM_MANT + 2];
             Sign_result_o = Sign_i;
             Mant_sticky = Sticky_one;
