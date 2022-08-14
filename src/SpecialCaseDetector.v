@@ -52,16 +52,16 @@ module SpecialCaseDetector #(
     output C_DeN_o);
 
 
-    wire [PARM_EXP - 1: 0] PARM_EXP_FULL = {PARM_EXP{1'b1}}; // parameter of exponent full of 1s
+    wire [PARM_EXP - 1: 0] Exp_Fullone = {PARM_EXP{1'b1}}; // Exponent is all '1'
 
     
     wire A_ExpZero = ~A_Leadingbit_i;
     wire B_ExpZero = ~B_Leadingbit_i;
     wire C_ExpZero = ~C_Leadingbit_i;
 
-    wire A_ExpFull = (A_i[PARM_XLEN - 2 : PARM_MANT] == PARM_EXP_FULL);
-    wire B_ExpFull = (B_i[PARM_XLEN - 2 : PARM_MANT] == PARM_EXP_FULL);
-    wire C_ExpFull = (C_i[PARM_XLEN - 2 : PARM_MANT] == PARM_EXP_FULL);
+    wire A_ExpFull = (A_i[PARM_XLEN - 2 : PARM_MANT] == Exp_Fullone);
+    wire B_ExpFull = (B_i[PARM_XLEN - 2 : PARM_MANT] == Exp_Fullone);
+    wire C_ExpFull = (C_i[PARM_XLEN - 2 : PARM_MANT] == Exp_Fullone);
 
     wire A_MantZero = (A_i[PARM_MANT - 1 : 0] == 0);
     wire B_MantZero = (B_i[PARM_MANT - 1 : 0] == 0);
