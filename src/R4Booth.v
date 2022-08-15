@@ -20,6 +20,7 @@
 // 07/25/2022 - Add decoder section to generate partial produt by the encoded message
 // 07/25/2022 - Decoder index bug fix
 // 07/25/2022 - Parameters updated, redundancy removed and comments added
+// 08/15/2022 - Save one bit by reducing the bus width of pp_12_o
 //
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -42,7 +43,7 @@ module R4Booth #(
     output [2*PARM_MANT + 2 : 0] pp_09_o,
     output [2*PARM_MANT + 2 : 0] pp_10_o,
     output [2*PARM_MANT + 2 : 0] pp_11_o,
-    output [2*PARM_MANT + 2 : 0] pp_12_o
+    output [2*PARM_MANT + 1 : 0] pp_12_o
 );
     parameter PARM_PP = ((PARM_MANT+1)+1+1)/2; //booth's algorithm produces at most CEILING( (n+1))/2 )  partial products
 
@@ -113,6 +114,6 @@ module R4Booth #(
     assign pp_09_o = { 5'd1, ~mulsign[ 9], booth_PP[ 9], 1'b0, mulsign[ 8], 16'd0};
     assign pp_10_o = { 3'd1, ~mulsign[10], booth_PP[10], 1'b0, mulsign[ 9], 18'd0};
     assign pp_11_o = { 1'd1, ~mulsign[11], booth_PP[11], 1'b0, mulsign[10], 20'd0};
-    assign pp_12_o = {booth_PP[12], 1'b0, mulsign[11], 22'd0};
+    assign pp_12_o = {booth_PP[12][PARM_MANT : 0], 1'b0, mulsign[11], 22'd0}; //Save one bit, MSB is always 0
 
 endmodule
