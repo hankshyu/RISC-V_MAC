@@ -13,6 +13,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 // Revision:
+// 08/15/2022 - allow parameter to control input size
 //
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -23,6 +24,6 @@ module ZeroDetector_Base #(
     input [XLEN - 1: 0] base_data_i,
     output zero_o );
 
-    assign zero_o = (base_data_i == 8'd0);
+    assign zero_o = (base_data_i == 0);
     
 endmodule
