@@ -23,6 +23,7 @@
 // Revision:
 // 08/12/2022 - Update mv_halt signal, now zero is viewed as the smalest denormalized number.
 // 08/14/2022 - Stable non-pipelined build (v1.0)
+// 08/15/2022 - R4Booth and Wallace Tree update
 //////////////////////////////////////////////////////////////////////////////////
 // Additional Comments:
 //Floating-point control and status register:
@@ -53,6 +54,7 @@
 //      NX          |   Inexact
 //
 //////////////////////////////////////////////////////////////////////////////////
+
 
 module MAC32_top #(
     parameter PARM_RM       = 3,
@@ -147,12 +149,13 @@ module MAC32_top #(
     wire [PARM_MANT : 0] C_Mant = {C_Leadingbit, C_i[PARM_MANT - 1 : 0]};
 
     //Generate 13 Partial Product by Radix-4 Booth's Algorithm
-    wire [2*PARM_MANT + 2 : 0] booth_PP [13 - 1: 0];
+    wire [2*PARM_MANT + 2 : 0] booth_PP [12 - 1: 0];
+    wire [2*PARM_MANT + 1 : 0] booth_PP_13; //Partial Product's MSB is always 0
     
 
     R4Booth #(
         .PARM_MANT(PARM_MANT)
-        ) r4Booth (
+    ) r4Booth (
         .MantA_i(B_Mant),
         .MantB_i(C_Mant),
         
@@ -168,7 +171,7 @@ module MAC32_top #(
         .pp_09_o(booth_PP[ 9]),
         .pp_10_o(booth_PP[10]),
         .pp_11_o(booth_PP[11]),
-        .pp_12_o(booth_PP[12])
+        .pp_12_o(booth_PP_13)
     );
 
 
@@ -180,7 +183,7 @@ module MAC32_top #(
 
     WallaceTree #(
         .PARM_MANT(PARM_MANT)
-        ) wallaceTree (
+    ) wallaceTree (
         .pp_00_i(booth_PP[ 0]),
         .pp_01_i(booth_PP[ 1]),
         .pp_02_i(booth_PP[ 2]),
@@ -193,7 +196,7 @@ module MAC32_top #(
         .pp_09_i(booth_PP[ 9]),
         .pp_10_i(booth_PP[10]),
         .pp_11_i(booth_PP[11]),
-        .pp_12_i(booth_PP[12]),
+        .pp_12_i(booth_PP_13),
         
         .wallace_sum_o(Wallace_sum),
         .wallace_carry_o(Wallace_carry),
