@@ -20,12 +20,13 @@
 // 07/22/2022 - Basic wiring finished, I/O signals updated for appropriate prefix
 // 07/25/2022 - Use generate statements to simplify code
 // 07/25/2022 - Multidriven net fixed
-// 06/25/2022 - Interleaving Wires rearranged
+// 07/25/2022 - Interleaving Wires rearranged
+// 08/15/2022 - Interconnection changed, to reduce critical path
 //
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module WallaceTree#(
+module WallaceTree #(
     parameter PARM_MANT = 23
 ) (
     input [2*PARM_MANT + 2 : 0] pp_00_i,
@@ -40,7 +41,7 @@ module WallaceTree#(
     input [2*PARM_MANT + 2 : 0] pp_09_i,
     input [2*PARM_MANT + 2 : 0] pp_10_i,
     input [2*PARM_MANT + 2 : 0] pp_11_i,
-    input [2*PARM_MANT + 2 : 0] pp_12_i,
+    input [2*PARM_MANT + 1 : 0] pp_12_i,
 
     output [2*PARM_MANT + 2 : 0] wallace_sum_o,
     output [2*PARM_MANT + 2 : 0] wallace_carry_o,
@@ -74,18 +75,17 @@ module WallaceTree#(
 
     Compressor32 #(2*PARM_MANT + 3) LV2_0 (.A_i(csa_sum[0] ),.B_i(csa_shcy[0]),.C_i(csa_sum[1] ),.Sum_o(csa_sum[4]),.Carry_o(csa_carry[4]));
     Compressor32 #(2*PARM_MANT + 3) LV2_1 (.A_i(csa_shcy[1]),.B_i(csa_sum[2] ),.C_i(csa_shcy[2]),.Sum_o(csa_sum[5]),.Carry_o(csa_carry[5]));
+    Compressor32 #(2*PARM_MANT + 3) LV2_2 (.A_i(csa_sum[3] ),.B_i(csa_shcy[3]),.C_i({1'd0, pp_12_i}),.Sum_o(csa_sum[6]),.Carry_o(csa_carry[6]));
     
-    Compressor32 #(2*PARM_MANT + 3) LV3_0 (.A_i(csa_sum[3] ),.B_i(csa_shcy[3]),.C_i(csa_sum[4] ),.Sum_o(csa_sum[6]),.Carry_o(csa_carry[6]));
-    Compressor32 #(2*PARM_MANT + 3) LV3_1 (.A_i(csa_shcy[4] ),.B_i(csa_shcy[5]),.C_i(csa_sum[5] ),.Sum_o(csa_sum[7]),.Carry_o(csa_carry[7]));
-    Compressor32 #(2*PARM_MANT + 3) LV3_2 (.A_i(csa_sum[6]),.B_i(csa_shcy[6] ),.C_i(csa_sum[7]),.Sum_o(csa_sum[8]),.Carry_o(csa_carry[8]));
+    Compressor32 #(2*PARM_MANT + 3) LV3_0 (.A_i(csa_sum[4] ),.B_i(csa_shcy[4]),.C_i(csa_sum[5] ),.Sum_o(csa_sum[7]),.Carry_o(csa_carry[7]));
+    Compressor32 #(2*PARM_MANT + 3) LV3_1 (.A_i(csa_shcy[5]),.B_i(csa_sum[6] ),.C_i(csa_shcy[6]),.Sum_o(csa_sum[8]),.Carry_o(csa_carry[8]));
 
-    //output logic
     Compressor42 #(2*PARM_MANT + 3)
         LV4_Final (
-            .A_i(csa_shcy[7]),
-            .B_i(csa_shcy[8]),
+            .A_i(csa_sum[7]),
+            .B_i(csa_shcy[7]),
             .C_i(csa_sum[8]),
-            .D_i(pp_12_i),
+            .D_i(csa_shcy[8]),
             .Sum_o(wallace_sum_o),
             .Carry_o(wallace_carry_o),
             .hidden_carry_msb(sign_extension[9])
