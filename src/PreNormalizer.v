@@ -10,8 +10,8 @@
 
 //
 //////////////////////////////////////////////////////////////////////////////////
-// Description:     It shifts the augend to the correct position, works in parallel
-//                  with the multiplier
+// Description:     It shifts the augend to the correct position, and calculates
+//                  its exponent, works in parallel with the multiplier
 //
 //////////////////////////////////////////////////////////////////////////////////
 // Revision:
