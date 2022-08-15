@@ -1,23 +1,21 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 07/22/2022 04:52:54 PM
-// Design Name: 
-// Module Name: MAC32_top_tb
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
+// Engineer:        Tzu-Han Hsu
+// Create Date:     07/22/2022 04:52:54 PM
+// Module Name:     Normalizer
+// Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
+// HDL(Version):    SystemVerilog
+//
+// Dependencies:    MAC32_top.v
+//
 //////////////////////////////////////////////////////////////////////////////////
+// Description:     Testbench of MAC32_top module
+//
+//////////////////////////////////////////////////////////////////////////////////
+// Revision:
+//
+//////////////////////////////////////////////////////////////////////////////////
+
 
 module MAC32_top_tb;
 
@@ -119,7 +117,7 @@ module MAC32_top_tb;
 
         printblank();
         if(wrong_answer == 0) print("All answer correct!");
-        else $display("There are %d mistakes...", wrong_answer);
+        else $display("There are %d inconsistencies...", wrong_answer);
         printblank();
         print("RISC-V Multiply-accumulate Testbench ends sucessfully!!");
         $finish;
@@ -149,8 +147,6 @@ module MAC32_top_tb;
             
             if(my_NV|my_OF|my_UF|my_NX) printblank();
             else $display("  ;");
-
-
 
         end
         
