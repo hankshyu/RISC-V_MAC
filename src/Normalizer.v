@@ -27,7 +27,6 @@ module Normalizer#(
 ) (
     input [3*PARM_MANT + 4 : 0]Mant_i,
     input [PARM_EXP + 1 : 0]Exp_i,
-    
     input [PARM_LEADONE_WIDTH - 1 : 0] Shift_num_i,
     input Exp_mv_sign_i,
 
