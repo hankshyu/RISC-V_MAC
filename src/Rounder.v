@@ -24,7 +24,7 @@
 // 08/13/2022 - Fix multidriven Net, Mant_result_o
 // 08/13/2022 - Underflow signal fixed, denorm number wouldn't fire Underflow Signal
 // 08/14/2022 - Debug wires removed
-
+//
 //////////////////////////////////////////////////////////////////////////////////
 // Additional Comments: 
 // IEEE Std 754-2008    Chap7. Default exception handling
@@ -76,7 +76,9 @@
 // (emphaisis added) 
 // When all of these exceptions are handled by default, the inexact flag 
 // is always raised when either the overflow or underflow flag is raised.
+//
 //////////////////////////////////////////////////////////////////////////////////
+
 
 module Rounder #(
     parameter PARM_RM               = 3,
