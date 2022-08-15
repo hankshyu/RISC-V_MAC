@@ -20,8 +20,8 @@
 
 
 module LeadingOneDetector_Top #(
-  parameter X_LEN = 74,
-  parameter PARM_SHIFTZERO = $clog2(X_LEN)
+    parameter X_LEN = 74,
+    parameter PARM_SHIFTZERO = $clog2(X_LEN)
 ) (
     input  [X_LEN - 1 : 0] data_i,
 
