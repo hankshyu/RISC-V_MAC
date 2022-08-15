@@ -8,8 +8,11 @@
 // Dependencies:    None
 //
 //////////////////////////////////////////////////////////////////////////////////
-// Description: 
-// 
+// Description:     Process Rounding by checking the rounding mode set, guard bit, 
+//                  round bit and sticky bit. 
+//                  Raises Invalid, Overflow and Underflow under appropriate situations
+//                  Adjust the exponent and mantissa for the module output
+//                  
 //////////////////////////////////////////////////////////////////////////////////
 // Revision:
 // 07/30/2022 - File Created
