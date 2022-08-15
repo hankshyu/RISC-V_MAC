@@ -36,11 +36,17 @@ module MAC32_top_tb;
     wire [31:0] my_result;
     wire my_OF, my_UF, my_NX, my_NV;
 
+
     reg [2 : 0] my_rm;//rounding mode
+
+    reg correct_answer;
 
 
     shortreal sa, sb, sc, sans;
     wire [31 : 0] sans_wire;
+    assign sa = $bitstoshortreal(a);
+    assign sb = $bitstoshortreal(b);
+    assign sc = $bitstoshortreal(c);
     
     always @(*) sans = sa + (sb * sc);
     assign sans_wire = $shortrealtobits(sans);
@@ -112,6 +118,9 @@ module MAC32_top_tb;
     task EndTest();
 
         printblank();
+        if(correct_answer) print("All answer correct!");
+        else print("Something wrong....");
+        printblank();
         print("RISC-V Multiply-accumulate Testbench ends sucessfully!!");
         $finish;
 
@@ -120,21 +129,28 @@ module MAC32_top_tb;
 
     task showresult;
         begin
-            $write("%03d ",label);
-            if(my_rm == 3'b000) $write("[RNE]");
-            if(my_rm == 3'b001) $write("[RTZ]");
-            if(my_rm == 3'b010) $write("[RDN]");
-            if(my_rm == 3'b011) $write("[RUP]");
-            if(my_rm == 3'b100) $write("[RMM]");
-            $write(" %8h(%13e) + %8h(%13e) x %8h(%13e) = %8h(%13e)\t",a,$bitstoshortreal(a),b,$bitstoshortreal(b),c,$bitstoshortreal(c),my_result,$bitstoshortreal(my_result));
+            if (my_result != sans_wire)begin
 
-            if(my_NV) $write("  NV(Invalid)");
-            if(my_OF) $write("  OF(Overflw)");
-            if(my_UF) $write("  UF(Underfw)");
-            if(my_NX) $write("  NX(Inexact)");
-            
-            if(my_NV|my_OF|my_UF|my_NX) printblank();
-            else $display("  ;");
+                $write("Inconsistent: %03d ",label);
+                correct_answer = 0;
+                // $write("%03d ",label);
+                if(my_rm == 3'b000) $write("[RNE]");
+                if(my_rm == 3'b001) $write("[RTZ]");
+                if(my_rm == 3'b010) $write("[RDN]");
+                if(my_rm == 3'b011) $write("[RUP]");
+                if(my_rm == 3'b100) $write("[RMM]");
+                $write(" %8h(%13e) + %8h(%13e) x %8h(%13e) = %8h(%13e)\t",a,$bitstoshortreal(a),b,$bitstoshortreal(b),c,$bitstoshortreal(c),my_result,$bitstoshortreal(my_result));
+                $write("**Ans: %8h(%13e) **",sans_wire,sans);
+                if(my_NV) $write("  NV(Invalid)");
+                if(my_OF) $write("  OF(Overflw)");
+                if(my_UF) $write("  UF(Underfw)");
+                if(my_NX) $write("  NX(Inexact)");
+                
+                if(my_NV|my_OF|my_UF|my_NX) printblank();
+                else $display("  ;");
+
+            end
+
 
         end
         
@@ -210,6 +226,7 @@ module MAC32_top_tb;
         @(posedge clk)
         label = 1;
         my_rm = PARM_RM_RTZ; // use RTZ
+        correct_answer = 1;
 
         testtype("Invalid Operation Test");
         testlabel("a) computational operation on a NaN");
