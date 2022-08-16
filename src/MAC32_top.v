@@ -119,10 +119,10 @@ module MAC32_top #(
         .A_Leadingbit_i(A_Leadingbit),
         .B_Leadingbit_i(B_Leadingbit),
         .C_Leadingbit_i(C_Leadingbit),
+        
         .A_Inf_o(A_Inf),
         .B_Inf_o(B_Inf),
         .C_Inf_o(C_Inf),
-
         .A_Zero_o(A_Zero),
         .B_Zero_o(B_Zero),
         .C_Zero_o(C_Zero),
