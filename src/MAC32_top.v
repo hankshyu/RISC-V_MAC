@@ -24,6 +24,7 @@
 // 08/12/2022 - Update mv_halt signal, now zero is viewed as the smalest denormalized number.
 // 08/14/2022 - Stable non-pipelined build (v1.0)
 // 08/15/2022 - R4Booth and Wallace Tree update
+// 08/16/2022 - Instantiation name start with UpperCase
 //////////////////////////////////////////////////////////////////////////////////
 // Additional Comments:
 //Floating-point control and status register:
@@ -111,7 +112,7 @@ module MAC32_top #(
         .PARM_XLEN(PARM_XLEN),
         .PARM_EXP(PARM_EXP),
         .PARM_MANT(PARM_MANT)
-        ) specialCaseDetector (
+        ) SpecialCaseDetector (
         .A_i(A_i),
         .B_i(B_i),
         .C_i(C_i),
@@ -155,7 +156,7 @@ module MAC32_top #(
 
     R4Booth #(
         .PARM_MANT(PARM_MANT)
-    ) r4Booth (
+    ) R4Booth (
         .MantA_i(B_Mant),
         .MantB_i(C_Mant),
         
@@ -183,7 +184,7 @@ module MAC32_top #(
 
     WallaceTree #(
         .PARM_MANT(PARM_MANT)
-    ) wallaceTree (
+    ) WallaceTree (
         .pp_00_i(booth_PP[ 0]),
         .pp_01_i(booth_PP[ 1]),
         .pp_02_i(booth_PP[ 2]),
@@ -238,7 +239,7 @@ module MAC32_top #(
         .PARM_EXP(PARM_EXP),
         .PARM_MANT(PARM_MANT),
         .PARM_BIAS(PARM_BIAS)
-        ) preNormalizer (
+        ) PreNormalizer (
         .A_sign_i(A_Sign),
         .B_sign_i(B_Sign),
         .C_sign_i(C_Sign),
@@ -272,7 +273,7 @@ module MAC32_top #(
     
     Compressor32 #(
         .XLEN(2*PARM_MANT + 2)
-        ) carrySaveAdder (
+        ) CarrySaveAdder (
         .A_i(A_Mant_aligned_low), //A_low
         .B_i(Wallace_sum_adjusted[2*PARM_MANT + 1 : 0]),
         .C_i({Wallace_carry_adjusted[2*PARM_MANT : 0], 1'b0}),
@@ -303,7 +304,7 @@ module MAC32_top #(
 
     EACAdder #(
         .PARM_MANT(PARM_MANT)
-        ) eacadder (
+        ) EACAdder (
         .CSA_sum_i(CSA_sum),
         .CSA_carry_i(CSA_carry),
         .Carry_postcor_i(Carry_postcor),
@@ -324,7 +325,7 @@ module MAC32_top #(
 
     MSBIncrementer #(
         .PARM_MANT(PARM_MANT)
-        ) msbincrementer (
+        ) MSBIncrementer (
         .low_carry_i(low_carry),
         .low_carry_inv_i(low_carry_inv),
         .A_Mant_aligned_high_i(A_Mant_aligned_high), 
@@ -364,7 +365,7 @@ module MAC32_top #(
 
     LeadingOneDetector_Top #(
         .X_LEN(74)
-        ) leadingonedetector (
+        ) LeadingOneDetector (
         .data_i(PosSum),
 
         .shift_num_o(shift_num),
@@ -383,7 +384,7 @@ module MAC32_top #(
         .PARM_EXP(PARM_EXP),
         .PARM_MANT(PARM_MANT),
         .PARM_LEADONE_WIDTH(PARM_LEADONE_WIDTH)
-        ) normalizer (
+        ) Normalizer (
         .Mant_i(PosSum),
         .Exp_i(Exp_aligned),
         .Shift_num_i(shift_num),
@@ -413,7 +414,7 @@ module MAC32_top #(
     .PARM_EXP(PARM_EXP),          
     .PARM_MANT(PARM_MANT),         
     .PARM_LEADONE_WIDTH(PARM_LEADONE_WIDTH)
-    ) rounder (
+    ) Rounder (
     .Exp_i(Exp_aligned),
     .Sign_i(Adder_sign),
     .Allzero_i(allzero),
