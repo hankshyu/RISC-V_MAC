@@ -15,6 +15,7 @@
 // Revision:
 //
 //////////////////////////////////////////////////////////////////////////////////
+// lincense info
 
 
 module Compressor32 #(
@@ -26,7 +27,7 @@ module Compressor32 #(
     output [XLEN - 1 : 0] Sum_o,
     output [XLEN - 1 : 0] Carry_o
 );
-    
+
     generate
         genvar j;
         for(j = 0; j < XLEN; j = j+1)begin
@@ -37,7 +38,7 @@ module Compressor32 #(
                 .sum_o(Sum_o[j]),
                 .carry_o(Carry_o[j])
             );
-            
+
         end
     endgenerate
 
