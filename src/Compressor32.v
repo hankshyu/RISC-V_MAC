@@ -23,10 +23,10 @@
 //  In the following license statements, "software" refers to the
 //  "source code" of the complete hardware/software system.
 //
-//  Copyright 2019,
+//  Copyright 2022,
 //                    Embedded Intelligent Systems Lab (EISL)
 //                    Deparment of Computer Science
-//                    National Chiao Tung Uniersity
+//                    National Yang Ming Chiao Tung Uniersity
 //                    Hsinchu, Taiwan.
 //
 //  All rights reserved.
