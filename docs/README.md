@@ -5,8 +5,19 @@
 
 ## 1.Intorduction
 
+floating point operation is curcial in modern day
 
-## 2.Overview
+Designs with a compound operation has performance advantage over separate add and multiply datapaths.
+
+Multiply fused add unit leads to more efficient superscaler cpu design, the scheduler could 
+
+Horner's reule for transforming a set of equations into a series of multiply-adds. 
+
+First processor to contain a fused multiply-add dataflow ins IBM RS/6000 in 1990
+
+
+
+## 2. Overview
 
 
 ## 3.Detailed Implementation 
