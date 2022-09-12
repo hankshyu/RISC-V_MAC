@@ -15,18 +15,21 @@ Horner's reule for transforming a set of equations into a series of multiply-add
 
 First processor to contain a fused multiply-add dataflow ins IBM RS/6000 in 1990
 
+## 2.Related Work
 
 
-## 2. Overview
+
+## 4.Architecture
 
 
-## 3.Detailed Implementation 
+### 1.Prenormalizer
 
 
-## 4.Simulation Result
+
+## 5.Implementation Results
 
 
-## 5.Conclusion
+## 6.Conclusion
 
 
 ## References
