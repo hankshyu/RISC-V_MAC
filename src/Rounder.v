@@ -1,30 +1,73 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Engineer:        Tzu-Han Hsu
-// Create Date:     07/30/2022 10:47:12 AM
-// Module Name:     Rounder
-// Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
-// HDL(Version):    Verilog-2005
-// Dependencies:    None
+//  Engineer:        Tzu-Han Hsu
+//  Create Date:     07/30/2022 10:47:12 AM
+//  Module Name:     Rounder
+//  Project Name:    IEEE-754 & RISC-V Compatible Multiply-Accumulate Unit
+//  HDL(Version):    Verilog-2005
 //
+//  Dependencies:    None
+//   
 //////////////////////////////////////////////////////////////////////////////////
-// Description:     Process Rounding by checking the rounding mode set, guard bit, 
-//                  round bit and sticky bit. 
-//                  Raises Invalid, Overflow and Underflow under appropriate situations
-//                  Adjust the exponent and mantissa for the module output
-//                  
+//  Description:     Process Rounding by checking the rounding mode set, guard bit, 
+//                   round bit and sticky bit. 
+//                   Raises Invalid, Overflow and Underflow under appropriate situations
+//                   Adjust the exponent and mantissa for the module output
+//             
 //////////////////////////////////////////////////////////////////////////////////
-// Revision:
-// 07/30/2022 - File Created
-// 08/01/2022 - Rename File 
-// 08/08/2022 - Add PARM_MATN_RMM support
-// 08/09/2022 - Invalid_o shall raise whilst Overflow/Underflow
-// 08/10/2022 - Debug wires added to observe the chosen MUX path
-// 08/12/2022 - Remove A = 0 as special case, due to the update of mv_halt in MAC32_top.v
-// 08/13/2022 - Fix multidriven Net, Mant_result_o
-// 08/13/2022 - Underflow signal fixed, denorm number wouldn't fire Underflow Signal
-// 08/14/2022 - Debug wires removed
+//  Revision:
+//  07/30/2022 - File Created
+//  08/01/2022 - Rename File 
+//  08/08/2022 - Add PARM_MATN_RMM support
+//  08/09/2022 - Invalid_o shall raise whilst Overflow/Underflow
+//  08/10/2022 - Debug wires added to observe the chosen MUX path
+//  08/12/2022 - Remove A = 0 as special case, due to the update of mv_halt in MAC32_top.v
+//  08/13/2022 - Fix multidriven Net, Mant_result_o
+//  08/13/2022 - Underflow signal fixed, denorm number wouldn't fire Underflow Signal
+//  08/14/2022 - Debug wires removed
+//  09/12/2022 - Add BSD-3-Clause Licence
+//   
+//////////////////////////////////////////////////////////////////////////////////
+//  License information:
 //
+//  This software is released under the BSD-3-Clause Licence,
+//  see https://opensource.org/licenses/BSD-3-Clause for details.
+//  In the following license statements, "software" refers to the
+//  "source code" of the complete hardware/software system.
+//
+//  Copyright 2022,
+//                    Embedded Intelligent Systems Lab (EISL)
+//                    Deparment of Computer Science
+//                    National Yang Ming Chiao Tung Uniersity
+//                    Hsinchu, Taiwan.
+//
+//  All rights reserved.
+//
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//  1. Redistributions of source code must retain the above copyright notice,
+//     this list of conditions and the following disclaimer.
+//
+//  2. Redistributions in binary form must reproduce the above copyright notice,
+//     this list of conditions and the following disclaimer in the documentation
+//     and/or other materials provided with the distribution.
+//
+//  3. Neither the name of the copyright holder nor the names of its contributors
+//     may be used to endorse or promote products derived from this software
+//     without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+//  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+//  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+//  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+//  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+//  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+//  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+//  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+//  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+//  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+//  POSSIBILITY OF SUCH DAMAGE.
 //////////////////////////////////////////////////////////////////////////////////
 // Additional Comments: 
 // IEEE Std 754-2008    Chap7. Default exception handling
