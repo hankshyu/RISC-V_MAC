@@ -35,6 +35,10 @@ a series of fused multiply-adds.
 
 ### 3.1. Multiplier
 
+The design of the multiplier involvers creating a partial product array made up of multiples of multiplicands, and sum them up to form the product. One of the key factor in designing a multiplier is to determine to radix of the multiplier. 
+Chosing the smaller radix creates loads of partial products that is easy to create and choose from, but harder to sum due to the quantity. On the other hand, a larger radix has fewer partial products to add from, but it's more difficut to create the partial product array. 
+Radix-10 multiplicantion is 
+
 
 ### 3.2. PreNormalizer
 
