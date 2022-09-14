@@ -47,7 +47,6 @@ a series of fused multiply-adds.
 ### 3.6 Rounder
 
 
-
 ## 4.Implementation Results
 
 
