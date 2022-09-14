@@ -15,10 +15,8 @@ Horner's reule for transforming a set of equations into a series of multiply-add
 
 First processor to contain a fused multiply-add dataflow ins IBM RS/6000 in 1990
 
-<<<<<<< HEAD
 ## 2.Related Work
 
-=======
 Binary floating-point units are available on every microprocessor and are
 very common in embedded applications including game systems. Most designs
 center around a fused multiply-add dataflow due to its simplicity and performance advantage over separate multiply and add pipelines. One technique used
@@ -30,7 +28,6 @@ IBM RS/6000 workstation which was introduced around 1990 [3]. Many of the
 hardware implementation algorithms of this machine are still popular today.
 The optimizing compiler was key to enabling C programs to be expanded into
 a series of fused multiply-adds.
->>>>>>> cb385ca664ab8bd2614955c0b31021f849d82a42
 
 
 ## 4.Architecture
