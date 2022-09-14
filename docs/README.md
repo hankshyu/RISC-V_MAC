@@ -30,17 +30,28 @@ The optimizing compiler was key to enabling C programs to be expanded into
 a series of fused multiply-adds.
 
 
-## 4.Architecture
+## 3.Architecture
 
 
-### 1.Prenormalizer
+### 3.1. Multiplier
+
+
+### 3.2. PreNormalizer
+
+### 3.3 End Around Carry (EAC) Adders
+
+### 3.4 Leading One Detector
+
+### 3.5 Normalizer 
+
+### 3.6 Rounder
 
 
 
-## 5.Implementation Results
+## 4.Implementation Results
 
 
-## 6.Conclusion
+## 5.Conclusion
 
 
 ## References
