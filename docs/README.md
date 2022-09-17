@@ -56,10 +56,11 @@ Modified Booth's Recording Table
 |     1       |    1      |       0       |  -1 x Multiplicand        |
 |     1       |    1      |       1       |   0 x Multiplicand        |
     
-
- > mul1x_o = bit (i) xor bit(i - 1)
- > mul2x_o = bit(i+1)bit(i)bit(i-1) == (100 or 011)
- > mulsign_o = bit (i + 1)
+```
+mul1x_o = bit (i) xor bit(i - 1)
+mul2x_o = bit(i+1)bit(i)bit(i-1) == (100 or 011)
+mulsign_o = bit (i + 1)
+```
 
 The fact that multiplicand may be negative is disturbing because we must sign extend the multiplicand to acquire the correct result. The intuitive way is by sign extending every single bit on the left of the partial product. [4] mentioned an elegent way of acquiring the same result while the sign of the partial product only effects two bits of the partial product, greatly improves the potential wiring of the design and is adopted in our proposed multiplier.
 
