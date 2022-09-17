@@ -32,7 +32,6 @@ a series of fused multiply-adds.
 
 ## 3.Architecture
 
-
 ### 3.1. Multiplier
 
 The design of the multiplier involvers creating a partial product array made up of multiples of multiplicands(R4Booth), and sum them up to form the product(WallaceTree). One of the key factor in designing a multiplier is to determine to radix of the multiplier. 
@@ -68,7 +67,6 @@ The fact that multiplicand may be negative is disturbing because we must sign ex
 
 
 
-
 ### 3.2. PreNormalizer
 
 ### 3.3 End Around Carry (EAC) Adders
@@ -78,6 +76,7 @@ The fact that multiplicand may be negative is disturbing because we must sign ex
 ### 3.5 Normalizer 
 
 ### 3.6 Rounder
+
 
 ## 4.Implementation Results
 
