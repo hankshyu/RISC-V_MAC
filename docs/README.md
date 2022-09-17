@@ -37,7 +37,13 @@ a series of fused multiply-adds.
 
 The design of the multiplier involvers creating a partial product array made up of multiples of multiplicands, and sum them up to form the product. One of the key factor in designing a multiplier is to determine to radix of the multiplier. 
 Chosing the smaller radix creates loads of partial products that is easy to create and choose from, but harder to sum due to the quantity. On the other hand, a larger radix has fewer partial products to add from, but it's more difficut to create the partial product array. 
-Radix-10 multiplicantion is 
+
+Radix-10 multiplication is what we are most familiar with, often carry out by hand. Decimal format is optimal for financial applications and may become more popular in the future by the publication of the revision to IEEE 754 floating point standard [1]. Binary is yet the choise for most desingers for the sake of it's mathematical properties and performance advantage.
+
+Assume both the multiplier and the multiplicand has N bit. Radix-2, the most naive binary, would require large counter tree to sum up N partial products. Radix-4 multiplication will reduce the number of partial product to ceil((N+1)/2), half the number compare to radix-2. The downside is the partial product ranges from 0x 1x 2x 3x the multiplicand, 3x multiple may require extra delay and area to form since it's non-trivial.
+
+Booth showed a technique to record digits in both positive and negative. Such transformation eliminates two cosecutive ones thus eliminates the 3x multiple. A Booth radix-4 scanning simplifies the multiples to 0x 1x andd 2x. 
+
 
 
 ### 3.2. PreNormalizer
@@ -58,3 +64,12 @@ Radix-10 multiplicantion is
 
 
 ## References
+[1]: “IEEE standard for floating-point arithmetic, ANSI/IEEE Std 754R,” The Institute of
+Electrical and Electronic Engineers, Inc., In progress, http://754r.ucbtest.org/ drafts/
+754r.pdf .
+
+[2] Knuth, D. “The Art of Computer Programming, Vol. 2: Seminumerical Algorithms,
+3rd ed.” Addison-Wesley, Reading, MA, 1998, 467–469.
+
+[3] Montoye, R.K.; Hokenek, E.; Runyon, S.L. “Design of the IBM RISC System/6000
+floating-point execution unit”, IBM J. Res. Dev., 1990, 34(1), 59–70.
