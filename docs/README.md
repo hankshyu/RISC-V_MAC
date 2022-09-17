@@ -71,7 +71,7 @@ The next step of multiplication is to sum the partial products, a hardware struc
 
 ### 3.2. Exponent Processor & PreNormalizer
 
-
+Before the Addend could be add with the sum and carry from the multiplier, proper alignment must take place. Furthermore, by executing multiplication and alignment in parallel, we must include a large shifter about 3 times the size of the mantissa in our design. [8] clearly explains the way of implementation
 
 ### 3.3 End Around Carry (EAC) Adders
 
@@ -109,6 +109,7 @@ floating-point execution unit”, IBM J. Res. Dev., 1990, 34(1), 59–70.
 
 [7] K. Prasad and K. K. Parhi, "Low-power 4-2 and 5-2 compressors," Conference Record of Thirty-Fifth Asilomar Conference on Signals, Systems and Computers (Cat.No.01CH37256), 2001, pp. 129-133 vol.1, doi: 10.1109/ACSSC.2001.986892.
 
+[8] Zhaolin Li, Xinyue Zhang, Gongqiong Liz and Runde Zhou, "Design of a fully pipelined single-precision floating-point unit," 2007 7th International Conference on ASIC, 2007, pp. 60-63, doi: 10.1109/ICASIC.2007.4415567.
 
 
 
