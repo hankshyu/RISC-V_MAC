@@ -31,7 +31,7 @@ a series of fused multiply-adds.
 
 
 ## 3.Architecture
-
+![overall architecture](Flowchart.png)
 ### 3.1. Multiplier
 
 The design of the multiplier involvers creating a partial product array made up of multiples of multiplicands(R4Booth), and sum them up to form the product(WallaceTree). One of the key factor in designing a multiplier is to determine to radix of the multiplier. 
@@ -65,7 +65,7 @@ The fact that multiplicand may be negative is disturbing because we must sign ex
 
 
 
-
+![WallaceTree](WallaceTree.png)
 
 ### 3.2. PreNormalizer
 
