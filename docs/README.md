@@ -68,12 +68,14 @@ The fact that multiplicand may be negative is disturbing because we must sign ex
 ![WallaceTree](WallaceTree.png)
 The next step of multiplication is to sum the partial products, a hardware structure named Wallace tree is implemented to reduce critical path. Wallace trees are usually composed of carry save adders, also called counters. Traditionally, they intake 3 partial sums to output a sum and carry. 4;2 counters was introduced in [5] and were further optimized and designed[6] [7]. By mixing the use of 3:2 counter and 4:2 counter results in optimal design when minimizing delay.
 
-**suppresion of sign extension**
+
+### 3.2. Exponent Processor & PreNormalizer
 
 
-### 3.2. PreNormalizer
 
 ### 3.3 End Around Carry (EAC) Adders
+
+**suppresion of sign extension**
 
 ### 3.4 Leading One Detector
 
@@ -106,3 +108,7 @@ floating-point execution unit”, IBM J. Res. Dev., 1990, 34(1), 59–70.
 [6] D. Radhakrishnan and A. P. Preethy, "Low power CMOS pass logic 4-2 compressor for high-speed multiplication," Proceedings of the 43rd IEEE Midwest Symposium on Circuits and Systems (Cat.No.CH37144), 2000, pp. 1296-1298 vol.3, doi: 10.1109/MWSCAS.2000.951453.
 
 [7] K. Prasad and K. K. Parhi, "Low-power 4-2 and 5-2 compressors," Conference Record of Thirty-Fifth Asilomar Conference on Signals, Systems and Computers (Cat.No.01CH37256), 2001, pp. 129-133 vol.1, doi: 10.1109/ACSSC.2001.986892.
+
+
+
+
