@@ -71,7 +71,10 @@ The next step of multiplication is to sum the partial products, a hardware struc
 
 ### 3.2. Exponent Processor & PreNormalizer
 
-Before the Addend could be add with the sum and carry from the multiplier, proper alignment must take place. Furthermore, by executing multiplication and alignment in parallel, we must include a large shifter about 3 times the size of the mantissa in our design. [8] clearly explains the way of implementation
+Before the Addend could be add with the sum and carry from the multiplier, proper alignment must take place. Furthermore, by executing multiplication and alignment in parallel, we must include a large shifter about 3 times the size of the mantissa in our design. 
+
+
+[8] clearly explains the way of implementation
 
 ### 3.3 End Around Carry (EAC) Adders
 
