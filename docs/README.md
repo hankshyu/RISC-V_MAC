@@ -94,6 +94,8 @@ mv = 27 - d
 
 **suppresion of sign extension**
 
+
+
 ### 3.4 Leading One Detector
 
 ### 3.5 Normalizer 
