@@ -92,13 +92,13 @@ mv = 27 - d
 
 ### 3.3 End Around Carry (EAC) Adders
 
+
 **suppresion of sign extension**
 
 
 
 ### 3.4 Leading One Detector
 
-### 3.5 Normalizer 
 
 ### 3.6 Rounder
 
