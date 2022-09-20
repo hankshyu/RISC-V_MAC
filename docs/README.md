@@ -73,32 +73,26 @@ The fact that multiplicand may be negative is disturbing because we must sign ex
 The next step of multiplication is to sum the partial products, a hardware structure named Wallace tree is implemented to reduce critical path. Wallace trees are usually composed of carry save adders, also called counters. Traditionally, they intake 3 partial sums to output a sum and carry. 4;2 counters was introduced in [5] and were further optimized and designed[6] [7]. By mixing the use of 3:2 counter and 4:2 counter results in optimal design when minimizing delay.
 
 
-### 3.2. Exponent Processor & PreNormalizer
+### 3.2. PreNormalizer
 
-Before the Addend could be add with the sum and carry from the multiplier, proper alignment must take place.
+Before the Addend could be add with the partial products from the multiplier, proper alignment must take place. Our design overlaps the data aligment with the early pahses of multiplication, such design requires the capability of shifting the addend in either direction while each of these partial products are two times as wide as the input operands. In short, by executing multiplication and alignment in parallel, we must include a large shifter about 3 times the size of the mantissa.
 
-Each of these partial products are two times as wide as the input operands. Usually in a normal floating point adder, the smaller exponent is aligned. But it is very costy to design a large shifter to shift bidirectionally. 
+In a normal floating point adder, the smaller exponent is aligned; nevertheless, it is very costy to implement a large shifter capable of shifting bidirectionally. 
 
-The product is treated as having a fixed radix point tand the addend is aligned to the radix point. The range of shifting is from 53(*) + 2 gurad bits breater than the product to when the addend's most significatn bit is less than the product's least significant bit, which is pproxiamtely three times the width of the data plus some guard bits.
+A clean impelmentation is mentioned in [8].  
 
-Furthermore, by executing multiplication and alignment in parallel, we must include a large shifter about 3 times the size of the mantissa in our design. 
+Alignment of the addend is implemented by placing the addend to leftmost of the product and shifts the addend to the right according to the exponent value; in other words the product is treated as having a fixed radix point and the addend is aligned to the radix point. Under such implementation, the shifting ranges also approxiamtely three times the width of the data plus some guard bits but only shift-right capbilities is needed to the shifter.
 
-To overlap the data alignment with the early pahses of multiplication is the first step, requiring the capability of shifting the addend in either direction.
 
-MAF unit would only be feasible only under teh conditions of building a very fast shifter, which eases overlap of the multiplication and prenormalization.
+After the normalization of the exponent, if the mantissa of the addend is of 24 (length of the mantissa) plus two gurad bits greater than the product, the final mantissa is solely decided by the product's mantissa thus further shift left is unnecessary. When the addend's most significatn bit is less than the product's least significant bit, the mantissa of the added dominates the result so it's needless to further shift to the right. The value of shifting is also mentioned in [8] and is processed in the exponent processor in our design.
 
----
-Implementation
-[8] clearly explains the way of implementation
-
-sub be the indication of effective subtraction
+d be the difference between the exponent of A,B and C
+the shift amount of A for alignment is equal to:
 
 ```
-sub = signA xor signB xor signC
+d = expA - (expB + ExpC -127)
+mv = 27 - d 
 ```
-
-
-
 
 ### 3.3 End Around Carry (EAC) Adders
 
