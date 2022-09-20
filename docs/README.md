@@ -5,6 +5,11 @@
 
 ## 1.Intorduction
 
+
+RISC concept of attacking the most frequently used functuions by building simple hardware.
+
+MAF implementation should be consistent with the basic RISC philosophy of heavily optimize units in order to rapidly carry out the most frequently expected function as fast as possible.
+
 floating point operation is curcial in modern day
 
 Designs with a compound operation has performance advantage over separate add and multiply datapaths.
@@ -28,7 +33,6 @@ IBM RS/6000 workstation which was introduced around 1990 [3]. Many of the
 hardware implementation algorithms of this machine are still popular today.
 The optimizing compiler was key to enabling C programs to be expanded into
 a series of fused multiply-adds.
-
 
 ## 3.Architecture
 ![overall architecture](Flowchart.png)
@@ -71,10 +75,30 @@ The next step of multiplication is to sum the partial products, a hardware struc
 
 ### 3.2. Exponent Processor & PreNormalizer
 
-Before the Addend could be add with the sum and carry from the multiplier, proper alignment must take place. Furthermore, by executing multiplication and alignment in parallel, we must include a large shifter about 3 times the size of the mantissa in our design. 
+Before the Addend could be add with the sum and carry from the multiplier, proper alignment must take place.
 
+Each of these partial products are two times as wide as the input operands. Usually in a normal floating point adder, the smaller exponent is aligned. But it is very costy to design a large shifter to shift bidirectionally. 
 
+The product is treated as having a fixed radix point tand the addend is aligned to the radix point. The range of shifting is from 53(*) + 2 gurad bits breater than the product to when the addend's most significatn bit is less than the product's least significant bit, which is pproxiamtely three times the width of the data plus some guard bits.
+
+Furthermore, by executing multiplication and alignment in parallel, we must include a large shifter about 3 times the size of the mantissa in our design. 
+
+To overlap the data alignment with the early pahses of multiplication is the first step, requiring the capability of shifting the addend in either direction.
+
+MAF unit would only be feasible only under teh conditions of building a very fast shifter, which eases overlap of the multiplication and prenormalization.
+
+---
+Implementation
 [8] clearly explains the way of implementation
+
+sub be the indication of effective subtraction
+
+```
+sub = signA xor signB xor signC
+```
+
+
+
 
 ### 3.3 End Around Carry (EAC) Adders
 
