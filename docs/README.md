@@ -80,12 +80,12 @@ Before the Addend could be add with the partial products from the multiplier, pr
 In a normal floating point adder, the smaller exponent is aligned; nevertheless, it is very costy to implement a large shifter capable of shifting bidirectionally. A clean and more efficient impelmentation is mentioned in [8]. Alignment of the addend is implemented by placing the addend to leftmost of the product and shifts the addend to the right according to the exponent value; in other words the product is treated as having a fixed radix point and the addend is aligned to the radix point. Under such implementation, the shifting ranges also approxiamtely three times the width of the data plus some guard bits but only shift-right capbilities is needed to the shifter.
 
 
-After the normalization of the exponent, if the mantissa of the addend is of 24 (length of the mantissa) plus two gurad bits greater than the product, the final mantissa is solely decided by the product's mantissa thus further shift left is unnecessary. When the addend's most significatn bit is less than the product's least significant bit, the mantissa of the added dominates the result so it's needless to further shift to the right. The value of shifting is also mentioned in [8] and is processed in the exponent processor in our design.
-
-d be the difference between the exponent of A,B and C
-the shift amount of A for alignment is equal to:
+After the normalization of the exponent, if the mantissa of the addend is of 24 (length of the mantissa) plus two gurad bits greater than the product, the final mantissa is solely decided by the product's mantissa thus further shifting to the left is unnecessary. When the addend's most significatn bit is less than the product's least significant bit, the mantissa of the addend dominates the result so it's needless to further shift to the right. The value of shifting is also mentioned in [8] and is processed in the exponent processor in our design:
 
 ```
+d:  the difference between the exponent of the addend and the product
+mv: the shift amount of the addned for alignment
+
 d = expA - (expB + ExpC -127)
 mv = 27 - d 
 ```
