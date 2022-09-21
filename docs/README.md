@@ -92,14 +92,11 @@ mv = 27 - d
 
 ### 3.3 End Around Carry (EAC) Adders
 
-Floating points are represented as sign and magnitude format in IEEE-754. As a consequence, the adder is only responsible of calculating the absolute value of the sum. Regrettably, it is very difficult to determine in advance which operand is bigger in the MAC dataflow. Even if we know which operand is the greater , we have to design a complementer on both the input from the Carry Save adder. Thus we need an adder that always output the magnitude of the result by coditionally complement one operand. This type of adder is called an "end round carry" adder.
+In an ordinary Multiply and add dataflow. The product should form before the add operation take place. However, the addend is added with the partial products comming out of the multiplier directly in our design. Such dataflow may cause a propagate of any carry outs that ought to be ignored, contaminating the final result. In other words, we should figure out whether there was a carry out of the sign extension prior to the last carry save adder. If the carry out is detected, no adjustment has to be made. On the other hand, if no carry out is detected, we must invert the result driving to the EAC Adders.
 
-The mathematical model is presented in [9]. The logic is essentially driving the carry out of (P-B) into another adder's carry in.
+Floating points are represented as sign and magnitude format in IEEE-754, in consequence, the adder is only responsible of calculating the absolute value of the sum. However, it is very difficult to determine in advance which operand is bigger in the MAC dataflow. Even if we know which operand is the greater , we have to design a complementer on both the input from the Carry Save adder. We need an adder that always output the magnitude of the result by coditionally complement one operand. This type of adder is called an "End Around carry" adder.
 
-Such function could be implemented by two carry chains, using two adders calculating (P - B) and (B - P) respectively with a multiplexer selecting the answer of the two. [9] also mentioned another impelmentation similar to a cary lookahead adder, which is smaller in size but harder to implement.
-
-**suppresion of sign extension**
-
+The mathematical model is presented in [9]. The logic is essentially driving the carry out of (P-B) into another adder's carry in. Such function could be implemented by two carry chains, using two adders calculating (P - B) and (B - P) respectively with a multiplexer selecting the answer of the two. [9] also mentioned another impelmentation similar to a cary lookahead adder, which is smaller in size but harder to implement.
 
 ### 3.4 Leading One Detector
 
