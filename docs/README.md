@@ -109,7 +109,7 @@ Although running one detection and addition in parallel would acclerate the calc
 An easy solution is to only implement a parts of the LZA component. Despite the fact that it would only operate when the sum is calculated, leading to a slower design. The lightweight leading one detector could assume the input is always positive, since the output of the End around carry is always positive. By taking the advantage of the know polarity, our design uses much smaller area and with simplier algorithm with great scalbility.
 
 ### 3.5 Rounder
-Rounding in 
+Rounding is the last step 
 
 
 
