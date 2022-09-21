@@ -96,7 +96,6 @@ mv = 27 - d
 **suppresion of sign extension**
 
 
-
 ### 3.4 Leading One Detector
 
 
