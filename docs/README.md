@@ -100,8 +100,17 @@ The mathematical model is presented in [9]. The logic is essentially driving the
 
 ### 3.4 Leading One Detector
 
+Design of the Leading One detector is pivotal to the normalization process. Normalization stips away all leading sign bits so that the two bits adjacent to the radix point are of opposite polarity. To determinte how much to shift would be the responsibility of the Leading one detector. 
+
+Back to the first processor contains a fused multiply-add dataflow [3], the RC/6000 processor also equipped a leading-zero anticipator (LZA) to process the leading zeros and ones in parallel with floating point addition. The algorithm is mentioned in [10] [11]. [12] further compares algorithms of detecting leading zeros/ones. 
+
+Although running one detection and addition in parallel would acclerate the calculation, the hardware would grew significantly if the input bits grew wider. Another disadvantage of calculating the leading ones before the addition is done is the polarity of the additon is not yet determined, the hardware must incorporate the sign of the sum to calculate the correct amount of leading ones.
+
+An easy solution is to only implement a parts of the LZA component. Despite the fact that it would only operate when the sum is calculated, leading to a slower design. The lightweight leading one detector could assume the input is always positive, since the output of the End around carry is always positive. By taking the advantage of the know polarity, our design uses much smaller area and with simplier algorithm with great scalbility.
 
 ### 3.5 Rounder
+Rounding in 
+
 
 
 ## 4.Implementation Results
@@ -133,4 +142,8 @@ floating-point execution unit”, IBM J. Res. Dev., 1990, 34(1), 59–70.
 
 [9] Schwarz, Eric. (2007). Binary Floating-Point Unit Design. 10.1007/978-0-387-34047-0_8. 
 
+[10] E. Hokenek and R. K. Montoye, "Leading-zero anticipator (LZA) in the IBM RISC System/6000 floating-point execution unit," in IBM Journal of Research and Development, vol. 34, no. 1, pp. 71-77, Jan. 1990, doi: 10.1147/rd.341.0071.
 
+[11] H. Suzuki, H. Morinaka, H. Makino, Y. Nakase, K. Mashiko and T. Sumi, "Leading-zero anticipatory logic for high-speed floating point addition," in IEEE Journal of Solid-State Circuits, vol. 31, no. 8, pp. 1157-1164, Aug. 1996, doi: 10.1109/4.508263.
+
+[12] M. S. Schmookler and K. J. Nowka, "Leading zero anticipation and detection-a comparison of methods," Proceedings 15th IEEE Symposium on Computer Arithmetic. ARITH-15 2001, 2001, pp. 7-12, doi: 10.1109/ARITH.2001.930098.
