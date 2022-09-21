@@ -92,6 +92,11 @@ mv = 27 - d
 
 ### 3.3 End Around Carry (EAC) Adders
 
+Floating points are represented as sign and magnitude format in IEEE-754. As a consequence, the adder is only responsible of calculating the absolute value of the sum. Regrettably, it is very difficult to determine in advance which operand is bigger in the MAC dataflow. Even if we know which operand is the greater , we have to design a complementer on both the input from the Carry Save adder. Thus we need an adder that always output the magnitude of the result by coditionally complement one operand. This type of adder is called an "end round carry" adder.
+
+The mathematical model is presented in [9]. The logic is essentially driving the carry out of (P-B) into another adder's carry in.
+
+Such function could be implemented by two carry chains, using two adders calculating (P - B) and (B - P) respectively with a multiplexer selecting the answer of the two. [9] also mentioned another impelmentation similar to a cary lookahead adder, which is smaller in size but harder to implement.
 
 **suppresion of sign extension**
 
@@ -99,7 +104,7 @@ mv = 27 - d
 ### 3.4 Leading One Detector
 
 
-### 3.6 Rounder
+### 3.5 Rounder
 
 
 ## 4.Implementation Results
@@ -129,5 +134,6 @@ floating-point execution unit”, IBM J. Res. Dev., 1990, 34(1), 59–70.
 
 [8] Zhaolin Li, Xinyue Zhang, Gongqiong Liz and Runde Zhou, "Design of a fully pipelined single-precision floating-point unit," 2007 7th International Conference on ASIC, 2007, pp. 60-63, doi: 10.1109/ICASIC.2007.4415567.
 
+[9] Schwarz, Eric. (2007). Binary Floating-Point Unit Design. 10.1007/978-0-387-34047-0_8. 
 
 
