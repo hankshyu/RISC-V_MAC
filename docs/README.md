@@ -109,7 +109,13 @@ Although running one detection and addition in parallel would acclerate the calc
 An easy solution is to only implement a parts of the LZA component. Despite the fact that it would only operate when the sum is calculated, leading to a slower design. The lightweight leading one detector could assume the input is always positive, since the output of the End around carry is always positive. By taking the advantage of the know polarity, our design uses much smaller area and with simplier algorithm with great scalbility.
 
 ### 3.5 Rounder
-Rounding is the last step 
+Since floating point has a fixed sized mantissa, bits that are less significant would be naturally truncated during the operation. For user to freely select which rounding mode to use, we must add extra bits called guard bit, round bit and sticky bit during arithmatic calculations. [13] explains why a guard bit is necessary to ensure the rounding works correctly.
+
+RISCV "F" standard Extension supports 5 rounding modes: RNE, RTZ, RDN, RUP and RMM. In IEEE754-2008[14] clearly defines the behaviour of rounding toward a directed orientation, which is how RTZ, RDN and RUP operate. RNE and RMM are a bit trickier, which the floating point number nearest to infinty precise result is given. If the distance between two nearest floating-point are equally near, RNE delivers the one with and even least significant digit, where RMM delivers the larger magnitude. They are named as roundTiesToEven and roundTiestoAway in IEEE754-2008.
+
+IEEE754-2008 also defines the default exception handling methods that we must obey. The exception handling is also done by the rounder because rounding mode could affect the way underflow or overflow is represented. For example, RTZ carries positive overflow to the format's largest finite nubmer while RUP carries to positive infinity. Other behaviours like NaN propogation are also doen in the rounder,
+
+
 
 
 
@@ -148,3 +154,7 @@ floating-point execution unit”, IBM J. Res. Dev., 1990, 34(1), 59–70.
 [11] H. Suzuki, H. Morinaka, H. Makino, Y. Nakase, K. Mashiko and T. Sumi, "Leading-zero anticipatory logic for high-speed floating point addition," in IEEE Journal of Solid-State Circuits, vol. 31, no. 8, pp. 1157-1164, Aug. 1996, doi: 10.1109/4.508263.
 
 [12] M. S. Schmookler and K. J. Nowka, "Leading zero anticipation and detection-a comparison of methods," Proceedings 15th IEEE Symposium on Computer Arithmetic. ARITH-15 2001, 2001, pp. 7-12, doi: 10.1109/ARITH.2001.930098.
+
+[13] https://pages.cs.wisc.edu/~david/courses/cs552/S12/handouts/guardbits.pdf
+
+[14] "IEEE Standard for Floating-Point Arithmetic," in IEEE Std 754-2008 , vol., no., pp.1-70, 29 Aug. 2008, doi: 10.1109/IEEESTD.2008.4610935.
