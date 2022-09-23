@@ -109,16 +109,13 @@ Although running one detection and addition in parallel would acclerate the calc
 An easy solution is to only implement a parts of the LZA component. Despite the fact that it would only operate when the sum is calculated, leading to a slower design. The lightweight leading one detector could assume the input is always positive, since the output of the End around carry is always positive. By taking the advantage of the know polarity, our design uses much smaller area and with simplier algorithm with great scalbility.
 
 ### 3.5 Rounder
-Since floating point has a fixed sized mantissa, bits that are less significant would be naturally truncated during the operation. For user to freely select which rounding mode to use, we must add extra bits called guard bit, round bit and sticky bit during arithmatic calculations. [13] explains why a guard bit is necessary to ensure the rounding works correctly.
+Since floating point has a fixed sized mantissa, bits that are less significant would be naturally truncated during the operation. For user to freely select their desired rounding mode, we must add extra bits called guard bit, round bit and sticky bit during arithmatic calculations. [13] explains why a guard bit is necessary to ensure the rounding works correctly.
 
-RISCV "F" standard Extension supports 5 rounding modes: RNE, RTZ, RDN, RUP and RMM. In IEEE754-2008[14] clearly defines the behaviour of rounding toward a directed orientation, which is how RTZ, RDN and RUP operate. RNE and RMM are a bit trickier, which the floating point number nearest to infinty precise result is given. If the distance between two nearest floating-point are equally near, RNE delivers the one with and even least significant digit, where RMM delivers the larger magnitude. They are named as roundTiesToEven and roundTiestoAway in IEEE754-2008.
+RISCV "F" standard Extension supports 5 rounding modes: RNE, RTZ, RDN, RUP and RMM. IEEE754-2008[14] clearly defines the behaviour of rounding toward a directed orientation, which is how RTZ, RDN and RUP operate. [8] provided an easy way of implementation, simplefies 3 rounding mode into two: RI and RZ. RNE and RMM are a bit trickier, the floating point number nearest to infinty precise result is given. If the distance between two nearest floating-point are equally near, RNE delivers the one with and even least significant digit, where RMM delivers the larger magnitude. They are named as roundTiesToEven and roundTiestoAway in IEEE754-2008.
 
-IEEE754-2008 also defines the default exception handling methods that we must obey. The exception handling is also done by the rounder because rounding mode could affect the way underflow or overflow is represented. For example, RTZ carries positive overflow to the format's largest finite nubmer while RUP carries to positive infinity. Other behaviours like NaN propogation are also doen in the rounder,
+The floating-point control and status register in RISC-V also holds the accrued exception flags, NV, DZ, OF, UF and NX respectively. In the MAC dataflow, DV would never be raised so only 4 exception flags are judged in our design. Overflow and underflow flags are pretty intuitive. NV flag will be raised if any invalid operation take place. IEEE754-2008 7.2 [14] defines lists of invalid operations. NX flag stands for inexact, it would fire if the calculated result of our design does not equal to the absolute answer. By checking the contamination of the sticky bits, we could judge whether the flag shall be raise.
 
-
-
-
-
+IEEE754-2008 also defined the default exception handling methods that we must obey. The job is also done by the rounder because rounding mode could affect the way underflow or overflow represents. For example, RTZ carries positive overflow to the format's largest finite nubmer while RUP carries to positive infinity. After all the adjustments,  output from the rounder drives the output of the module.
 
 ## 4.Implementation Results
 
