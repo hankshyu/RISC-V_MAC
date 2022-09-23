@@ -20,19 +20,17 @@ Horner's reule for transforming a set of equations into a series of multiply-add
 
 First processor to contain a fused multiply-add dataflow ins IBM RS/6000 in 1990
 
+Binary floating-point units are available on every microprocessor and are very common in embedded applications including game systems. Most designs center around a fused multiply-add dataflow due to its simplicity and performance advantage over separate multiply and add pipelines. 
+
+One technique used for increasing performance is to use Horner’s rule for transforming a set of equations into a series of multiply-adds [2]. This numerical analysis technique is very common and takes full advantage of this type of dataflow.
+
 ## 2.Related Work
 
-Binary floating-point units are available on every microprocessor and are
-very common in embedded applications including game systems. Most designs
-center around a fused multiply-add dataflow due to its simplicity and performance advantage over separate multiply and add pipelines. One technique used
-for increasing performance is to use Horner’s rule for transforming a set of
-equations into a series of multiply-adds [2]. This numerical analysis technique
-is very common and takes full advantage of this type of dataflow.
-The first processor to contain a fused multiply-add dataflow was the first
-IBM RS/6000 workstation which was introduced around 1990 [3]. Many of the
-hardware implementation algorithms of this machine are still popular today.
-The optimizing compiler was key to enabling C programs to be expanded into
-a series of fused multiply-adds.
+IBM RS/6000 workstation in 1990 is the first processor to contain a fused multiply-add dataflow. The design is so compact that the pipeline latency is only two cycles. It brought the concept of fusing multiply and add operation to reduce connections, and for better compiler optimization. The design is so classic that many of the hardware implementation algorithms of this machine are still popular today. 
+
+[15] [16] [17]
+
+
 
 ## 3.Architecture
 ![overall architecture](Flowchart.png)
@@ -113,8 +111,17 @@ The floating-point control and status register in RISC-V also holds the accrued 
 
 IEEE754-2008 also defined the default exception handling methods that we must obey. The job is also done by the rounder because rounding mode could potentially affect the way underflow or overflow represents. For example, RTZ carries positive overflow to the format's largest finite nubmer while RUP carries to positive infinity. After all the adjustments, the output from the rounder drives the output of the MAC module.
 
-## 4.Implementation Results
+## 4.Results
+A testbench program is carefully designed to test the module, including error prone border testcases. Most of the testcases are hand-carved in order to provide a strict testbench. The test could be found in a Systemverilog testbench file. The test is split into several parts:
 
+- Invalid operations: test if the module's exception handling works.
+- Infinities: test if the operations about infinities defined in IEEE754-2008 is obeyed.
+- Operation with zeros: test if the operations with zero work properly.
+- Overflow/Rounding: If the flags raise correctly and the output value adjusted according to the rounding mode.
+- Rounding: test if supported rounding mode works well.
+- Random generated numbers: Generate random float numbers to test if MAC operates as the way we want.
+
+Our module passes all of the tests above mentioned. We plan to further test our module with exhausting torture tests and on development boards in the future.
 
 
 ## 5.Conclusion
@@ -153,3 +160,9 @@ floating-point execution unit”, IBM J. Res. Dev., 1990, 34(1), 59–70.
 [13] https://pages.cs.wisc.edu/~david/courses/cs552/S12/handouts/guardbits.pdf
 
 [14] "IEEE Standard for Floating-Point Arithmetic," in IEEE Std 754-2008 , vol., no., pp.1-70, 29 Aug. 2008, doi: 10.1109/IEEESTD.2008.4610935.
+
+[15] G. Gerwig, H. Wetter, E. M. Schwarz and J. Haess, "The IBM eServer z990 floating-point unit", IBM Journal of Research and Development, vol. 48, no. 3–4, pp. 311-322, May/July 2004.
+
+[16] C. Chen, L.-A. Chen and J.-R. Cheng, "Architectural Design of a Fast Floating-Point Multiplication-Add Fused Unit Using Signed-Digit Addition", Proc. Euromicro Symp. Digital System Design (DSD 2001), pp. 346-353, 2001.
+
+[17] L. Tomas and B. Javier D, "Floating-point multiply-add fused with reduced latency", IEEE Transactions on Computers, vol. 53, no. 8, pp. 988-1003, August 2004.
