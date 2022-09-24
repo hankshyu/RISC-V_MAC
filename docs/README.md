@@ -26,9 +26,14 @@ One technique used for increasing performance is to use Horner’s rule for tran
 
 ## 2.Related Work
 
-IBM RS/6000 workstation in 1990 is the first processor to contain a fused multiply-add dataflow. The design is so compact that the pipeline latency is only two cycles. It brought the concept of fusing multiply and add operation to reduce connections, and for better compiler optimization. The design is so classic that many of the hardware implementation algorithms of this machine are still popular today. 
+IBM RS/6000 workstation [3] in 1990 is the first processor to contain a fused multiply-add dataflow. The design is so compact that the pipeline latency is only two cycles. It brought the concept of fusing multiply and add operation to reduce connections, and for better compiler optimization. The design is so classic that many of the hardware implementation algorithms [18] are still popular today. 
 
-[15] [16] [17]
+Later, IBM released a high-performance microprocessor optimized for commercial workloads called z990 eServer [15.1], also the first IBM mainframe equipped with a fused-multiply-add floating point unit. It supports both the zSeries hexadecimal floating point architecture [15.3] and the IEEE 754 binary floating point archituecture[15.2]. The instructions are executed in five pipeline stages. z990 eServer is not only famous for its variety of predecessors [15.4 ~ 15.9] ,but also for its aims to optimize binary floating point and have a fast multiply-add execution workflow.
+
+As when more micorprocessors starts to incorporate the ingenious MAF concept into their design. Innovations for improvements also mushroomed. [16] supports multiple IEEE percisions MAF with single instruction multiple data(SIMD). The datapath is designed to execute one double-percison or two parallel single percision operations with around 20% more area and with 10% more delay. 
+
+Standard operations floating-point add and floating-point multiply are performed by the MAF unit by setting multiplier 1 or addend 0. [17] proposes an archituecture permitting to skip  pipeline stages to speed up the operation. The design could potentially save 2 to 3 cycles in the datapath.
+
 
 
 
@@ -161,8 +166,48 @@ floating-point execution unit”, IBM J. Res. Dev., 1990, 34(1), 59–70.
 
 [14] "IEEE Standard for Floating-Point Arithmetic," in IEEE Std 754-2008 , vol., no., pp.1-70, 29 Aug. 2008, doi: 10.1109/IEEESTD.2008.4610935.
 
+
+
 [15] G. Gerwig, H. Wetter, E. M. Schwarz and J. Haess, "The IBM eServer z990 floating-point unit", IBM Journal of Research and Development, vol. 48, no. 3–4, pp. 311-322, May/July 2004.
+
+[15.1] T. J. Slegel, E. Pfeffer and J. A. Magee, "The IBM eServer z990 microprocessor," in IBM Journal of Research and Development, vol. 48, no. 3.4, pp. 295-309, May 2004, doi: 10.1147/rd.483.0295.
+
+[15.2] 2. “IEEE Standard for Binary Floating-Point Arithmetic,”
+ANSI/IEEE Standard 754-1985, The Institute of Electrical
+and Electronics Engineers, Inc., New York, August 1985.
+
+[15.3]. IBM Corporation, Enterprise Systems Architecture/390
+Principles of Operation (SA22-7201); see http://
+www.elink.ibmlink.ibm.com/public/applications/publications/
+cgibin/pbi.cgi/.
+
+[15.4]. G. Gerwig and M. Kroener, “Floating-Point-Unit in
+Standard Cell Design with 116 Bit Wide Dataflow,”
+Proceedings of the 14th IEEE Symposium on Computer
+Arithmetic, Adelaide, Australia, April 1999, pp. 266 –273.
+[15.5]. E. M. Schwarz, L. Sigal, and T. J. McPherson, “CMOS
+Floating-Point Unit for the S/390 Parallel Enterprise
+Server G4,” IBM J. Res. & Dev. 41, No. 4/5, 475– 488
+(July/September 1997).
+[15.6]. E. M. Schwarz, R. M. Averill III, and L. J. Sigal, “A
+Radix-8 CMOS S/390 Multiplier,” Proceedings of the 13th
+IEEE Symposium on Computer Arithmetic (ARITH 97),
+Asilomar, CA, July 1997, pp. 2–9.
+[15.7]. E. M. Schwarz and C. A. Krygowski, “The S/390
+G5 Floating-Point Unit,” IBM J. Res. & Dev. 43, No. 5/6,
+707–721 (September/November 1999).
+[15.8]. E. M. Schwarz, R. M. Smith, and C. A. Krygowski, “The
+S/390 G5 Floating Point Unit Supporting Hex and Binary
+Architectures,” Proceedings of the 14th IEEE Symposium
+on Computer Arithmetic, Adelaide, Australia, April 1999,
+pp. 258 –265.
+[15.9]. E. M. Schwarz, M. A. Check, C.-L. K. Shum, T. Koehler,
+S. B. Swaney, J. D. MacDougall, and C. A. Krygowski,
+“The Microarchitecture of the IBM eServer z900
+Processor,” IBM J.
 
 [16] C. Chen, L.-A. Chen and J.-R. Cheng, "Architectural Design of a Fast Floating-Point Multiplication-Add Fused Unit Using Signed-Digit Addition", Proc. Euromicro Symp. Digital System Design (DSD 2001), pp. 346-353, 2001.
 
 [17] L. Tomas and B. Javier D, "Floating-point multiply-add fused with reduced latency", IEEE Transactions on Computers, vol. 53, no. 8, pp. 988-1003, August 2004.
+
+[18] E. Hokenek, R. K. Montoye and P. W. Cook, "Second-generation RISC floating point with multiply-add fused," in IEEE Journal of Solid-State Circuits, vol. 25, no. 5, pp. 1207-1213, Oct. 1990, doi: 10.1109/4.62143.
