@@ -32,7 +32,8 @@ Later, IBM released a high-performance microprocessor optimized for commercial w
 
 As when more micorprocessors starts to incorporate the ingenious MAF concept into their design. Innovations for improvements also mushroomed. [16] supports multiple IEEE percisions MAF with single instruction multiple data(SIMD). The datapath is designed to execute one double-percison or two parallel single percision operations with around 20% more area and with 10% more delay. 
 
-Standard operations floating-point add and floating-point multiply are performed by the MAF unit by setting multiplier 1 or addend 0. [17] proposes an archituecture permitting to skip  pipeline stages to speed up the operation. The design could potentially save 2 to 3 cycles in the datapath.
+Standard operations floating-point add and floating-point multiply are performed by the MAF unit by setting multiplier 1 or addend 0. [17] proposes an archituecture permitting to skip  pipeline stages to speed up the operation. The design could potentially save 2 to 3 cycles when executing a floating-point add instruction.
+
 
 
 
