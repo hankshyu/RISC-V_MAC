@@ -2,41 +2,32 @@
 
 ## Abstract
 
-
 ## 1.Intorduction
-
-
-RISC concept of attacking the most frequently used functuions by building simple hardware.
-
-MAF implementation should be consistent with the basic RISC philosophy of heavily optimize units in order to rapidly carry out the most frequently expected function as fast as possible.
 
 floating point operation is curcial in modern day
 
-Designs with a compound operation has performance advantage over separate add and multiply datapaths.
+
+
+Binary floating-point units are available on every microprocessor and are very common in embedded applications including game systems. 
+Floating-point operations are all over
+
+Most designs center around a fused multiply-add dataflow due to its simplicity and performance advantage over separate multiply and add pipelines. It combines two basic operations into one with only one rounding error, and shares hardware components. Such design is also consistent with the basic RISC philosophy of heavily optimize units in order to rapidly carry out the most frequently expected function as fast as possible. 
 
 Multiply fused add unit leads to more efficient superscaler cpu design, the scheduler could 
 
-Horner's reule for transforming a set of equations into a series of multiply-adds. 
 
-First processor to contain a fused multiply-add dataflow ins IBM RS/6000 in 1990
-
-Binary floating-point units are available on every microprocessor and are very common in embedded applications including game systems. Most designs center around a fused multiply-add dataflow due to its simplicity and performance advantage over separate multiply and add pipelines. 
-
-One technique used for increasing performance is to use Horner’s rule for transforming a set of equations into a series of multiply-adds [2]. This numerical analysis technique is very common and takes full advantage of this type of dataflow.
+By applying Horner's rule to transform a set of equations into a series of multiply-adds [2], such numerical analysis technique is very common and takes full advantage of MAf dataflow.
 
 ## 2.Related Work
-
 IBM RS/6000 workstation [3] in 1990 is the first processor to contain a fused multiply-add dataflow. The design is so compact that the pipeline latency is only two cycles. It brought the concept of fusing multiply and add operation to reduce connections, and for better compiler optimization. The design is so classic that many of the hardware implementation algorithms [18] are still popular today. 
 
 Later, IBM released a high-performance microprocessor optimized for commercial workloads called z990 eServer [15.1], also the first IBM mainframe equipped with a fused-multiply-add floating point unit. It supports both the zSeries hexadecimal floating point architecture [15.3] and the IEEE 754 binary floating point archituecture[15.2]. The instructions are executed in five pipeline stages. z990 eServer is not only famous for its variety of predecessors [15.4 ~ 15.9] ,but also for its aims to optimize binary floating point and have a fast multiply-add execution workflow.
 
 As when more micorprocessors starts to incorporate the ingenious MAF concept into their design. Innovations for improvements also mushroomed. [16] supports multiple IEEE percisions MAF with single instruction multiple data(SIMD). The datapath is designed to execute one double-percison or two parallel single percision operations with around 20% more area and with 10% more delay. 
 
-Standard operations floating-point add and floating-point multiply are performed by the MAF unit by setting multiplier 1 or addend 0. [17] proposes an archituecture permitting to skip  pipeline stages to speed up the operation. The design could potentially save 2 to 3 cycles when executing a floating-point add instruction.
+Standard operations floating-point add and floating-point multiply are performed by the MAF unit by setting multiplier 1 and addend 0. [17] proposes an archituecture permitting to skip  pipeline stages to speed up the operation. The design could potentially save 2 to 3 cycles when executing a floating-point add instruction.
 
-
-
-
+Floating point computation often require high implementation cost in hardware, hence microcontroller level processors often carry out floating point calculations with software emulation. By replacing Floating point operations with library function call at compile time, software emulation associates with long computation time, compromised efficiency and large memory usage. [19] designs an area-optimized IEEE754 compliant RISC-V Floating point unit with MAF dataflow specifically for area sensitive microcontrollers, achieving 15 times speedups when compare to software emulation. 
 
 ## 3.Architecture
 ![overall architecture](Flowchart.png)
@@ -192,7 +183,7 @@ Server G4,” IBM J. Res. & Dev. 41, No. 4/5, 475– 488
 (July/September 1997).
 [15.6]. E. M. Schwarz, R. M. Averill III, and L. J. Sigal, “A
 Radix-8 CMOS S/390 Multiplier,” Proceedings of the 13th
-IEEE Symposium on Computer Arithmetic (ARITH 97),
+IEEE Symposium on Computer Arithmetic (ARITH 97),
 Asilomar, CA, July 1997, pp. 2–9.
 [15.7]. E. M. Schwarz and C. A. Krygowski, “The S/390
 G5 Floating-Point Unit,” IBM J. Res. & Dev. 43, No. 5/6,
@@ -212,3 +203,5 @@ Processor,” IBM J.
 [17] L. Tomas and B. Javier D, "Floating-point multiply-add fused with reduced latency", IEEE Transactions on Computers, vol. 53, no. 8, pp. 988-1003, August 2004.
 
 [18] E. Hokenek, R. K. Montoye and P. W. Cook, "Second-generation RISC floating point with multiply-add fused," in IEEE Journal of Solid-State Circuits, vol. 25, no. 5, pp. 1207-1213, Oct. 1990, doi: 10.1109/4.62143.
+
+[19] Bertaccini, Luca & Perotti, Matteo & Mach, Stefan & Schiavone, Pasquale & Zaruba, Florian & Benini, Luca. (2021). Tiny-FPU: Low-Cost Floating-Point Support for Small RISC-V MCU Cores. 1-5. 10.1109/ISCAS51556.2021.9401149. 
