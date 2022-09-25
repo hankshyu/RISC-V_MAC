@@ -42,7 +42,7 @@ Radix-10 multiplication is what we are most familiar with, often carry out by ha
 
 Booth showed a technique to record digits in both positive and negative. Such transformation eliminates two cosecutive ones thus eliminates the 3x multiple. A Booth radix-4 scanning simplifies the multiples to signed 0x 1x and 2x. Under implementation, the scanning process involves examining 3 bits of the multiplier, compare it to the Modified Booth's Recording Table and determine the multiplicand selected. The logic could be simplified to the equation below:
 
-Modified Booth's Recording Table
+Table 1:Modified Booth's Recording Table
 | Bit i + 1   |   Bit i   |   Bit i - 1   |   Multiplicand selected   |
 |:------:|:----:|:----:|:----:|
 |     0       |    0      |       0       |   0 x Multiplicand        |
