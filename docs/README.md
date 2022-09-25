@@ -122,6 +122,8 @@ Our module passes all of the tests above mentioned. We plan to further test our 
 
 ## 5.Conclusion
 
+We implemented a RISC-V "F" instruciton compatible Fused Multiply-Add Unit with efficient multiplier, end around carry adders and area saving leading one detector. Although there are faster algorithms out there, our implementation our much more scalable and balanced in chip area. We have verified our design with exception handling capabilities and corner cases.
+
 
 ## References
 
