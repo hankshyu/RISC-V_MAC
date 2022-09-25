@@ -26,13 +26,11 @@ A fused multiply-add can be described as the following equation:
 
 Answer = A + B x C
 
-"A" is called the addend, "B" is the multiplicand and "C" is the multiplier. The input operands are in standard IEEE 754 format and are further split into the sign portion, the exponent portion and the mantissa portion. The SpecialCaseDetector checks if the input value is a Zero, NaN, Infinity or denormalized number. Special values may require special treatments in the datapath, so detecting them in the early stage is necessary. 
+"A" is called the addend, "B" is the multiplicand and "C" is the multiplier. The input operands are in IEEE 754 format and are further split into the sign bit, the exponent string and the mantissa portion without the leading number. The SpecialCaseDetector checks if the input value represents zero, NaN, infinity or denormalized number. Special values may require special treatments in the datapath, so detecting them in the early stage is necessary. 
 
-The mantissa of the multiplier and the multiplicand would be send to the multiplier for prodcut calculation while the mantissa of the addend would be the input of the prenormalizer. The prenormalizer an the Exponent Processor reads the exponent of the operands and calculates the value of shifts necessary for the pronormalizer to align the product and the addend. After the alignment, the shifted addend would be split into two parts, the lower part would join the carry save adder with the product whilst the upper part would be sent to the incrementer. Whether to increment or not would be decided by the output result of the End Around Carry Adder.
+The mantissa of the multiplier and the multiplicand would be send to the Multiplier for prodcut calculation while the mantissa of the addend would be the input of the Prenormalizer. The Prenormalizer and the Exponent Processor reads the exponent of the operands and calculates the value of shifts necessary for the pronormalizer to align the product and the addend. After the alignment, the shifted addend would be split into two parts, the lower part would join the carry save adder with the product whilst the upper part would be sent to the incrementer. Whether to increment or not would be decided by the output result of the EACAdder.
 
-After combining the result from the EACAdder and the MSBIncrementer, an unnormalized answer is formed. The output is then sent into the Leading OneDetector to calculate the number of shift necessary to obtain a normalized reslt. The last step is to round the normalized answer with the rounding mode specified at the input. Exception handling also takes place at the rounder. The output result and the flags are diretly output from the rounder as the module's answer.
-
-As in fig.1. The 3 input operands are split into 
+After concatenating the result from the EACAdder and the MSBIncrementer, an unnormalized answer is formed. The LeadingOneDetector scans the answer to determine show much shifting does the Normalizer need to normalize the answer. Rounder would accept the normalized answer and deal with exception handling procedures if necessary flags will be raised at this stage too. Before the final answer is output, the rounder would than adjust the answer with the rounding mode specified by the user.
 
 ![overall architecture](Flowchart.png)
 Fig. 1. Overall MAF Unit Architecture
