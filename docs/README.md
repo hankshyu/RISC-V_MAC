@@ -36,7 +36,7 @@ After concatenate the result from the EACAdder and the MSBIncrementer, an unnorm
 Fig. 1. Overall MAF Unit Architecture
 
 ### 3.1. Multiplier
-The design of the multiplier involves creating a partial product array made up of multiples of multiplicand (R4Booth), and sum them up to form the product (WallaceTree). One of the key factors in designing a fast multiplier is to determine the radix. Chosing a smaller radix creates loads of partial products that is easy to calculate and pick from, but harder to sum due to the large quantity. On the other hand, a larger radix generates  fewer partial products to add, but it's much more difficut to create the partial product array. 
+The design of the multiplier involves creating a partial product array made up of multiples of multiplicand (R4Booth), and sum them up to form the product (WallaceTree). One of the key factors in designing a fast multiplier is to determine the radix. Chosing a smaller radix creates loads of partial products that is easy to calculate and pick from, but harder to sum due to the large quantity. On the other hand, a larger radix generates fewer partial products, but it's much more difficut to create the partial product array.
 
 Radix-10 multiplication is what we are most familiar with, often carry out by hand. Decimal format is optimal for financial applications and may become more popular in the future by the publication of the revision IEEE 754 floating point standard [2]. Binary is yet the choise for most desingers for the sake of it's mathematical properties and performance advantage.
 
