@@ -98,11 +98,11 @@ Design of the Leading One detector is pivotal to the normalization process. Norm
 Although running one detection and addition in parallel would acclerate the calculation, the hardware area grows significantly if the input bits grew wider. Another disadvantage of calculating the leading ones beforehand is the polarity of the additon is not yet determined, the hardware must incorporate the sign of the sum to calculate the correct amount of leading ones. An easy solution is to only implement parts of the LZA component. Despite the fact that it would only operate when the sum is calculated, leading to a slower design. The lightweight leading one detector could assume the input is always positive, since the output of the EACAdder is always positive. By taking the advantage of the know polarity, our design uses much smaller area and simplier algorithm to achieve the correct result with great scalbility.
 
 ### 3.5 Rounder
-Since floating point has a fixed sized mantissa, bits that are less significant would be naturally truncated during the operation. For user to freely select their desired rounding mode, we must add extra bits called guard bit, round bit and sticky bit during arithmatic calculations. [*13] explains why a guard bit is necessary to ensure the rounding works correctly.
+Since floating point has a fixed sized mantissa, bits that are less significant would be naturally truncated during calculation. For user to freely select their desired rounding mode, we must add extra bits named guard bit, round bit and sticky bit during arithmatic calculations. [29] explains why a guard bit is necessary to ensure the rounding works correctly.
 
-RISCV "F" standard Extension supports 5 rounding modes: RNE, RTZ, RDN, RUP and RMM. IEEE754-2008[*14] clearly defines the behaviour of rounding toward a directed orientation, which is how RTZ, RDN and RUP operate. [*8] provided an easy way of implementation, simplefies 3 rounding mode into two: RI and RZ. RNE and RMM are a bit trickier, the floating point number nearest to infinty precise result is given. If the distance between two nearest floating-point are equally near, RNE delivers the one with and even least significant digit, where RMM delivers the larger magnitude. They are named as roundTiesToEven and roundTiestoAway in IEEE754-2008[*14].
+RISCV "F" standard Extension [1] supports 5 rounding modes: RNE, RTZ, RDN, RUP and RMM. IEEE 754-2008 [2] clearly defines the behaviour of rounding toward a directed orientation, which is how RTZ, RDN and RUP operate. [25] provided an easy way of implementation, simplefies 3 rounding mode into two: RI and RZ. RNE and RMM are a bit trickier, the floating point number nearest to infinty precise result is given. If the distance between two nearest floating-point are equally near, RNE delivers the one with and even least significant digit, where RMM delivers the larger magnitude. They are named as roundTiesToEven and roundTiestoAway in IEEE754-2008.
 
-The floating-point control and status register in RISC-V also holds the accrued exception flags, NV, DZ, OF, UF and NX. In the MAC dataflow, DV would never be raised so only 4 exception flags are judged in our design. Overflow and underflow flags are pretty intuitive. NV flag will be raised if any invalid operation take place. IEEE754-2008 7.2 [*14] lists invalid operations that shall be detected. NX flag stands for inexact, it would fire if the calculated result of our design does not equal to the absolute answer. By checking the contamination of the sticky bits, we could judge whether the flag shall be raise.
+The floating-point control and status register in RISC-V also holds the accrued exception flags, NV, DZ, OF, UF and NX. In the MAC dataflow, DV would never be raised so only 4 exception flags are judged in our design. Overflow and underflow flags are pretty intuitive. NV flag will be raised if any invalid operation take place. IEEE754-2008 7.2 [2] lists invalid operations that shall be detected. NX flag stands for inexact, it would fire if the calculated result of our design does not equal to the absolute answer. By checking the contamination of the sticky bits, we could judge whether the flag shall be raise.
 
 IEEE754-2008 also defined the default exception handling methods that we must obey. The job is also done by the rounder because rounding mode could potentially affect the way underflow or overflow represents. For example, RTZ carries positive overflow to the format's largest finite nubmer while RUP carries to positive infinity. After all the adjustments, the output from the rounder drives the output of the MAC module.
 
@@ -121,7 +121,8 @@ Our module passes all of the tests above mentioned. We plan to further test our 
 ## 5.Conclusion
 
 
-## Neo_Reference
+## References
+
 [1] “The RISC-V Instruction Set Manual, Volume I: User-Level ISA, Document Version 20191213”, Editors Andrew Waterman and Krste Asanovi ́c, RISC-V Foundation, December 2019.
 
 [2] "IEEE Standard for Floating-Point Arithmetic," in IEEE Std 754-2008 , vol., no., pp.1-70, 29 Aug. 2008, doi: 10.1109/IEEESTD.2008.4610935.
@@ -181,91 +182,4 @@ cgibin/pbi.cgi/.
 
 [28] M. S. Schmookler and K. J. Nowka, "Leading zero anticipation and detection-a comparison of methods," Proceedings 15th IEEE Symposium on Computer Arithmetic. ARITH-15 2001, 2001, pp. 7-12, doi: 10.1109/ARITH.2001.930098.
 
-
-## References
-
-
-
-
-[*1]: “IEEE standard for floating-point arithmetic, ANSI/IEEE Std 754R,” The Institute of
-Electrical and Electronic Engineers, Inc., In progress, http://754r.ucbtest.org/ drafts/754r.pdf .
-
-[*2] Knuth, D. “The Art of Computer Programming, Vol. 2: Seminumerical Algorithms, 3rd ed.” Addison-Wesley, Reading, MA, 1998, 467–469.
-
-[*3] Montoye, R.K.; Hokenek, E.; Runyon, S.L. “Design of the IBM RISC System/6000
-floating-point execution unit”, IBM J. Res. Dev., 1990, 34(1), 59–70.
-
-[*4] Appendix A Sign Extension in Booth Multipliers, http://i.stanford.edu/pub/cstr/reports/csl/tr/94/617/CSL-TR-94-617.appendix.pdf
-
-[*5] Weinberger, A. “4:2 carry-save adder module”, IBM Technical Disclosure Bull., 1981,
-23, 3811–3814.
-
-[*6] D. Radhakrishnan and A. P. Preethy, "Low power CMOS pass logic 4-2 compressor for high-speed multiplication," Proceedings of the 43rd IEEE Midwest Symposium on Circuits and Systems (Cat.No.CH37144), 2000, pp. 1296-1298 vol.3, doi: 10.1109/MWSCAS.2000.951453.
-
-[*7] K. Prasad and K. K. Parhi, "Low-power 4-2 and 5-2 compressors," Conference Record of Thirty-Fifth Asilomar Conference on Signals, Systems and Computers (Cat.No.01CH37256), 2001, pp. 129-133 vol.1, doi: 10.1109/ACSSC.2001.986892.
-
-[*8] Zhaolin Li, Xinyue Zhang, Gongqiong Liz and Runde Zhou, "Design of a fully pipelined single-precision floating-point unit," 2007 7th International Conference on ASIC, 2007, pp. 60-63, doi: 10.1109/ICASIC.2007.4415567.
-
-[*9] Schwarz, Eric. (2007). Binary Floating-Point Unit Design. 10.1007/978-0-387-34047-0_8. 
-
-[*10] E. Hokenek and R. K. Montoye, "Leading-zero anticipator (LZA) in the IBM RISC System/6000 floating-point execution unit," in IBM Journal of Research and Development, vol. 34, no. 1, pp. 71-77, Jan. 1990, doi: 10.1147/rd.341.0071.
-
-[*11] H. Suzuki, H. Morinaka, H. Makino, Y. Nakase, K. Mashiko and T. Sumi, "Leading-zero anticipatory logic for high-speed floating point addition," in IEEE Journal of Solid-State Circuits, vol. 31, no. 8, pp. 1157-1164, Aug. 1996, doi: 10.1109/4.508263.
-
-[*12] M. S. Schmookler and K. J. Nowka, "Leading zero anticipation and detection-a comparison of methods," Proceedings 15th IEEE Symposium on Computer Arithmetic. ARITH-15 2001, 2001, pp. 7-12, doi: 10.1109/ARITH.2001.930098.
-
-[*13] https://pages.cs.wisc.edu/~david/courses/cs552/S12/handouts/guardbits.pdf
-
-[*14] "IEEE Standard for Floating-Point Arithmetic," in IEEE Std 754-2008 , vol., no., pp.1-70, 29 Aug. 2008, doi: 10.1109/IEEESTD.2008.4610935.
-
-
-
-[*15] G. Gerwig, H. Wetter, E. M. Schwarz and J. Haess, "The IBM eServer z990 floating-point unit", IBM Journal of Research and Development, vol. 48, no. 3–4, pp. 311-322, May/July 2004.
-
-[*15.1] T. J. Slegel, E. Pfeffer and J. A. Magee, "The IBM eServer z990 microprocessor," in IBM Journal of Research and Development, vol. 48, no. 3.4, pp. 295-309, May 2004, doi: 10.1147/rd.483.0295.
-
-[*15.2] 2. “IEEE Standard for Binary Floating-Point Arithmetic,”
-ANSI/IEEE Standard 754-1985, The Institute of Electrical
-and Electronics Engineers, Inc., New York, August 1985.
-
-[*15.3]. IBM Corporation, Enterprise Systems Architecture/390
-Principles of Operation (SA22-7201); see http://
-www.elink.ibmlink.ibm.com/public/applications/publications/
-cgibin/pbi.cgi/.
-
-[*15.4]. G. Gerwig and M. Kroener, “Floating-Point-Unit in
-Standard Cell Design with 116 Bit Wide Dataflow,”
-Proceedings of the 14th IEEE Symposium on Computer
-Arithmetic, Adelaide, Australia, April 1999, pp. 266 –273.
-[*15.5]. E. M. Schwarz, L. Sigal, and T. J. McPherson, “CMOS
-Floating-Point Unit for the S/390 Parallel Enterprise
-Server G4,” IBM J. Res. & Dev. 41, No. 4/5, 475– 488
-(July/September 1997).
-[*15.6]. E. M. Schwarz, R. M. Averill III, and L. J. Sigal, “A
-Radix-8 CMOS S/390 Multiplier,” Proceedings of the 13th
-IEEE Symposium on Computer Arithmetic (ARITH 97),
-Asilomar, CA, July 1997, pp. 2–9.
-[*15.7]. E. M. Schwarz and C. A. Krygowski, “The S/390
-G5 Floating-Point Unit,” IBM J. Res. & Dev. 43, No. 5/6,
-707–721 (September/November 1999).
-[*15.8]. E. M. Schwarz, R. M. Smith, and C. A. Krygowski, “The
-S/390 G5 Floating Point Unit Supporting Hex and Binary
-Architectures,” Proceedings of the 14th IEEE Symposium
-on Computer Arithmetic, Adelaide, Australia, April 1999,
-pp. 258 –265.
-[*15.9]. E. M. Schwarz, M. A. Check, C.-L. K. Shum, T. Koehler,
-S. B. Swaney, J. D. MacDougall, and C. A. Krygowski,
-“The Microarchitecture of the IBM eServer z900
-Processor,” IBM J.
-
-[*16] C. Chen, L.-A. Chen and J.-R. Cheng, "Architectural Design of a Fast Floating-Point Multiplication-Add Fused Unit Using Signed-Digit Addition", Proc. Euromicro Symp. Digital System Design (DSD 2001), pp. 346-353, 2001.
-
-[*17] L. Tomas and B. Javier D, "Floating-point multiply-add fused with reduced latency", IEEE Transactions on Computers, vol. 53, no. 8, pp. 988-1003, August 2004.
-
-[*18] E. Hokenek, R. K. Montoye and P. W. Cook, "Second-generation RISC floating point with multiply-add fused," in IEEE Journal of Solid-State Circuits, vol. 25, no. 5, pp. 1207-1213, Oct. 1990, doi: 10.1109/4.62143.
-
-[*19] Bertaccini, Luca & Perotti, Matteo & Mach, Stefan & Schiavone, Pasquale & Zaruba, Florian & Benini, Luca. (2021). Tiny-FPU: Low-Cost Floating-Point Support for Small RISC-V MCU Cores. 1-5. 10.1109/ISCAS51556.2021.9401149. 
-
-[*20] Y. Voronenko and M. Puschel, "Mechanical Derivation of Fused Multiply–Add Algorithms for Linear Transforms," in IEEE Transactions on Signal Processing, vol. 55, no. 9, pp. 4458-4473, Sept. 2007, doi: 10.1109/TSP.2007.896116.
-
-[*21] Y. Voronenko and M. Puschel, "Automatic generation of implementations for DSP transforms on fused multiply-add architectures," 2004 IEEE International Conference on Acoustics, Speech, and Signal Processing, 2004, pp. V-101, doi: 10.1109/ICASSP.2004.1327057.
+[29] https://pages.cs.wisc.edu/~david/courses/cs552/S12/handouts/guardbits.pdf
