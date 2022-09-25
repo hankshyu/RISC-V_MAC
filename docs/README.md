@@ -23,8 +23,9 @@ Floating-point computation often require high implementation cost in hardware, h
 
 ## 3.Architecture
 
-![*overall architecture](Flowchart.png)
 
+![overall architecture](Flowchart.png)
+Fig. 1. Overall MAF Unit Architecture
 
 ### 3.1. Multiplier
 The design of the multiplier involvers creating a partial product array made up of multiples of multiplicand (R4Booth), and sum them up to form the product (WallaceTree). To determine to radix of the multiplier is one of the key factors in designing a fast multiplier. Chosing a smaller radix creates loads of partial products that is easy to calculate and choose from, but harder to sum due to the large quantity. On the other hand, a larger radix has fewer partial products to add from, but it's more difficut to create the partial product array. 
@@ -115,6 +116,7 @@ A testbench program is carefully designed to test the module, including error pr
 Our module passes all of the tests above mentioned. We plan to further test our module with exhausting torture tests and on development boards in the future.
 
 ## 5.Conclusion
+
 
 ## Neo_Reference
 [1] “The RISC-V Instruction Set Manual, Volume I: User-Level ISA, Document Version 20191213”, Editors Andrew Waterman and Krste Asanovi ́c, RISC-V Foundation, December 2019.
