@@ -122,7 +122,9 @@ Our module passes all of the tests above mentioned. We plan to further test our 
 
 ## 5.Conclusion
 
-We implemented a RISC-V "F" instruciton compatible Fused Multiply-Add Unit with efficient multiplier, end around carry adders and area saving leading one detector. Although there are faster algorithms out there, our implementation our much more scalable and balanced in chip area. We have verified our design with exception handling capabilities and corner cases.
+In this paper, we implemented a RISC-V "F" instruciton compatible Fused Multiply-Add Unit. The multiplier incorporates radix-4 booth algorithm to generate partial products and with crafted Wallace tree to reduce critical path. End Around Carry Adders is a more efficient to sum the lower part of the addend with the product, which is used in our design. Although there are faster algorithms out there, our implementation of Leading One detector is much more scalable and balanced in chip area. The Rounder is responsible of handling exceptions, raise flags and produce the rounded result as the answer. We have verified our design with exception handling capabilities and corner cases.
+
+The design of fused multiply-add dataflow has changed since it's first presentation in 1990, yet it still influences the design of floating point units in microprocessors. The advance of MAF have not yet stop, researches of more compact counter trees and optimized addition path are still in progress, Hopefully, a more powerful floating point unit with renewed MAF dataflow would meet the future demand for floating-point computing.
 
 
 ## References
