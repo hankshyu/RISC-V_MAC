@@ -1,7 +1,7 @@
 # Implementation of a RISC-V compatible Multiply-Add-Fused Unit
 
 ## Abstract
-The floating-point multiply-add fused (MAF, also named Multiply Accumulate, MAC) unit is popular in modern microprocessor design due to its efficiency and performance advantages. Its design aims to speed up scientific computations, multimedia applications along with trendy machine learning tasks. This study implements a MAF unit with RISC-V "F" extension compatability [1], incorporates standard IEEE754-2008 [2] exception handling, NaN propagation and with denormalized number support. Five distinct rounding modes and accured exceptin flags are also supported in our implementation as specified. We test our design with carefully crafted corner cases and with random generated floating-point numbers to verify its correctness. Source code of the project could be found on https://github.com/hankshyu/RISC-V_MAC.
+The floating-point multiply-add fused (MAF, also named Multiply Accumulate, MAC) unit is popular in modern microprocessor design due to its efficiency and performance advantages. Its design aims to speed up scientific computations, multimedia applications along with trendy machine learning tasks. This study implements a MAF unit with RISC-V "F" extension compatability [1], incorporates standard IEEE 754-2008 [2] exception handling, NaN propagation and with denormalized number support. Five distinct rounding modes and accured exceptin flags are also supported in our implementation as specified. We test our design with carefully crafted corner cases and with random generated floating-point numbers to verify its correctness. Source code of the project could be found on https://github.com/hankshyu/RISC-V_MAC.
 
 Index terms: Floating-Point Unit, Multiply-Add fused, Multiply Accumulate, RISC-V
 
@@ -15,13 +15,13 @@ To take full advantage of the MAF dataflow, [3] trasnforms a set of equations in
 ## 2.Related Work
 IBM RS/6000 workstation [6] in 1990 is the first processor to contain a fused multiply-add dataflow. The compact design with pipeline latency of two cycles is made possible by a fast-shifter and a novel leading-zero/one anticipator [7]. It brought the concept of fusing multiply and add operation to reduce ports, and for better compiler optimization. The design is so classic that many of the hardware implementation algorithms are still popular today. 
 
-Later, IBM released a high-performance microprocessor optimized for commercial workloads called z990 eServer [8], also the first IBM mainframe equipped with a fused-multiply-add floating point unit [9]. It supports both the zSeries hexadecimal floating point architecture [10] and the IEEE 754 binary floating point archituecture [2]. The instructions are executed in five pipeline stages. z990 eServer is not only famous for its variety of predecessors [11~16] ,but also for its aims to optimize binary floating point and have a fast multiply-add execution workflow.
+Later, IBM released a high-performance microprocessor optimized for commercial workloads called z990 eServer [8], also the first IBM mainframe equipped with a fused-multiply-add floating point unit [9]. It supports both the zSeries hexadecimal floating point architecture [10] and the IEEE 754 binary floating point archituecture [11]. The instructions are executed in five pipeline stages. z990 eServer is not only famous for its variety of predecessors [12~17] ,but also for its aims to optimize binary floating point and have a fast multiply-add execution workflow.
 
-As when more micorprocessors starts to incorporate the ingenious MAF concept into their design. Innovations for improvements also mushroomed. [17] supports multiple IEEE percisions MAF with single instruction multiple data(SIMD). The datapath is designed to execute one double-percison or two parallel single percision operations with around 20% more area and with 10% more delay. 
+As when more micorprocessors starts to incorporate the ingenious MAF concept into their design. Innovations for improvements also mushroomed. [18] supports multiple IEEE percisions MAF with single instruction multiple data(SIMD). The datapath is designed to execute one double-percison or two parallel single percision operations with around 20% more area and with 10% more delay. 
 
-Standard operations floating-point add and floating-point multiply are performed by the MAF unit by setting multiplier 1 and addend 0. [18] proposes an archituecture permitting to skip  pipeline stages to speed up the operation. The design could potentially save 2 to 3 cycles when executing a floating-point add instruction.
+Standard operations floating-point add and floating-point multiply are performed by the MAF unit by setting multiplier 1 and addend 0. [19] proposes an archituecture permitting to skip  pipeline stages to speed up the operation. The design could potentially save 2 to 3 cycles when executing a floating-point add instruction.
 
-Floating point computation often require high implementation cost in hardware, hence microcontroller level processors often carry out floating point calculations with software emulation. By replacing Floating point operations with library function call at compile time, software emulation associates with long computation time, compromised efficiency and large memory usage. [19] designs an area-optimized IEEE754 compliant RISC-V Floating point unit with MAF dataflow specifically for area sensitive microcontrollers, achieving 15 times speedups when compare to software emulation. 
+Floating point computation often require high implementation cost in hardware, hence microcontroller level processors often carry out floating point calculations with software emulation. By replacing Floating point operations with library function call at compile time, software emulation associates with long computation time, compromised efficiency and large memory usage. [20] designs an area-optimized IEEE754 compliant RISC-V Floating point unit with MAF dataflow specifically for area sensitive microcontrollers, achieving 15 times speedups when compare to software emulation. 
 
 ## 3.Architecture
 
@@ -142,23 +142,25 @@ Principles of Operation (SA22-7201); see http://
 www.elink.ibmlink.ibm.com/public/applications/publications/
 cgibin/pbi.cgi/.
 
-[11] G. Gerwig and M. Kroener, "Floating-point unit in standard cell design with 116 bit wide dataflow," Proceedings 14th IEEE Symposium on Computer Arithmetic (Cat. No.99CB36336), 1999, pp. 266-273, doi: 10.1109/ARITH.1999.762853.
+[11] "IEEE Standard for Binary Floating-Point Arithmetic," in ANSI/IEEE Std 754-1985 , vol., no., pp.1-20, 12 Oct. 1985, doi: 10.1109/IEEESTD.1985.82928.
 
-[12] E. M. Schwarz, L. Sigal and T. J. McPherson, "CMOS floating-point unit for the S/390 Parallel Enterprise Server G4," in IBM Journal of Research and Development, vol. 41, no. 4.5, pp. 475-488, July 1997, doi: 10.1147/rd.414.0475.
+[12] G. Gerwig and M. Kroener, "Floating-point unit in standard cell design with 116 bit wide dataflow," Proceedings 14th IEEE Symposium on Computer Arithmetic (Cat. No.99CB36336), 1999, pp. 266-273, doi: 10.1109/ARITH.1999.762853.
 
-[13] E. M. Schwarz, R. M. Averill and L. J. Sigal, "A radix-8 CMOS S/390 multiplier," Proceedings 13th IEEE Sympsoium on Computer Arithmetic, 1997, pp. 2-9, doi: 10.1109/ARITH.1997.614873.
+[13] E. M. Schwarz, L. Sigal and T. J. McPherson, "CMOS floating-point unit for the S/390 Parallel Enterprise Server G4," in IBM Journal of Research and Development, vol. 41, no. 4.5, pp. 475-488, July 1997, doi: 10.1147/rd.414.0475.
 
-[14] E. M. Schwarz and C. A. Krygowski, "The S/390 G5 floating-point unit," in IBM Journal of Research and Development, vol. 43, no. 5.6, pp. 707-721, Sept. 1999, doi: 10.1147/rd.435.0707.
+[14] E. M. Schwarz, R. M. Averill and L. J. Sigal, "A radix-8 CMOS S/390 multiplier," Proceedings 13th IEEE Sympsoium on Computer Arithmetic, 1997, pp. 2-9, doi: 10.1109/ARITH.1997.614873.
 
-[15] E. M. Schwarz, R. M. Smith and C. A. Krygowski, "The S/390 G5 floating point unit supporting hex and binary architectures," Proceedings 14th IEEE Symposium on Computer Arithmetic (Cat. No.99CB36336), 1999, pp. 258-265, doi: 10.1109/ARITH.1999.762852.
+[15] E. M. Schwarz and C. A. Krygowski, "The S/390 G5 floating-point unit," in IBM Journal of Research and Development, vol. 43, no. 5.6, pp. 707-721, Sept. 1999, doi: 10.1147/rd.435.0707.
 
-[16] E. M. Schwarz et al., "The microarchitecture of the IBM eServer z900 processor," in IBM Journal of Research and Development, vol. 46, no. 4.5, pp. 381-395, July 2002, doi: 10.1147/rd.464.0381.
+[16] E. M. Schwarz, R. M. Smith and C. A. Krygowski, "The S/390 G5 floating point unit supporting hex and binary architectures," Proceedings 14th IEEE Symposium on Computer Arithmetic (Cat. No.99CB36336), 1999, pp. 258-265, doi: 10.1109/ARITH.1999.762852.
 
-[17] Chichyang Chen, Liang-An Chen and Jih-Ren Cheng, "Architectural design of a fast floating-point multiplication-add fused unit using signed-digit addition," Proceedings Euromicro Symposium on Digital Systems Design, 2001, pp. 346-353, doi: 10.1109/DSD.2001.952324.
+[17] E. M. Schwarz et al., "The microarchitecture of the IBM eServer z900 processor," in IBM Journal of Research and Development, vol. 46, no. 4.5, pp. 381-395, July 2002, doi: 10.1147/rd.464.0381.
 
-[18] T. Lang and J. D. Bruguera, "Floating-point fused multiply-add with reduced latency," Proceedings. IEEE International Conference on Computer Design: VLSI in Computers and Processors, 2002, pp. 145-150, doi: 10.1109/ICCD.2002.1106762.
+[18] Chichyang Chen, Liang-An Chen and Jih-Ren Cheng, "Architectural design of a fast floating-point multiplication-add fused unit using signed-digit addition," Proceedings Euromicro Symposium on Digital Systems Design, 2001, pp. 346-353, doi: 10.1109/DSD.2001.952324.
 
-[19] Bertaccini, Luca & Perotti, Matteo & Mach, Stefan & Schiavone, Pasquale & Zaruba, Florian & Benini, Luca. (2021). Tiny-FPU: Low-Cost Floating-Point Support for Small RISC-V MCU Cores. 1-5. 10.1109/ISCAS51556.2021.9401149. 
+[19] T. Lang and J. D. Bruguera, "Floating-point fused multiply-add with reduced latency," Proceedings. IEEE International Conference on Computer Design: VLSI in Computers and Processors, 2002, pp. 145-150, doi: 10.1109/ICCD.2002.1106762.
+
+[20] Bertaccini, Luca & Perotti, Matteo & Mach, Stefan & Schiavone, Pasquale & Zaruba, Florian & Benini, Luca. (2021). Tiny-FPU: Low-Cost Floating-Point Support for Small RISC-V MCU Cores. 1-5. 10.1109/ISCAS51556.2021.9401149. 
 
 ## References
 
