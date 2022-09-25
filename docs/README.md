@@ -1,22 +1,15 @@
 # Implementation of a RISC-V compatible Multiply-Add-Fused Unit
 
 ## Abstract
+The floating-point multiply-add fused (MAF) unit is popular in the modern microprocessor design due to its efficiency and performance advantage. It is designed to speed up scientific computations, multimedia applications along with trendy machine learning tasks. This study implements a MAF unit with RISC-V "F" extension compatability, incorporates standard IEEE754-2008 exception handling, NaN propagation and with denormalized number support. 5 distinct rounding modes and accured exceptin flags are also supported in our implementation as specified. We test our design with carefully designed corner cases and with random generated floating-point numbers to verify its correctness. Source code of the project could be found on https://github.com/hankshyu/RISC-V_MAC.
+
 
 ## 1.Intorduction
+Floating-point operations play a crucial rule in modern day computing, especially with the floursish of machine learning. Machine learning deals with real time data, which is floating points in nature. Moreover, Neural network is one of the most popular branches of machine learning algorithms famous for its exhaustive need of floating point computational capabilities. Among all floating-point operations, add and multiply are the most demanding, such combination appears in convolution layers in CNN architecture and many other models.
 
-floating point operation is curcial in modern day
+Binary floating-point units are available on most microprocessors nowadays and are very common in embedded applications including game systems. Most designs center around a fused multiply-add dataflow due to its simplicity and performance advantage over separate multiply and add pipelines. It combines two basic operations with only one rounding error and shares hardware components to save chip area. Such design is also consistent with the basic RISC philosophy of heavily optimize units in order to rapidly carry out the most frequently expected function. Furthermore, the existence of multiply fused add unit leads to more efficient superscaler cpu design since floating point add, multiply and fused-multiply add could be scheduled to the same functional unit.
 
-
-
-Binary floating-point units are available on every microprocessor and are very common in embedded applications including game systems. 
-Floating-point operations are all over
-
-Most designs center around a fused multiply-add dataflow due to its simplicity and performance advantage over separate multiply and add pipelines. It combines two basic operations into one with only one rounding error, and shares hardware components. Such design is also consistent with the basic RISC philosophy of heavily optimize units in order to rapidly carry out the most frequently expected function as fast as possible. 
-
-Multiply fused add unit leads to more efficient superscaler cpu design, the scheduler could 
-
-
-By applying Horner's rule to transform a set of equations into a series of multiply-adds [2], such numerical analysis technique is very common and takes full advantage of MAf dataflow.
+To take full advantage of the MAF dataflow, [2] trasnform a set of equations into a series of multiply-adds by a numerical analysis technique called Horner's rule. [20] presents a general method to convert any transform algorithm into an FMA algorithms. [21] presents a framework for automaticaay generating FMA code for every linear DSP transform. It shows that the MAF architecture is recognized in modern computing and could receive optimization at the software level. 
 
 ## 2.Related Work
 IBM RS/6000 workstation [3] in 1990 is the first processor to contain a fused multiply-add dataflow. The design is so compact that the pipeline latency is only two cycles. It brought the concept of fusing multiply and add operation to reduce connections, and for better compiler optimization. The design is so classic that many of the hardware implementation algorithms [18] are still popular today. 
@@ -120,7 +113,6 @@ A testbench program is carefully designed to test the module, including error pr
 
 Our module passes all of the tests above mentioned. We plan to further test our module with exhausting torture tests and on development boards in the future.
 
-
 ## 5.Conclusion
 
 
@@ -205,3 +197,7 @@ Processor,” IBM J.
 [18] E. Hokenek, R. K. Montoye and P. W. Cook, "Second-generation RISC floating point with multiply-add fused," in IEEE Journal of Solid-State Circuits, vol. 25, no. 5, pp. 1207-1213, Oct. 1990, doi: 10.1109/4.62143.
 
 [19] Bertaccini, Luca & Perotti, Matteo & Mach, Stefan & Schiavone, Pasquale & Zaruba, Florian & Benini, Luca. (2021). Tiny-FPU: Low-Cost Floating-Point Support for Small RISC-V MCU Cores. 1-5. 10.1109/ISCAS51556.2021.9401149. 
+
+[20] Y. Voronenko and M. Puschel, "Mechanical Derivation of Fused Multiply–Add Algorithms for Linear Transforms," in IEEE Transactions on Signal Processing, vol. 55, no. 9, pp. 4458-4473, Sept. 2007, doi: 10.1109/TSP.2007.896116.
+
+[21] Y. Voronenko and M. Puschel, "Automatic generation of implementations for DSP transforms on fused multiply-add architectures," 2004 IEEE International Conference on Acoustics, Speech, and Signal Processing, 2004, pp. V-101, doi: 10.1109/ICASSP.2004.1327057.
