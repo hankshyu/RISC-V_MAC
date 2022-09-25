@@ -22,6 +22,17 @@ As when more micorprocessors starts to incorporate the ingenious MAF concept int
 Floating-point computation often require high implementation cost in hardware, hence microcontroller level processors often carry out calculations with software emulation. By replacing Floating-point operations with library function call at compile time, software emulation associates with long computation time, compromised efficiency and large memory usage. [20] designs an area-optimized IEEE 754 compliant RISC-V Floating-point unit with MAF dataflow specifically for area sensitive microcontrollers, achieving 15 times speedups when compared with software emulation. 
 
 ## 3.Architecture
+A fused multiply-add can be described as the following equation:
+
+Answer = A + B x C
+
+"A" is called the addend, "B" is the multiplicand and "C" is the multiplier. The input operands are in standard IEEE 754 format and are further split into the sign portion, the exponent portion and the mantissa portion. The SpecialCaseDetector checks if the input value is a Zero, NaN, Infinity or denormalized number. Special values may require special treatments in the datapath, so detecting them in the early stage is necessary. 
+
+The mantissa of the multiplier and the multiplicand would be send to the multiplier for prodcut calculation while the mantissa of the addend would be the input of the prenormalizer. The prenormalizer an the Exponent Processor reads the exponent of the operands and calculates the value of shifts necessary for the pronormalizer to align the product and the addend. After the alignment, the shifted addend would be split into two parts, the lower part would join the carry save adder with the product whilst the upper part would be sent to the incrementer. Whether to increment or not would be decided by the output result of the End Around Carry Adder.
+
+After combining the result from the EACAdder and the MSBIncrementer, an unnormalized answer is formed. The output is then sent into the Leading OneDetector to calculate the number of shift necessary to obtain a normalized reslt. The last step is to round the normalized answer with the rounding mode specified at the input. Exception handling also takes place at the rounder. The output result and the flags are diretly output from the rounder as the module's answer.
+
+As in fig.1. The 3 input operands are split into 
 
 ![overall architecture](Flowchart.png)
 Fig. 1. Overall MAF Unit Architecture
