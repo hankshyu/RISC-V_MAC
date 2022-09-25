@@ -85,11 +85,11 @@ mv = 27 - d
 
 ### 3.3 End Around Carry (EAC) Adders
 
-In an ordinary Multiply and add dataflow. The product should form before the add operation take place. However, the addend is added with the partial products comming out of the multiplier directly in our design. Such dataflow may cause a propagate of any carry outs that ought to be ignored, contaminating the final result. In other words, we should figure out whether there was a carry out of the sign extension prior to the last carry save adder, if the carry out is detected, no adjustment has to be made. On the other hand, if no carry out is detected, we must invert the result driving to the EAC Adders.
+In an ordinary Multiply and add dataflow, the product should form before the add operation takes place. However, the addend is summed with the partial products comming out of the multiplier directly in our design. Such dataflow may cause a propagate of any carry outs that ought to be ignored, contaminating the final result. In other words, we should figure out whether there was a carry out of the sign extension prior to the last carry save adder, if the carry out is detected, no adjustment has to be made. On the other hand, if no carry out is detected, we must invert the result driving to the EACAdders.
 
-Floating points are represented as sign and magnitude format in IEEE-754. In consequence, the adder is only responsible of calculating the absolute value of the sum. However, it is very difficult to determine in advance which operand is bigger in the MAC dataflow. Even if we know which operand is greater, we would need two complementors for the sum and carry comming from the carry save adder, which is inefficient. We need an adder that always output the magnitude of the result by coditionally complement one operand. This type of adder is called an "End Around carry" adder.
+Floating-points are represented as sign and magnitude format in IEEE-754. In consequence, the adder is only responsible of calculating the absolute value of the sum. However, it is very difficult to determine in advance which operand is bigger in the MAF dataflow. Even if we know which operand is greater, we would need two complementors for the sum and carry comming from the CarrySaveAdder, which is inefficient. We demand an adder that always output the magnitude of the result by coditionally complement one operand, which is called an "End Around carry" adder.
 
-The mathematical model is presented in [*9]. The logic is essentially driving the carry out of (P-B) into another adder's carry in. Such function could be implemented by two carry chains, using two adders calculating (P - B) and (B - P) respectively with a multiplexer selecting the answer of the two. [*9] also mentioned another impelmentation similar to a cary lookahead adder, which is smaller in size but harder to implement.
+The mathematical model is presented in [26]. The logic is essentially driving the carry out of (P-B) into another adder's carry in. Such function could be implemented by two carry chains, using two adders calculating (P - B) and (B - P) respectively with a multiplexer selecting the answer of the two. [26] also mentioned another impelmentation similar to a cary lookahead adder, which is smaller in size but harder to implement.
 
 ### 3.4 Leading One Detector
 
@@ -179,6 +179,7 @@ cgibin/pbi.cgi/.
 
 [25] Zhaolin Li, Xinyue Zhang, Gongqiong Liz and Runde Zhou, "Design of a fully pipelined single-precision floating-point unit," 2007 7th International Conference on ASIC, 2007, pp. 60-63, doi: 10.1109/ICASIC.2007.4415567.
 
+[26] Schwarz, Eric. (2007). Binary Floating-Point Unit Design. 10.1007/978-0-387-34047-0_8. 
 
 
 ## References
