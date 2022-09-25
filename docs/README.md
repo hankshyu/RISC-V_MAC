@@ -107,13 +107,15 @@ The floating-point control and status register in RISC-V also holds the accrued 
 IEEE 754-2008 also defines the default exception handling methods that we must obey. Exception handling is also done by the Rounder because rounding mode could potentially affect the way underflow or overflow represents. For example, RTZ carries positive overflow to the format's largest finite nubmer while RUP carries to positive infinity. After all the adjustments, the output from the rounder drives the output of our MAC module.
 
 ## 4.Results
-A testbench program is carefully designed to test the module, including error prone border testcases. Most of the testcases are hand-carved in order to provide a strict testbench. The test could be found in a Systemverilog testbench file. The test is split into several parts:
+A testbench program is carefully designed to test the module. Most of the testcases are hand-carved in order to come up with error prone border testcases. we have tested our module with over 100 border testcases with different rounding modes. The test is written with a Systemverilog testbench file. 
+The test is split into several parts:
 
-- Invalid operations: test if the module's exception handling works.
-- Infinities: test if the operations about infinities defined in IEEE 754-2008 is obeyed.
-- Operation with zeros: test if the operations with zero work properly.
-- Overflow/Rounding: If the flags raise correctly and the output value adjusted according to the rounding mode.
-- Rounding: test if supported rounding mode works well.
+- Invalid operations: Test if the module's exception handling works.
+- Infinities: Test if any operand is infinity works as defined in IEEE 754-2008.
+- Operation with zeros: Test if the operations with zero work properly.
+- Overflow/Underflow: If the flags raise correctly and the output value adjusted according to the rounding mode.
+- Rounding: Test whether five supported rounding mode works as expected.
+- Denormalized Numbers: Test if denormalized numbers are fully supported, works if input/output is denormalized.
 - Random generated numbers: Generate random float numbers to test if MAC operates as the way we want.
 
 Our module passes all of the tests above mentioned. We plan to further test our module with exhausting torture tests and on development boards in the future.
