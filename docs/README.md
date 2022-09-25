@@ -71,9 +71,9 @@ The next step of multiplication is to sum the partial products, a hardware struc
 
 Before the Addend could be add with the partial products from the multiplier, proper alignment must take place. Our design overlaps the data aligment with the early pahses of multiplication, such design requires shifting the addend in either direction while each of these partial products are two times as wide as the input. In short, by executing multiplication and alignment in parallel, we must include a large shifter about 3 times the size of the mantissa.
 
-In a normal floating point adder, the smaller exponent is aligned; nevertheless, it is very costy to implement a large shifter capable of shifting bidirectionally. A clean and more efficient impelmentation is mentioned in [*8]. Alignment of the addend is implemented by placing the addend to leftmost of the product and shifts the addend to the right according to the exponent value. In other words, the product is treated as having a fixed radix point and the addend is aligned to the radix point. Under such implementation, the shifting ranges also approxiamtely three times the width of the data plus some guard bits but only shift-right capbilities is needed for the shifter.
+In a normal floating point adder, the smaller exponent is aligned; nevertheless, it is very costy to implement a large shifter capable of shifting bidirectionally. A clean and more efficient impelmentation is mentioned in [25]. Alignment of the addend is implemented by placing the addend to leftmost of the product and shifts the addend to the right according to the exponent value. In other words, the product is treated as having a fixed radix point and the addend is aligned to the radix point. Under such implementation, the shifting ranges also approxiamtely three times the width of the data plus some guard bits but only shift-right capbilities is needed for the shifter.
 
-After the normalization of the exponent, if the mantissa of the addend is of 24 (length of the mantissa) plus two gurad bits greater than the product, the final mantissa is solely decided by the product's mantissa thus further shifting to the left is unnecessary. When the addend's most significatn bit is less than the product's least significant bit, the mantissa of the addend dominates the result so it's needless to further shift to the right. The value of shifting is also mentioned in [*8] and is processed in the exponent processor in our design:
+After the normalization of the exponent, if the mantissa of the addend is of 24 (length of the mantissa) plus two gurad bits greater than the product, the final mantissa is solely decided by the product's mantissa thus further shifting to the left is unnecessary. When the addend's most significatn bit is less than the product's least significant bit, the mantissa of the addend dominates the result so it's needless to further shift to the right. The value of shifting is also mentioned in [25] and is processed in the exponent processor in our design:
 
 ```
 d:  the difference between the exponent of the addend and the product
@@ -176,6 +176,11 @@ cgibin/pbi.cgi/.
 [23] D. Radhakrishnan and A. P. Preethy, "Low power CMOS pass logic 4-2 compressor for high-speed multiplication," Proceedings of the 43rd IEEE Midwest Symposium on Circuits and Systems (Cat.No.CH37144), 2000, pp. 1296-1298 vol.3, doi: 10.1109/MWSCAS.2000.951453.
 
 [24] K. Prasad and K. K. Parhi, "Low-power 4-2 and 5-2 compressors," Conference Record of Thirty-Fifth Asilomar Conference on Signals, Systems and Computers (Cat.No.01CH37256), 2001, pp. 129-133 vol.1, doi: 10.1109/ACSSC.2001.986892.
+
+[25] Zhaolin Li, Xinyue Zhang, Gongqiong Liz and Runde Zhou, "Design of a fully pipelined single-precision floating-point unit," 2007 7th International Conference on ASIC, 2007, pp. 60-63, doi: 10.1109/ICASIC.2007.4415567.
+
+
+
 ## References
 
 
