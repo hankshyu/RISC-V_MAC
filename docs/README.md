@@ -95,9 +95,9 @@ The mathematical model is presented in [26]. The logic is essentially driving th
 
 Design of the Leading One detector is pivotal to the normalization process. Normalization stips away all leading sign bits so that the two bits adjacent to the radix point are of opposite polarity. To determinte how much to shift would be the responsibility of the Leading one detector. 
 
-Back to the first processor contains a fused multiply-add dataflow [*3], the RC/6000 processor also equipped a leading-zero anticipator (LZA) to process the leading zeros and ones in parallel with floating point addition. The algorithm is mentioned in [*10] [*11]. [*12] further compares algorithms of detecting leading zeros/ones. 
+Back to the first processor contains a fused multiply-add dataflow [6], the RC/6000 processor also equipped a leading-zero anticipator (LZA) to process the leading zeros and ones in parallel with floating point addition. The algorithm is mentioned in [7] [27]. [28] further compares algorithms of detecting leading zeros/ones. 
 
-Although running one detection and addition in parallel would acclerate the calculation, the hardware area  grows significantly if the input bits grew wider. Another disadvantage of calculating the leading ones before addition is the polarity of the additon is not yet determined, the hardware must incorporate the sign of the sum to calculate the correct amount of leading ones.
+Although running one detection and addition in parallel would acclerate the calculation, the hardware area grows significantly if the input bits grew wider. Another disadvantage of calculating the leading ones before addition is the polarity of the additon is not yet determined, the hardware must incorporate the sign of the sum to calculate the correct amount of leading ones.
 
 An easy solution is to only implement a parts of the LZA component. Despite the fact that it would only operate when the sum is calculated, leading to a slower design. The lightweight leading one detector could assume the input is always positive, since the output of the End around carry is always positive. By taking the advantage of the know polarity, our design uses much smaller area and  simplier algorithm with great scalbility.
 
@@ -180,6 +180,10 @@ cgibin/pbi.cgi/.
 [25] Zhaolin Li, Xinyue Zhang, Gongqiong Liz and Runde Zhou, "Design of a fully pipelined single-precision floating-point unit," 2007 7th International Conference on ASIC, 2007, pp. 60-63, doi: 10.1109/ICASIC.2007.4415567.
 
 [26] Schwarz, Eric. (2007). Binary Floating-Point Unit Design. 10.1007/978-0-387-34047-0_8. 
+
+[27] H. Suzuki, H. Morinaka, H. Makino, Y. Nakase, K. Mashiko and T. Sumi, "Leading-zero anticipatory logic for high-speed floating point addition," in IEEE Journal of Solid-State Circuits, vol. 31, no. 8, pp. 1157-1164, Aug. 1996, doi: 10.1109/4.508263.
+
+[28] M. S. Schmookler and K. J. Nowka, "Leading zero anticipation and detection-a comparison of methods," Proceedings 15th IEEE Symposium on Computer Arithmetic. ARITH-15 2001, 2001, pp. 7-12, doi: 10.1109/ARITH.2001.930098.
 
 
 ## References
