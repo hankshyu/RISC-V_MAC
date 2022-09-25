@@ -1,7 +1,7 @@
 # Implementation of a RISC-V compatible Multiply-Add-Fused Unit
 
 ## Abstract
-The floating-point multiply-add fused (MAF) unit is popular in the modern microprocessor design due to its efficiency and performance advantage. It is designed to speed up scientific computations, multimedia applications along with trendy machine learning tasks. This study implements a MAF unit with RISC-V "F" extension compatability, incorporates standard IEEE754-2008 exception handling, NaN propagation and with denormalized number support. 5 distinct rounding modes and accured exceptin flags are also supported in our implementation as specified. We test our design with carefully designed corner cases and with random generated floating-point numbers to verify its correctness. Source code of the project could be found on https://github.com/hankshyu/RISC-V_MAC.
+The floating-point multiply-add fused (MAF) unit is popular in the modern microprocessor design due to its efficiency and performance advantages. It is designed to speed up scientific computations, multimedia applications along with trendy machine learning tasks. This study implements a MAF unit with RISC-V "F" extension compatability, incorporates standard IEEE754-2008 exception handling, NaN propagation and with denormalized number support. Five distinct rounding modes and accured exceptin flags are also supported in our implementation as specified. We test our design with carefully crafted corner cases and with random generated floating-point numbers to verify its correctness. Source code of the project could be found on https://github.com/hankshyu/RISC-V_MAC.
 
 
 ## 1.Intorduction
@@ -23,9 +23,11 @@ Standard operations floating-point add and floating-point multiply are performed
 Floating point computation often require high implementation cost in hardware, hence microcontroller level processors often carry out floating point calculations with software emulation. By replacing Floating point operations with library function call at compile time, software emulation associates with long computation time, compromised efficiency and large memory usage. [19] designs an area-optimized IEEE754 compliant RISC-V Floating point unit with MAF dataflow specifically for area sensitive microcontrollers, achieving 15 times speedups when compare to software emulation. 
 
 ## 3.Architecture
-![overall architecture](Flowchart.png)
-### 3.1. Multiplier
 
+![overall architecture](Flowchart.png)
+
+
+### 3.1. Multiplier
 The design of the multiplier involvers creating a partial product array made up of multiples of multiplicand (R4Booth), and sum them up to form the product (WallaceTree). To determine to radix of the multiplier is one of the key factors in designing a fast multiplier. Chosing a smaller radix creates loads of partial products that is easy to calculate and choose from, but harder to sum due to the large quantity. On the other hand, a larger radix has fewer partial products to add from, but it's more difficut to create the partial product array. 
 
 Radix-10 multiplication is what we are most familiar with, often carry out by hand. Decimal format is optimal for financial applications and may become more popular in the future by the publication of the revision IEEE 754 floating point standard [1]. Binary is yet the choise for most desingers for the sake of it's mathematical properties and performance advantage.
