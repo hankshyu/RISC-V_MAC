@@ -23,7 +23,6 @@ Floating-point computation often require high implementation cost in hardware, h
 
 ## 3.Architecture
 
-
 ![overall architecture](Flowchart.png)
 Fig. 1. Overall MAF Unit Architecture
 
