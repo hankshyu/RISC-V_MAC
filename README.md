@@ -32,7 +32,7 @@ The mantissa of the multiplier and the multiplicand would be send to the Multipl
 
 After concatenate the result from the EACAdder and the MSBIncrementer, an unnormalized answer is formed. The LeadingOneDetector scans the answer to determine how much shifting does the Normalizer need to normalize the answer. Rounder would accept the normalized answer and deal with exception handling procedures if necessary, flags will be raised at this stage too. Before the final answer is presented, the rounder would then adjust the answer with the rounding mode specified by the user.
 
-![overall architecture](Flowchart.png)
+![overall architecture](docs/Flowchart.png)
 Fig. 1. Overall MAF Unit Architecture
 
 ### 3.1. Multiplier
@@ -62,7 +62,7 @@ mulsign_o = bit (i + 1)
 
 The fact that multiplicand may be negative is disturbing because we must sign extend the multiplicand during calcluation. The intuitive way is by sign extending every single bit on the left of the partial product. [21] mentioned an elegent way of acquiring the correct result while the sign of the partial product only effects two bits of the partial product, greatly improves the potential wiring of the design and is adopted in our proposed multiplier.
 
-![*WallaceTree](WallaceTree.png)
+![*WallaceTree](docs/WallaceTree.png)
 Fig. 2. Wallace tree structure implemented in our design
 
 The next step of multiplication is to sum the partial products, a hardware structure named Wallace tree is implemented to reduce critical path. Wallace trees are usually composed of carry save adders, also called counters. Traditionally, they intake 3 partial sums to output a sum and carry. 4:2 counters was introduced in [22] and were further optimized and designed [23] [24]. By mixing the use of 3:2 counter and 4:2 counter results in an optimal design which minimizes delay.
