@@ -2,9 +2,7 @@
 
 ## Abstract
 
-
-
-The floating-point Multiply-Add Fused (MAF, also known as Multiply-ACcumulate, MAC) unit is popular in modern microprocessor design due to its efficiency and performance advantages. The design aims to speed up scientific computations, multimedia applications, and in particular, convolutional neural networks for machine learning tasks. This study implements a MAF unit with RISC-V ”F” extension compatibility, incorporating standard IEEE 754-2008 exception handling, NaN propagation, and denormalized number support. Five distinct rounding modes and accrued exception flags are also supported in the proposed design. We test our implementation with carefully crafted corner cases and random generated floating-point numbers to verify its correctness. Source code of the project is available on https://github.com/hankshyu/RISC-V MAC.
+The floating-point Multiply-Add Fused (MAF, also known as Multiply-ACcumulate, MAC) unit is popular in modern microprocessor design due to its efficiency and performance advantages. The design aims to speed up scientific computations, multimedia applications, and in particular, convolutional neural networks for machine learning tasks. This study implements a MAF unit with RISC-V ”F” extension compatibility, incorporating standard IEEE 754-2008 exception handling, NaN propagation, and denormalized number support. Five distinct rounding modes and accrued exception flags are also supported in the proposed design. We test our implementation with carefully crafted corner cases and random generated floating-point numbers to verify its correctness.
 
 Index Terms—Floating-Point Unit, Multiply-Add fused, Multiply Accumulate, RISC-V
 
