@@ -13,3 +13,4 @@ Floating-point units are available on most microprocessors nowadays. Most design
 
 To take full advantage of the MAF dataflow, [3] transforms a set of equations into a series of multiply-adds by a numerical analysis technique called Horner's rule. [4] presents a general method to convert any transform algorithm into MAF optimized algorithms. [5] presents a framework for automatically generating MAF code for every linear DSP transform. The above-mentioned examples shows that the MAF architecture is recognized in modern computing and could receive optimization at the software level.
 
+# The full paper could be found [here](docs/Implementation%20of%20a%20RISC-V%20compatible%20Multiply-Add-Fused%20Unit.pdf).
