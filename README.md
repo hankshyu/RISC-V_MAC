@@ -1,6 +1,6 @@
 # Implementation of a RISC-V compatible Multiply-Add Fused Unit
 
-**The full paper could be found [here](docs/Implementation%20of%20a%20RISC-V%20compatible%20Multiply-Add%20Fused%20Unit.pdf)**
+***The full paper could be found [here](docs/Implementation%20of%20a%20RISC-V%20compatible%20Multiply-Add%20Fused%20Unit.pdf)***
 
 ## Abstract
 
