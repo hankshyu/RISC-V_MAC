@@ -31,26 +31,13 @@ module PATTERN #(
     input NX_o );
 
 //================================================================
-// integer
+// Main Function
 //================================================================
-real CYCLE = `CYCLE_TIME;
-integer SEED = 82; 
+initial begin
+    $display("Welcom to the RISCV MAC project!");
+    #5;
+    $finish;
+end
 
-parameter PATNUM = 300;
-integer total_latency;
-integer patcount;
-reg [1 : 0] map [64-1 : 0][4-1 : 0];
-reg [1:0]init_in;
-integer wait_val_time;
-integer i;
-integer cac; //check answer cycle
-
-integer bonus_point;
-integer sum_bonus;
-
-reg [1:0] spotA, spotB, move;
-reg [1:0] current_line;
-
-integer resetted;
 
 endmodule
